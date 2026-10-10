@@ -90,7 +90,7 @@ export function Laboratory({
     finish("explored");
   }
   return (
-    <>
+    <div className="lab-workspace">
       <p>
         Choose a teaching specimen, look around, and record whatever interests
         you. Every step is optional.
@@ -389,6 +389,6 @@ export function Laboratory({
         </>
       )}
       <p role="status">{message}</p>
-    </>
+    </div>
   );
 }
