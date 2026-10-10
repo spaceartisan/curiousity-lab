@@ -1,71 +1,167 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { notes, playNotes, tone, stopAudio } from "./audio";
+import {
+  phraseExercises,
+  melodyExercises,
+  rhythmExercises,
+  rhythmFeedback,
+  type MusicMode,
+} from "../content/music";
 import type { GameProps } from "./types";
 export interface MusicData {
-  mode: "piano" | "phrase" | "match" | "rhythm";
+  mode: MusicMode;
   notes: number[];
   title: string;
   solved: boolean;
+  exercise?: number;
+  presentation?: "staff" | "pattern" | "ear";
+  tempo?: "comfortable" | "slow";
+  taps?: number;
+  flexibility?: "gentle" | "extra";
 }
-const phrase = [0, 1, 2, 3];
-function Staff({ sequence }: { sequence: number[] }) {
+const noteName = (n: number) => `${notes[n]}${n === 7 ? "5" : "4"}`;
+function Staff({
+  sequence,
+  active = -1,
+}: {
+  sequence: number[];
+  active?: number;
+}) {
+  const x = (i: number) => 52 + i * 62;
   return (
     <svg
       className="staff"
-      viewBox="0 0 380 110"
+      viewBox="0 0 380 120"
       role="img"
-      aria-label={`Treble staff, middle C to high C. Notes: ${sequence.map((n) => notes[n]).join(", ")}`}
+      aria-label={`Treble staff, middle C to high C. Notes: ${sequence.map(noteName).join(", ") || "none yet"}`}
     >
+      <text x="12" y="14" fontSize="12" fill="currentColor">
+        Treble · C4–C5
+      </text>
       {[28, 40, 52, 64, 76].map((y) => (
-        <line
-          key={y}
-          x1="12"
-          y1={y}
-          x2="370"
-          y2={y}
-          stroke="currentColor"
-          strokeWidth="1"
-        />
+        <line key={y} x1="12" y1={y} x2="370" y2={y} stroke="currentColor" />
       ))}
       {sequence.map((n, i) => (
-        <g key={i}>
+        <g key={i} className={active === i ? "playing-note" : ""}>
+          {active === i && (
+            <rect
+              x={x(i) - 18}
+              y="20"
+              width="36"
+              height="78"
+              rx="5"
+              className="note-highlight"
+            />
+          )}
           {n === 0 && (
             <line
-              x1={38 + i * 62}
-              x2={62 + i * 62}
+              x1={x(i) - 12}
+              x2={x(i) + 12}
               y1="88"
               y2="88"
               stroke="currentColor"
-              strokeWidth="1"
             />
           )}
           <ellipse
-            cx={50 + i * 62}
+            cx={x(i)}
             cy={88 - n * 6}
             rx="8"
             ry="6"
-            transform={`rotate(-18 ${50 + i * 62} ${88 - n * 6})`}
+            transform={`rotate(-18 ${x(i)} ${88 - n * 6})`}
             fill="currentColor"
           />
           <line
-            x1={57 + i * 62}
-            x2={57 + i * 62}
+            x1={x(i) + (n >= 6 ? -7 : 7)}
+            x2={x(i) + (n >= 6 ? -7 : 7)}
             y1={88 - n * 6}
-            y2={55 - n * 6}
+            y2={88 - n * 6 + (n >= 6 ? 33 : -33)}
             stroke="currentColor"
             strokeWidth="2"
           />
           <text
-            x={50 + i * 62}
-            y="106"
+            x={x(i)}
+            y="112"
             textAnchor="middle"
-            fontSize="13"
+            fontSize="14"
             fill="currentColor"
           >
-            {notes[n]}
+            {noteName(n)}
           </text>
         </g>
       ))}
+    </svg>
+  );
+}
+function NotePattern({
+  sequence,
+  active = -1,
+}: {
+  sequence: number[];
+  active?: number;
+}) {
+  return (
+    <div
+      className="note-pattern"
+      role="img"
+      aria-label={`Note pattern: ${sequence.map(noteName).join(", ") || "none yet"}`}
+    >
+      {sequence.map((n, i) => (
+        <div
+          className={
+            active === i ? "pattern-note playing-note" : "pattern-note"
+          }
+          key={i}
+        >
+          <span
+            className="music-bar"
+            style={{ height: `${20 + n * 7}px` }}
+            aria-hidden="true"
+          />
+          <span>{noteName(n)}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+function RhythmPattern({
+  beats,
+  description,
+  active,
+}: {
+  beats: number[];
+  description: string;
+  active: number;
+}) {
+  return (
+    <svg
+      className="rhythm-pattern"
+      viewBox="0 0 380 90"
+      role="img"
+      aria-label={description}
+    >
+      <line x1="25" x2="355" y1="35" y2="35" stroke="currentColor" />
+      {beats.map((beat, i) => {
+        const x = 25 + (beat / Math.max(3, beats.at(-1)!)) * 330;
+        return (
+          <g key={i}>
+            <circle
+              cx={x}
+              cy="35"
+              r={active === i ? 14 : 9}
+              fill="currentColor"
+            />
+            <text
+              x={x}
+              y="75"
+              textAnchor="middle"
+              fontSize="18"
+              fill="currentColor"
+            >
+              {i + 1}
+            </text>
+          </g>
+        );
+      })}
     </svg>
   );
 }
@@ -74,55 +170,185 @@ export function Music({
   update,
   finish,
   create,
+  replay,
+  repeat,
   sound,
   volume,
-}: GameProps & { sound: boolean; volume: number }) {
+  onSoundChange,
+  onVolumeChange,
+}: GameProps & {
+  sound: boolean;
+  volume: number;
+  onSoundChange: (value: boolean) => void;
+  onVolumeChange: (value: number) => void;
+}) {
   const d = draft.data as MusicData;
+  const index = d.exercise ?? 0;
+  const phrase = phraseExercises[index % phraseExercises.length];
+  const melody = melodyExercises[index % melodyExercises.length];
+  const rhythm = rhythmExercises[index % rhythmExercises.length];
+  const presentation = d.presentation ?? "staff";
   const [message, setMessage] = useState(""),
-    [showNotes, setShowNotes] = useState(true),
-    [taps, setTaps] = useState<number[]>([]);
-  useEffect(() => () => stopAudio(), []);
-  const play = (seq: number[]) => {
-    if (!sound) {
+    [active, setActive] = useState(-1),
+    [source, setSource] = useState<"target" | number>("target");
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const playbackEpoch = useRef(0);
+  const tapLock = useRef(false);
+  const tapTimes = useRef<number[]>([]);
+  function cancelPlayback(clear = true) {
+    playbackEpoch.current++;
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    stopAudio();
+    if (clear) setActive(-1);
+  }
+  useEffect(() => {
+    const hidden = () => {
+      if (document.hidden) cancelPlayback();
+    };
+    document.addEventListener("visibilitychange", hidden);
+    return () => {
+      document.removeEventListener("visibilitychange", hidden);
+      cancelPlayback(false);
+    };
+  }, []);
+  useEffect(() => {
+    if (!sound) stopAudio();
+  }, [sound]);
+  const target =
+    d.mode === "piano"
+      ? d.notes
+      : d.mode === "phrase"
+        ? phrase.heard
+        : d.mode === "match"
+          ? melody.target
+          : [0, 0, 0, 0];
+  function play(
+    sequence: number[],
+    offsets?: number[],
+    playingSource: "target" | number = "target",
+  ) {
+    cancelPlayback();
+    if (!sound && presentation === "ear" && d.mode !== "rhythm") {
       setMessage(
-        "Sound is off. You can follow the notes visually, or turn sound on in Settings.",
+        "Sound is off. Choose Staff or Note pattern, or turn sound on here.",
       );
       return;
     }
-    playNotes(seq, volume).catch(() =>
-      setMessage(
-        "Sound could not start. Try Play again after checking your device volume.",
+    const epoch = playbackEpoch.current;
+    const step = d.tempo === "slow" ? 0.95 : 0.6;
+    setSource(playingSource);
+    setMessage(
+      sound
+        ? "Playing. You can listen again whenever you like."
+        : "Playing the visual pattern. Sound is off.",
+    );
+    // Reduced motion keeps a static readable pattern.
+    if (!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
+      sequence.forEach((_, i) => {
+        timers.current.push(
+          setTimeout(
+            () => {
+              if (playbackEpoch.current === epoch) setActive(i);
+            },
+            (offsets?.[i] ?? i) * step * 1000,
+          ),
+        );
+      });
+    timers.current.push(
+      setTimeout(
+        () => {
+          if (playbackEpoch.current === epoch) {
+            setActive(-1);
+            setMessage("Playback finished. Replay whenever you like.");
+          }
+        },
+        ((offsets?.at(-1) ?? sequence.length - 1) * step + 0.6) * 1000,
       ),
     );
-  };
-  function press(n: number) {
     if (sound)
-      tone(n, volume).catch(() =>
-        setMessage("Check your device volume, then try again."),
-      );
+      playNotes(sequence, volume, step, offsets).catch(() => {
+        if (playbackEpoch.current === epoch) {
+          cancelPlayback();
+          setMessage(
+            "Sound could not start. Try Play again after checking your device volume, or choose a visual view.",
+          );
+        }
+      });
+  }
+  function previewNote(n: number) {
+    cancelPlayback();
+    const epoch = playbackEpoch.current;
+    if (sound)
+      tone(n, volume).catch(() => {
+        if (epoch === playbackEpoch.current)
+          setMessage(
+            "Sound could not start. Check your device volume or continue visually.",
+          );
+      });
+  }
+  function press(n: number) {
+    previewNote(n);
     if (d.mode === "piano") update({ ...d, notes: [...d.notes, n].slice(-64) });
-    else if (d.mode === "phrase") {
-      if (n === 3) {
+    else if (d.mode === "phrase" && !d.solved) {
+      if (n === phrase.next) {
         update({ ...d, solved: true });
         finish("completed");
-        setMessage("F continues the step-by-step pattern.");
-      } else
         setMessage(
-          "Listen or look again. The notes move up one step at a time.",
+          `${noteName(n)} continues this pattern. Try it again or explore another phrase.`,
         );
+      } else
+        setMessage("Try the pattern again, or use Hint to see the next note.");
     }
   }
-  function mode(m: MusicData["mode"]) {
-    stopAudio();
+  function mode(next: MusicMode) {
+    if (next === d.mode) return;
+    cancelPlayback();
+    // Keep the free-piano recording when exploring another mode.
     update(
-      { mode: m, notes: [], title: "My melody", solved: false },
-      { mode: m },
+      { ...d, mode: next, exercise: 0, solved: false, taps: 0 },
+      { mode: next },
     );
-    setMessage("");
-    setTaps([]);
   }
+  function view(next: MusicData["presentation"]) {
+    cancelPlayback();
+    update({ ...d, presentation: next }, { view: true });
+    setMessage("");
+  }
+  const showSequence = (seq: number[], playing = -1) =>
+    presentation === "staff" ? (
+      <Staff sequence={seq} active={playing} />
+    ) : presentation === "pattern" ? (
+      <NotePattern sequence={seq} active={playing} />
+    ) : null;
+  const taps = d.taps ?? 0;
   return (
     <>
+      <div className="music-controls">
+        <label className="checkbox">
+          <input
+            type="checkbox"
+            checked={sound}
+            onChange={(e) => {
+              if (!e.target.checked) stopAudio();
+              onSoundChange(e.target.checked);
+            }}
+          />
+          Sound
+        </label>
+        <label className="music-volume">
+          Volume{" "}
+          <input
+            aria-label="Music volume"
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={(e) => onVolumeChange(Number(e.target.value))}
+          />
+        </label>
+      </div>
       <div className="tabs" aria-label="Music activities">
         {(["piano", "phrase", "match", "rhythm"] as const).map((m) => (
           <button key={m} aria-pressed={d.mode === m} onClick={() => mode(m)}>
@@ -137,77 +363,138 @@ export function Music({
           </button>
         ))}
       </div>
+      <h2>
+        {d.mode === "piano"
+          ? "Your piano"
+          : d.mode === "phrase"
+            ? phrase.title
+            : d.mode === "match"
+              ? melody.title
+              : rhythm.title}
+      </h2>
       <p>
         {d.mode === "piano"
           ? "Explore the keyboard and save a melody to your collection."
           : d.mode === "phrase"
-            ? "C, D, E… which note continues this ascending phrase?"
+            ? phrase.rule
             : d.mode === "match"
-              ? "Listen as often as you like. Which pattern matches?"
-              : "Listen to four evenly spaced beats, then tap four beats at your own comfortable pace."}
+              ? "Play the target phrase, then choose its matching pattern. You can hear either choice before selecting it."
+              : `${rhythm.description} Listen or watch, then tap four beats at your own pace. There is no timing score.`}
       </p>
       {d.mode !== "rhythm" && (
-        <>
-          <button
-            onClick={() => setShowNotes(!showNotes)}
-            aria-pressed={showNotes}
-          >
-            Notation {showNotes ? "shown" : "hidden"}
-          </button>
-          {showNotes && (
-            <Staff
-              sequence={
-                d.mode === "piano"
-                  ? d.notes.slice(-5)
-                  : d.mode === "match"
-                    ? [0, 2, 4, 2]
-                    : phrase.slice(0, 3)
-              }
-            />
-          )}
-        </>
+        <div className="actions" aria-label="Music presentation">
+          {(["staff", "pattern", "ear"] as const).map((p) => (
+            <button
+              key={p}
+              aria-pressed={presentation === p}
+              onClick={() => view(p)}
+            >
+              {{ staff: "Staff", pattern: "Note pattern", ear: "By ear" }[p]}
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="actions" aria-label="Playback pace">
+        <span>Playback pace</span>
+        <button
+          aria-pressed={d.tempo !== "slow"}
+          onClick={() => {
+            cancelPlayback();
+            update({ ...d, tempo: "comfortable" }, { view: true });
+          }}
+        >
+          Comfortable
+        </button>
+        <button
+          aria-pressed={d.tempo === "slow"}
+          onClick={() => {
+            cancelPlayback();
+            update({ ...d, tempo: "slow" }, { view: true });
+          }}
+        >
+          Slower
+        </button>
+      </div>
+      {d.mode === "rhythm" ? (
+        <RhythmPattern
+          beats={rhythm.beats}
+          description={rhythm.description}
+          active={active}
+        />
+      ) : (
+        showSequence(
+          d.mode === "piano" ? d.notes.slice(-5) : target,
+          source === "target"
+            ? d.mode === "piano"
+              ? active - Math.max(0, d.notes.length - 5)
+              : active
+            : -1,
+        )
+      )}
+      {presentation === "ear" && !sound && d.mode !== "rhythm" && (
+        <p className="muted">
+          Sound is off. Turn it on above, or choose Staff or Note pattern.
+        </p>
       )}
       <div className="actions">
         <button
           className="primary"
+          disabled={!target.length}
           onClick={() =>
-            play(
-              d.mode === "piano"
-                ? d.notes
-                : d.mode === "phrase"
-                  ? phrase.slice(0, 3)
-                  : d.mode === "match"
-                    ? [0, 2, 4, 2]
-                    : [0, 0, 0, 0],
-            )
+            play(target, d.mode === "rhythm" ? rhythm.beats : undefined)
           }
-          disabled={d.mode === "piano" && !d.notes.length}
         >
           Play / replay
         </button>
-        <button onClick={stopAudio}>Stop sound</button>
+        <button
+          onClick={() => {
+            cancelPlayback();
+            setMessage("Playback stopped.");
+          }}
+        >
+          Stop sound
+        </button>
+        {d.mode === "phrase" && (
+          <button
+            disabled={d.solved}
+            onClick={() => {
+              setMessage(phrase.hint);
+              update(d, { hint: true });
+            }}
+          >
+            Hint
+          </button>
+        )}
       </div>
       {(d.mode === "piano" || d.mode === "phrase") && (
-        <div className="piano" role="group" aria-label="Piano keyboard">
-          {notes.map((n, i) => (
-            <button
-              key={i}
-              onClick={() => press(i)}
-              aria-label={`Play ${n}${i === 7 ? " high" : ""}`}
-            >
-              <span>{n}</span>
-            </button>
-          ))}
-        </div>
+        <>
+          <p className="muted">
+            The keyboard runs from middle C to the next C. On a small screen,
+            slide it sideways to reach all keys.
+          </p>
+          <div className="piano-scroll">
+            <div className="piano" role="group" aria-label="Piano keyboard">
+              {notes.map((n, i) => (
+                <button
+                  key={i}
+                  onClick={() => press(i)}
+                  aria-label={`Play ${n}${i === 7 ? " high" : ""}`}
+                >
+                  <span>
+                    {n}
+                    <small>{i === 7 ? "5" : "4"}</small>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
       )}
       {d.mode === "piano" && (
         <>
           <p className="muted">
             {d.notes.length
-              ? `${d.notes.length} notes recorded. Last notes: ${d.notes
-                  .slice(-8)
-                  .map((n) => notes[n])
-                  .join(" · ")}`
+              ? `${d.notes.length} notes recorded. Last notes: ${d.notes.slice(-8).map(noteName).join(" · ")}`
               : "Your notes will appear here."}
           </p>
           <label>
@@ -215,7 +502,9 @@ export function Music({
             <input
               maxLength={80}
               value={d.title}
-              onChange={(e) => update({ ...d, title: e.target.value })}
+              onChange={(e) =>
+                update({ ...d, title: e.target.value }, { view: true })
+              }
             />
           </label>
           <div className="actions">
@@ -240,7 +529,12 @@ export function Music({
             >
               Undo note
             </button>
-            <button onClick={() => update({ ...d, notes: [] })}>
+            <button
+              onClick={() => {
+                cancelPlayback();
+                update({ ...d, notes: [] });
+              }}
+            >
               Clear keyboard recording
             </button>
           </div>
@@ -248,68 +542,120 @@ export function Music({
       )}
       {d.mode === "match" && (
         <div className="match-choices">
-          {[
-            [0, 2, 4, 2],
-            [4, 2, 0, 2],
-          ].map((seq, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                if (i === 0) {
-                  update({ ...d, solved: true });
-                  finish("completed");
-                  setMessage("That is the matching melody.");
-                } else
-                  setMessage(
-                    "Try hearing the phrase again. It starts low, rises, then comes back a little.",
-                  );
-              }}
-            >
-              <Staff sequence={seq} />
-              <span>Pattern {i + 1}</span>
-            </button>
+          {(melody.correct === 0
+            ? [melody.target, melody.other]
+            : [melody.other, melody.target]
+          ).map((seq, i) => (
+            <div className="melody-choice" key={i}>
+              <h3>Pattern {i + 1}</h3>
+              {showSequence(seq, source === i ? active : -1)}
+              <div className="actions">
+                <button onClick={() => play(seq, undefined, i)}>
+                  Hear pattern {i + 1}
+                </button>
+                <button
+                  disabled={d.solved}
+                  onClick={() => {
+                    cancelPlayback();
+                    if (i === melody.correct) {
+                      update({ ...d, solved: true });
+                      finish("completed");
+                      setMessage(
+                        "That is the matching melody. Replay it or explore another.",
+                      );
+                    } else
+                      setMessage(
+                        "Listen or look again. You can preview either pattern as often as you like.",
+                      );
+                  }}
+                >
+                  Choose pattern {i + 1}
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       )}
       {d.mode === "rhythm" && (
         <>
-          <div className="beats" aria-label="Four evenly spaced beats">
-            ● &nbsp; ● &nbsp; ● &nbsp; ●
+          <div className="actions" aria-label="Rhythm feedback flexibility">
+            <span>Rhythm feedback</span>
+            <button
+              aria-pressed={d.flexibility !== "extra"}
+              onClick={() =>
+                update({ ...d, flexibility: "gentle" }, { view: true })
+              }
+            >
+              Gentle
+            </button>
+            <button
+              aria-pressed={d.flexibility === "extra"}
+              onClick={() =>
+                update({ ...d, flexibility: "extra" }, { view: true })
+              }
+            >
+              Extra flexible
+            </button>
           </div>
+          <p aria-live="polite">
+            {taps} of 4 beats tapped
+            {d.solved ? " · This exploration is complete." : "."}
+          </p>
           <button
             className="tap-button"
+            disabled={d.solved || taps >= 4}
             onClick={() => {
-              const next = [...taps, performance.now()];
-              if (sound) tone(0, volume, 0.12).catch(() => undefined);
-              setTaps(next);
-              if (next.length === 4) {
-                const gaps = next.slice(1).map((t, i) => t - next[i]);
-                const mean = gaps.reduce((a, b) => a + b, 0) / 3;
-                setMessage(
-                  gaps.every(
-                    (g) => Math.abs(g - mean) <= Math.max(250, mean * 0.5),
-                  )
-                    ? "You tapped four beats with a steady rhythm."
-                    : "You tapped four beats. You can explore another rhythm whenever you like.",
-                );
+              if (tapLock.current) return;
+              tapLock.current = true;
+              tapTimes.current.push(performance.now());
+              previewNote(0);
+              const next = taps + 1;
+              update({ ...d, taps: next, solved: next === 4 });
+              if (next === 4) {
                 finish("explored");
-              } else setMessage(`${next.length} of 4 beats tapped.`);
+                setMessage(
+                  rhythmFeedback(tapTimes.current, rhythm.beats, d.flexibility)
+                    ? "Your spacing followed the pattern at your own pace. Try again whenever you like."
+                    : "You explored four beats. Listen or watch again, and try another rhythm whenever you like.",
+                );
+              }
+              queueMicrotask(() => {
+                tapLock.current = false;
+              });
             }}
-            disabled={taps.length >= 4}
           >
             Tap a beat
           </button>
-          <button
-            onClick={() => {
-              setTaps([]);
-              setMessage("");
-            }}
-          >
-            Try again
-          </button>
         </>
       )}
-      <p role="status">{message}</p>
+      <div className="actions">
+        {d.mode !== "piano" && (
+          <button onClick={replay}>
+            {
+              {
+                phrase: "Another phrase",
+                match: "Another melody",
+                rhythm: "Another rhythm",
+              }[d.mode]
+            }
+          </button>
+        )}
+        {repeat && (
+          <button onClick={repeat}>
+            {d.mode === "piano"
+              ? "New recording"
+              : d.mode === "rhythm"
+                ? "Try again"
+                : "Try this exercise again"}
+          </button>
+        )}
+      </div>
+      <p role="status">
+        {message ||
+          (d.solved
+            ? "This exercise is complete. You can play it again or start another."
+            : "")}
+      </p>
     </>
   );
 }

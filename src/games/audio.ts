@@ -9,6 +9,7 @@ export async function tone(
   duration = 0.45,
   delay = 0,
 ) {
+  if (volume <= 0) return;
   const currentEpoch = audioEpoch;
   context ??= new AudioContext();
   await context.resume();
@@ -46,7 +47,16 @@ export function stopAudio() {
   }
   voices.clear();
 }
-export async function playNotes(sequence: number[], volume: number) {
+export async function playNotes(
+  sequence: number[],
+  volume: number,
+  step = 0.6,
+  offsets?: number[],
+) {
   stopAudio();
-  await Promise.all(sequence.map((n, i) => tone(n, volume, 0.5, i * 0.6)));
+  await Promise.all(
+    sequence.map((n, i) =>
+      tone(n, volume, Math.min(0.5, step * 0.8), (offsets?.[i] ?? i) * step),
+    ),
+  );
 }

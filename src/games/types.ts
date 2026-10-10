@@ -3,7 +3,7 @@ export interface GameProps {
   draft: Draft;
   update: (
     data: unknown,
-    metrics?: { hint?: boolean; undo?: boolean; mode?: string },
+    metrics?: { hint?: boolean; undo?: boolean; mode?: string; view?: boolean },
   ) => void;
   finish: (outcome: "completed" | "explored") => void;
   create: (item: Omit<Creation, "id" | "savedAt">) => void;

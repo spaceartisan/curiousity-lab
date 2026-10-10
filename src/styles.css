@@ -476,10 +476,80 @@ main {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   max-width: 800px;
+  min-width: 390px;
   height: 200px;
   border: 3px solid var(--ink);
   border-radius: 12px;
   overflow: hidden;
+}
+.piano-scroll {
+  overflow-x: auto;
+}
+.piano button small {
+  display: block;
+}
+.music-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+.music-volume {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+}
+.music-volume input {
+  min-width: 0;
+  max-width: 100%;
+}
+.note-highlight {
+  fill: var(--hover);
+  stroke: var(--accent);
+  stroke-width: 2px;
+}
+.note-pattern {
+  display: flex;
+  align-items: end;
+  gap: 0.8rem;
+  min-height: 110px;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+.pattern-note {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 42px;
+  padding: 0.4rem;
+  border: 2px solid transparent;
+  border-radius: 8px;
+}
+.music-bar {
+  width: 24px;
+  border-radius: 4px;
+  background: var(--accent);
+}
+.pattern-note.playing-note {
+  border-color: var(--accent);
+}
+.rhythm-pattern {
+  width: min(100%, 440px);
+  height: auto;
+  margin: 1rem 0;
+}
+.melody-choice {
+  min-width: 0;
+  flex: 1 1 280px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem;
+}
+.melody-choice .staff {
+  max-width: 100%;
 }
 .piano button {
   border-radius: 0;
@@ -509,8 +579,9 @@ main {
   flex-wrap: wrap;
 }
 .match-choices button {
-  flex: 1;
-  min-width: 220px;
+  flex: 1 1 160px;
+  min-width: 0;
+  max-width: 100%;
 }
 .beats {
   font-size: 2rem;
@@ -520,8 +591,8 @@ main {
 }
 .tap-button {
   min-height: 100px;
-  min-width: 180px;
-  margin-right: 1rem;
+  min-width: min(180px, 100%);
+  max-width: 100%;
 }
 .specimen-grid {
   display: grid;

@@ -20,7 +20,8 @@ import { Sudoku } from "./games/Sudoku";
 import { generateSudoku } from "./games/sudoku-engine";
 import { searchBoard, searchPacks } from "./content/words";
 import { Connections, WordSearch } from "./games/Words";
-import { Music } from "./games/Music";
+import { Music, type MusicData } from "./games/Music";
+import { exerciseCount, musicPuzzle } from "./content/music";
 import { Laboratory } from "./games/Laboratory";
 import { ActivityClock } from "./games/activity-clock";
 import { stopAudio, playNotes } from "./games/audio";
@@ -61,6 +62,8 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
     previous?.game === "sudoku"
       ? (previous.data as { size: 4 | 6 | 9; tier: "Relaxed" | "Classic" })
       : undefined;
+  const oldMusic =
+    previous?.game === "music" ? (previous.data as MusicData) : undefined;
   const data =
     game === "sudoku"
       ? generateSudoku(oldSudoku?.size || 9, seed, oldSudoku?.tier || "Classic")
@@ -82,7 +85,21 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
               found: [],
             }
           : game === "music"
-            ? { mode: "piano", notes: [], title: "My melody", solved: false }
+            ? {
+                mode: oldMusic?.mode ?? "piano",
+                exercise: oldMusic
+                  ? ((oldMusic.exercise ?? 0) + (samePuzzle ? 0 : 1)) %
+                    exerciseCount(oldMusic.mode)
+                  : 0,
+                notes:
+                  oldMusic?.mode !== "piano" ? (oldMusic?.notes ?? []) : [],
+                title: oldMusic?.title ?? "My melody",
+                solved: false,
+                taps: 0,
+                presentation: oldMusic?.presentation ?? "staff",
+                tempo: oldMusic?.tempo ?? "comfortable",
+                flexibility: oldMusic?.flexibility ?? "gentle",
+              }
             : {
                 specimen: 0,
                 stage: "desk",
@@ -102,7 +119,7 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
           : game === "search"
             ? searchBoard((data as { pack: number }).pack).id
             : game === "music"
-              ? "music-studio-v1"
+              ? musicPuzzle(data as MusicData)
               : specimens[0].id,
     startedAt: new Date().toISOString(),
     activeMs: 0,
@@ -112,7 +129,7 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
       game === "sudoku"
         ? `${oldSudoku?.size || 9}x${oldSudoku?.size || 9}:${oldSudoku?.tier || "Classic"}`
         : game === "music"
-          ? "piano"
+          ? (data as MusicData).mode
           : "explore",
     data,
   };
@@ -133,7 +150,9 @@ function archive(
           contentVersion:
             draft.game === "search" && draft.puzzleId !== "quiet-garden-v1"
               ? "word-search-2"
-              : "starter-1",
+              : draft.game === "music" && draft.puzzleId !== "music-studio-v1"
+                ? "music-exercises-1"
+                : "starter-1",
           game: draft.game,
           puzzleId: draft.puzzleId,
           startedAt: draft.startedAt,
@@ -392,7 +411,7 @@ export function App({ appRole }: { appRole: Role }) {
   }
   function update(
     data: unknown,
-    metrics?: { hint?: boolean; undo?: boolean; mode?: string },
+    metrics?: { hint?: boolean; undo?: boolean; mode?: string; view?: boolean },
   ) {
     const game = screen as GameKind;
     setState((s) => {
@@ -409,7 +428,7 @@ export function App({ appRole }: { appRole: Role }) {
         (data as { specimen: number }).specimen !==
           (old.data as { specimen: number }).specimen;
       if (
-        old.finalized ||
+        (old.finalized && !metrics?.view) ||
         newContent ||
         newSpecimen ||
         (metrics?.mode && metrics.mode !== old.mode)
@@ -423,7 +442,9 @@ export function App({ appRole }: { appRole: Role }) {
               ? `sudoku-${(data as { size: number; seed: number }).size}-${(data as { seed: number }).seed}`
               : game === "lab"
                 ? specimens[(data as { specimen: number }).specimen].id
-                : old.puzzleId,
+                : game === "music"
+                  ? musicPuzzle(data as MusicData)
+                  : old.puzzleId,
           mode: metrics?.mode || old.mode,
         };
       }
@@ -1304,6 +1325,8 @@ export function App({ appRole }: { appRole: Role }) {
                     {...props}
                     sound={prefs.sound}
                     volume={prefs.volume}
+                    onSoundChange={(sound) => changePrefs({ sound })}
+                    onVolumeChange={(volume) => changePrefs({ volume })}
                   />
                 ) : (
                   <Laboratory key={props.draft.id} {...props} />

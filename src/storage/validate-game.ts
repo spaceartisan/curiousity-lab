@@ -1,5 +1,6 @@
 import { generateSudoku, validSudoku, type Size } from "../games/sudoku-engine";
 import { searchBoard, searchPacks } from "../content/words";
+import { exerciseCount, type MusicMode } from "../content/music";
 const record = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
 const strings = (v: unknown, max = 32) =>
@@ -79,7 +80,24 @@ export function validateGame(kind: string, value: unknown): boolean {
       value.notes.length <= 64 &&
       typeof value.title === "string" &&
       value.title.length <= 80 &&
-      typeof value.solved === "boolean"
+      typeof value.solved === "boolean" &&
+      (value.exercise === undefined ||
+        (Number.isInteger(value.exercise) &&
+          Number(value.exercise) >= 0 &&
+          Number(value.exercise) < exerciseCount(value.mode as MusicMode))) &&
+      (value.presentation === undefined ||
+        ["staff", "pattern", "ear"].includes(String(value.presentation))) &&
+      (value.tempo === undefined ||
+        ["comfortable", "slow"].includes(String(value.tempo))) &&
+      (value.taps === undefined ||
+        (Number.isInteger(value.taps) &&
+          Number(value.taps) >= 0 &&
+          Number(value.taps) <= 4)) &&
+      (value.flexibility === undefined ||
+        ["gentle", "extra"].includes(String(value.flexibility))) &&
+      (value.mode !== "rhythm" ||
+        value.taps === undefined ||
+        value.solved === (value.taps === 4))
     );
   if (kind === "lab")
     return (

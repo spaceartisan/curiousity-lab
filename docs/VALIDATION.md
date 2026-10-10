@@ -1,3 +1,13 @@
+# v0.7.0 validation
+
+Locally: 75 unit/component tests passed, including eleven new music/audio cases for content bounds/answer variation, relative rhythm feedback, legacy save validation, preserved piano recordings, distinct rhythm replay IDs, all four phrases, view changes after completion, deliberate sound activation, rejected audio, timer cleanup/reduced motion, nonuniform audio scheduling, volume zero and cancellation during audio unlock. Thirteen archive/remote cases passed with the age-only test skipped locally. TypeScript, production build and PWA validation passed.
+
+CI gates deployment on 75 unit/component tests, fourteen archive/remote tests with age installed, twenty-two Firestore security cases plus the encrypted emulator recovery drill, and thirty-two desktop/phone browser scenarios. Two new scenarios cover offline rhythm resume, same-pattern replay, candidate selection, melody retention, 320-pixel/200% text layouts, and actual Chromium audio-context/oscillator instrumentation for no autoplay and Stop/Sound-off cancellation. Instrumentation is test-only; production has no test identity or audio toggle. Check this commit's workflow result for actual completion.
+
+Browser audio scheduling is not proof of audible quality or real iPhone/Android compatibility. No microphone, recording asset or real family record is used. Raw tap timestamps remain in component memory only; resumed partial rhythms get neutral feedback when a full local timing trace is unavailable. Completed legacy sessions are untouched. Final modality/tempo/device context for longitudinal comparisons remains reporting work; no music performance trend or clinical inference is presented.
+
+---
+
 # v0.6.0 validation
 
 Locally: 64 unit/component tests passed, including all four boards' dimensions and unique word paths, malformed save rejection, legacy garden resume, reverse/vertical selection, keyboard cancellation, real hints, offline-history exclusion and separate replay IDs/attempt metadata. Thirteen archive/remote tests passed with the age-only case explicitly skipped locally. TypeScript, build and PWA checks passed.

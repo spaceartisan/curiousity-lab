@@ -1,5 +1,180 @@
 import { test, expect } from "@playwright/test";
 import { searchPacks, findWordPaths } from "../src/content/words";
+test("music exercises replay separately and keep rhythm progress offline", async ({
+  page,
+  context,
+}, info) => {
+  await page.goto("/curiousity-lab/play/");
+  await page
+    .getByRole("button", { name: "Keep activity history on this device" })
+    .click();
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await expect(
+    page.getByRole("checkbox", { name: "Sound", exact: true }),
+  ).not.toBeChecked();
+  await page.getByRole("button", { name: "Play C", exact: true }).click();
+  await page.getByRole("button", { name: "Play E", exact: true }).click();
+  await page
+    .getByRole("textbox", { name: "Melody name" })
+    .fill("Fictional test melody");
+  await page.getByRole("button", { name: "Complete the phrase" }).click();
+  await page.getByRole("button", { name: "Hint", exact: true }).click();
+  await page.getByRole("button", { name: "Play F", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Hint", exact: true }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "Note pattern", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Hint", exact: true }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "Another phrase" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Down one step" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Free piano", exact: true }).click();
+  await expect(page.getByRole("textbox", { name: "Melody name" })).toHaveValue(
+    "Fictional test melody",
+  );
+  await expect(page.getByText(/2 notes recorded/)).toBeVisible();
+  await page
+    .getByRole("button", { name: "Match the melody", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Another melody" }).click();
+  await page.getByRole("button", { name: "Staff", exact: true }).click();
+  await page.screenshot({
+    path: info.outputPath("music-melody-staff.png"),
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Choose pattern 1" }).click();
+  await expect(
+    page.getByRole("button", { name: "Choose pattern 2" }),
+  ).toBeEnabled();
+  await page.getByRole("button", { name: "Choose pattern 2" }).click();
+  await expect(
+    page.getByRole("button", { name: "Choose pattern 2" }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "Rhythm echo", exact: true }).click();
+  await page.getByRole("button", { name: "Another rhythm" }).click();
+  await expect(page.getByRole("heading", { name: "Two pairs" })).toBeVisible();
+  for (let i = 0; i < 2; i++)
+    await page.getByRole("button", { name: "Tap a beat" }).click();
+  await page.getByRole("button", { name: "Back to games" }).click();
+  await expect(
+    page.getByText("Saved on this device", { exact: true }),
+  ).toBeVisible();
+  await context.setOffline(true);
+  await page.reload();
+  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await expect(page.getByText("2 of 4 beats tapped.")).toBeVisible();
+  for (let i = 0; i < 2; i++)
+    await page.getByRole("button", { name: "Tap a beat" }).click();
+  await expect(page.getByRole("button", { name: "Tap a beat" })).toBeDisabled();
+  await page.getByRole("button", { name: "Slower", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Tap a beat" })).toBeDisabled();
+  await page.getByRole("button", { name: "Try again", exact: true }).click();
+  await expect(page.getByText("0 of 4 beats tapped.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Two pairs" })).toBeVisible();
+  await page
+    .getByRole("button", { name: "Extra flexible", exact: true })
+    .click();
+  await page.screenshot({
+    path: info.outputPath("music-rhythm-replay.png"),
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 320, height: 900 });
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "200%";
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    ),
+  ).toBe(false);
+  await page
+    .getByRole("button", { name: "Match the melody", exact: true })
+    .click();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    ),
+  ).toBe(false);
+  await page.getByRole("button", { name: "Free piano", exact: true }).click();
+  const key = await page
+    .getByRole("button", { name: "Play C", exact: true })
+    .boundingBox();
+  expect(key!.width).toBeGreaterThanOrEqual(48);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    ),
+  ).toBe(false);
+});
+test("music audio starts only after a gesture and Stop or Sound off cancels scheduled tones", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const state = { contexts: 0, starts: 0, stops: 0 };
+    (window as unknown as { musicAudio: typeof state }).musicAudio = state;
+    const Native = window.AudioContext;
+    window.AudioContext = class extends Native {
+      constructor() {
+        super();
+        state.contexts++;
+      }
+      createOscillator() {
+        const voice = super.createOscillator(),
+          start = voice.start.bind(voice),
+          stop = voice.stop.bind(voice);
+        voice.start = (when?: number) => {
+          state.starts++;
+          start(when);
+        };
+        voice.stop = (when?: number) => {
+          state.stops++;
+          stop(when);
+        };
+        return voice;
+      }
+    };
+  });
+  const audio = () =>
+    page.evaluate(
+      () =>
+        (
+          window as unknown as {
+            musicAudio: { contexts: number; starts: number; stops: number };
+          }
+        ).musicAudio,
+    );
+  await page.goto("/curiousity-lab/play/");
+  await page
+    .getByRole("button", { name: "Play without activity history" })
+    .click();
+  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page
+    .getByRole("button", { name: "Match the melody", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Play / replay" }).click();
+  expect((await audio()).contexts).toBe(0);
+  await page.getByRole("checkbox", { name: "Sound", exact: true }).click();
+  expect((await audio()).contexts).toBe(0);
+  await page.getByRole("button", { name: "Play / replay" }).click();
+  await expect.poll(async () => (await audio()).starts).toBe(4);
+  const before = (await audio()).stops;
+  await page.getByRole("button", { name: "Stop sound" }).click();
+  expect((await audio()).stops).toBeGreaterThan(before);
+  await page.getByRole("button", { name: "Play / replay" }).click();
+  await expect.poll(async () => (await audio()).starts).toBe(8);
+  const playing = (await audio()).stops;
+  await page.getByRole("checkbox", { name: "Sound", exact: true }).click();
+  expect((await audio()).stops).toBeGreaterThan(playing);
+  await page.getByRole("button", { name: "Free piano", exact: true }).click();
+  await page.getByRole("button", { name: "Play C", exact: true }).click();
+  expect((await audio()).starts).toBe(8);
+});
 test("word search boards preserve highlights offline and support keyboard, replay and large text", async ({
   page,
   context,
