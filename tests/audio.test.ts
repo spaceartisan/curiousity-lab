@@ -9,6 +9,7 @@ function audioStub(resume = async () => {}) {
     frequency: { value: number };
   }[] = [];
   const constructor = vi.fn();
+  const gains: { setTargetAtTime: ReturnType<typeof vi.fn> }[] = [];
   class FakeAudioContext {
     currentTime = 10;
     destination = {};
@@ -30,11 +31,15 @@ function audioStub(resume = async () => {}) {
       return voice;
     }
     createGain() {
+      const target = vi.fn();
+      gains.push({ setTargetAtTime: target });
       return {
         gain: {
           setValueAtTime: vi.fn(),
           linearRampToValueAtTime: vi.fn(),
           exponentialRampToValueAtTime: vi.fn(),
+          cancelScheduledValues: vi.fn(),
+          setTargetAtTime: target,
         },
         connect: vi.fn(),
         disconnect: vi.fn(),
@@ -42,12 +47,13 @@ function audioStub(resume = async () => {}) {
     }
   }
   vi.stubGlobal("AudioContext", FakeAudioContext);
-  return { voices, constructor };
+  return { voices, constructor, gains };
 }
 it("audio schedules slower nonuniform rhythm offsets and zero volume creates no audio context", async () => {
   vi.resetModules();
-  const { voices, constructor } = audioStub();
-  const { tone, playNotes, stopAudio } = await import("../src/games/audio");
+  const { voices, constructor, gains } = audioStub();
+  const { tone, playNotes, stopAudio, setAudioVolume } =
+    await import("../src/games/audio");
   await tone(0, 0);
   expect(constructor).not.toHaveBeenCalled();
   await playNotes([0, 0, 0, 0], 0.25, 0.95, [0, 1, 3, 4]);
@@ -55,6 +61,10 @@ it("audio schedules slower nonuniform rhythm offsets and zero volume creates no 
     10, 10.95, 12.85, 13.8,
   ]);
   expect(voices[0].frequency.value).toBeCloseTo(261.625565, 5);
+  setAudioVolume(0.73);
+  expect(gains[0].setTargetAtTime).toHaveBeenLastCalledWith(0.73, 10, 0.02);
+  setAudioVolume(0);
+  expect(gains[0].setTargetAtTime).toHaveBeenLastCalledWith(0, 10, 0.02);
   stopAudio();
   expect(voices.every((v) => v.stop.mock.calls.length === 2)).toBe(true);
 });

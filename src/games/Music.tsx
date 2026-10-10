@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { notes, playNotes, tone, stopAudio } from "./audio";
+import { notes, playNotes, tone, stopAudio, setAudioVolume } from "./audio";
 import {
   phraseExercises,
   melodyExercises,
@@ -215,6 +215,9 @@ export function Music({
   useEffect(() => {
     if (!sound) stopAudio();
   }, [sound]);
+  useEffect(() => {
+    setAudioVolume(volume);
+  }, [volume]);
   const target =
     d.mode === "piano"
       ? d.notes

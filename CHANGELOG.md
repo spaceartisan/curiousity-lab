@@ -1,7 +1,7 @@
 # v0.7.0
 
 - Expanded Music Studio to four original phrase exercises, four melody comparisons and three rhythm patterns with stable puzzle IDs and content versions.
-- Added staff/note-pattern/by-ear views, adjustable playback pace, in-game sound/volume controls, candidate previews, actual-position phrase hints and explicit repeat/new-exercise controls.
+- Added staff/note-pattern/by-ear views, adjustable playback pace, in-game sound and live playback volume controls, candidate previews, actual-position phrase hints and explicit repeat/new-exercise controls.
 - Fixed rhythm replay to create a new attempt; persisted beat-count progress without saving raw tap times. Relative-spacing feedback has gentle/extra-flexible options and no score or failure outcome.
 - Preserved legacy music saves and piano recordings across mode changes. Display/pace changes do not restart a completed attempt. Added audio-unlock cancellation, zero-volume silence, reduced-motion visual playback and phone-size keyboard targets.
 

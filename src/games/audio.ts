@@ -1,17 +1,39 @@
 let context: AudioContext | undefined;
+let master: GainNode | undefined;
 let audioEpoch = 0;
 const voices = new Set<OscillatorNode>();
 export const notes = ["C", "D", "E", "F", "G", "A", "B", "C"];
 export const midi = [60, 62, 64, 65, 67, 69, 71, 72];
+export function setAudioVolume(volume: number) {
+  if (!context || !master) return;
+  master.gain.cancelScheduledValues(context.currentTime);
+  master.gain.setTargetAtTime(
+    Math.max(0, Math.min(1, volume)),
+    context.currentTime,
+    0.02,
+  );
+}
 export async function tone(
   note: number,
   volume: number,
   duration = 0.45,
   delay = 0,
 ) {
-  if (volume <= 0) return;
+  if (volume <= 0) {
+    setAudioVolume(0);
+    return;
+  }
   const currentEpoch = audioEpoch;
   context ??= new AudioContext();
+  if (!master) {
+    master = context.createGain();
+    master.gain.setValueAtTime(
+      Math.max(0, Math.min(1, volume)),
+      context.currentTime,
+    );
+    master.connect(context.destination);
+  }
+  setAudioVolume(volume);
   await context.resume();
   if (currentEpoch !== audioEpoch) return;
   const oscillator = context.createOscillator(),
@@ -20,13 +42,10 @@ export async function tone(
   oscillator.type = "triangle";
   oscillator.frequency.value = 440 * 2 ** ((midi[note] - 69) / 12);
   gain.gain.setValueAtTime(0, when);
-  gain.gain.linearRampToValueAtTime(
-    Math.max(0.001, volume * 0.35),
-    when + 0.015,
-  );
+  gain.gain.linearRampToValueAtTime(0.35, when + 0.015);
   gain.gain.exponentialRampToValueAtTime(0.001, when + duration);
   oscillator.connect(gain);
-  gain.connect(context.destination);
+  gain.connect(master);
   oscillator.start(when);
   oscillator.stop(when + duration + 0.05);
   voices.add(oscillator);
