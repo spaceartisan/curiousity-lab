@@ -194,8 +194,8 @@ function inventory(records) {
     }
   return {
     documentCount: records.length,
-    collections,
-    schemaVersions,
+    collections: Object.fromEntries(Object.entries(collections)),
+    schemaVersions: Object.fromEntries(Object.entries(schemaVersions)),
     appVersions: [...appVersions].sort(),
     contentVersions: [...contentVersions].sort(),
   };

@@ -50,6 +50,7 @@ const fixture = () =>
   );
 test("canonical archive preserves typed values and validates complete inventory", () => {
   const archive = unpackArchive(packArchive(fixture()));
+  assert.deepEqual(archive, fixture());
   assert.equal(archive.manifest.documentCount, 1);
   assert.deepEqual(archive.manifest.collections, { synthetic: 1 });
   const data = decode(archive.records[0].data);
