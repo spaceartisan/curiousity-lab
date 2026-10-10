@@ -6,6 +6,8 @@ CI gates deployment on 112 unit/component tests, fourteen archive/remote checks 
 
 Solving-technique proofs are game-content verification, not human difficulty equivalence or medical measurements. Both explanation and fill are deliberate help requests; history-off keeps their metrics at zero. No production activity sharing, Firebase permissions, backup credentials or family records change. Actual device audio/accessibility, independent content review, advanced technique/preference tiers, private sync/reporting and production launch gates remain.
 
+The initial browser run passed the prior 38 scenarios and reached the new enlarged-control check, where an ambiguous option string matched a displayed row/column number rather than its zero-based value. The scenario now specifies option values explicitly; the final workflow must pass before deployment is reported complete.
+
 ---
 
 # v0.10.0 validation

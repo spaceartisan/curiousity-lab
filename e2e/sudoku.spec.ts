@@ -125,10 +125,10 @@ test("hidden-single Sudoku explains, saves notes, undoes and replays offline wit
   });
   await page
     .getByRole("combobox", { name: "Row", exact: true })
-    .selectOption(String(Math.floor(step.index / 9)));
+    .selectOption({ value: String(Math.floor(step.index / 9)) });
   await page
     .getByRole("combobox", { name: "Column", exact: true })
-    .selectOption(String(step.index % 9));
+    .selectOption({ value: String(step.index % 9) });
   await expect(page.locator(".selected-square")).toContainText(
     `Row ${Math.floor(step.index / 9) + 1}, column ${(step.index % 9) + 1}: empty`,
   );
@@ -188,7 +188,7 @@ test("hidden-single Sudoku explains, saves notes, undoes and replays offline wit
   page.once("dialog", (dialog) => dialog.accept());
   await page
     .getByRole("combobox", { name: "Grid", exact: true })
-    .selectOption("4");
+    .selectOption({ value: "4" });
   await expect(
     page.getByRole("group", { name: "4 by 4 Sudoku" }),
   ).toBeVisible();
