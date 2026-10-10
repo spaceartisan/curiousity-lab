@@ -6,6 +6,8 @@ CI gates deployment on 100 unit/component tests, fourteen archive/remote tests w
 
 Last-viewed metadata records an explicit local notebook reopen, never cognitive ability, emotional response or inferred microscope examination. Search/filter choices are not saved or uploaded. No private fixture or production backup/permission change is used. Chromium checks do not verify real-device audio quality, VoiceOver, independent scientific/content review or the remaining full-document launch gates.
 
+Browser review first exposed an exact-label selector mismatch; ordering now has an explicit accessible name. The next run passed all 175 checks, but visual review found excessive card padding at doubled text size. Notebook cards and their buttons now limit horizontal padding by viewport width; the browser scenario also measures whether complete heading and button words fit their available text width. Final deployment requires that follow-up workflow to pass.
+
 ---
 
 # v0.9.0 validation

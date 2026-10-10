@@ -134,6 +134,19 @@ test("notebook collections filter paginate and revisit legacy entries offline", 
   await page.evaluate(() => {
     document.documentElement.style.fontSize = "200%";
   });
+  for (const [element, word] of [
+    [recent.getByRole("heading"), "Fictional"],
+    [recent.getByRole("button", { name: "Revisit specimen" }), "specimen"],
+  ] as const) {
+    expect(await element.evaluate((node, longestWord) => {
+      const style = getComputedStyle(node);
+      const canvas = document.createElement("canvas");
+      const drawing = canvas.getContext("2d")!;
+      drawing.font = style.font;
+      const available = node.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      return available >= drawing.measureText(longestWord).width;
+    }, word)).toBe(true);
+  }
   await page.screenshot({
     path: info.outputPath("notebook-large-text.png"),
     fullPage: true,

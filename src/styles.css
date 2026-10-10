@@ -1308,6 +1308,12 @@ summary {
   max-width: 100%;
   overflow-wrap: anywhere;
 }
+.collections .creation {
+  padding-inline: min(1.5rem, 5vw);
+}
+.collections .creation button {
+  padding-inline: min(1rem, 3vw);
+}
 .collection-tools {
   display: flex;
   flex-wrap: wrap;
