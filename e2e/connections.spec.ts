@@ -94,6 +94,14 @@ test("word connections help undo and replay work offline across all eight packs"
   expect(layout.scrollWidth, JSON.stringify(layout)).toBeLessThanOrEqual(
     layout.width,
   );
+  const firstWords = await page
+    .getByRole("group", { name: "Connection words" })
+    .getByRole("button")
+    .all();
+  const firstBox = await firstWords[0].boundingBox();
+  const secondBox = await firstWords[1].boundingBox();
+  expect(Math.abs(firstBox!.x - secondBox!.x)).toBeLessThan(1);
+  expect(secondBox!.y).toBeGreaterThan(firstBox!.y);
   for (const button of await page
     .getByRole("group", { name: "Connection words" })
     .getByRole("button")

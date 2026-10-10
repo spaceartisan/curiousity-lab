@@ -1291,3 +1291,10 @@ summary {
   background: var(--hover);
   border-radius: 10px;
 }
+/* Keep up to four columns, but give enlarged words enough reading width. */
+.connections-workspace .word-grid {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, max(12ch, calc((100% - 1.95rem) / 4))), 1fr)
+  );
+}
