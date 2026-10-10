@@ -1,19 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import type { Role } from "../storage/contracts";
-import { resolveWebConfig, type Connection } from "./contracts";
+import type { Connection } from "./contracts";
+import { useFamilyConnection, type FamilyContext } from "./useFamilyConnection";
 import {
   incomingInvitation,
   type Invitation,
   type FamilyDevice,
   type ParentRole,
 } from "./invitations";
-import deployment from "../../firebase/web-config.json";
 import type { FamilyClient } from "./client";
 
-export function FamilySetup({ role }: { role: Role }) {
-  const [connection, setConnection] = useState<Connection>({
-    status: "not-configured",
-  });
+export function FamilySetup({
+  role,
+  context,
+}: {
+  role: Role;
+  context?: FamilyContext;
+}) {
+  const ownContext = useFamilyConnection(role, !context);
+  const { connection, client: adapter } = context || ownContext;
   const [trusted, setTrusted] = useState(true);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -22,47 +27,15 @@ export function FamilySetup({ role }: { role: Role }) {
   const [devices, setDevices] = useState<FamilyDevice[]>([]);
   const client = useRef<FamilyClient | null>(null);
   const owner = role === "insights";
-  useEffect(() => {
-    if (connection.status !== "checking") return;
-    const timeout = setTimeout(
-      () => setConnection({ status: "unavailable" }),
-      15000,
-    );
-    return () => clearTimeout(timeout);
-  }, [connection.status]);
-  useEffect(() => {
-    let active = true,
-      stop = () => {};
-    try {
-      const config = resolveWebConfig(
-        import.meta.env.VITE_FIREBASE_CONFIG,
-        deployment,
-      );
-      if (!config) return;
-      setConnection({ status: "checking" });
-      import("./client")
-        .then(({ familyClient }) => {
-          if (!active) return;
-          client.current = familyClient(config, role);
-          stop = client.current.watch((value) => {
-            if (active) setConnection(value);
-          });
-        })
-        .catch(() => {
-          if (active) setConnection({ status: "unavailable" });
-        });
-    } catch {
-      setConnection({ status: "unavailable" });
-    }
-    return () => {
-      active = false;
-      stop();
-      client.current = null;
-    };
-  }, [role]);
+  client.current = adapter;
+  const accountKey = "uid" in connection ? connection.uid : connection.status;
+  const activeAccount = useRef(accountKey);
+  activeAccount.current = accountKey;
   const familyId =
     connection.status === "approved" ? connection.membership.familyId : "";
   useEffect(() => {
+    setBusy(false);
+    setMessage("");
     setDevices([]);
     setInvite(null);
     if (!owner || !familyId || !client.current) return;
@@ -71,13 +44,15 @@ export function FamilySetup({ role }: { role: Role }) {
         "Device connections could not be checked. Try again when online.",
       ),
     );
-  }, [owner, familyId]);
+  }, [owner, familyId, accountKey]);
   async function action(task: () => Promise<void>, fallback: string) {
+    const captured = accountKey;
     setBusy(true);
     setMessage("");
     try {
       await task();
     } catch (error) {
+      if (activeAccount.current !== captured) return;
       const reason = error instanceof Error ? error.message : "";
       setMessage(
         /^(Paste the complete|This code is for|Disconnect this account)/.test(
@@ -87,15 +62,16 @@ export function FamilySetup({ role }: { role: Role }) {
           : fallback,
       );
     } finally {
-      setBusy(false);
+      if (activeAccount.current === captured) setBusy(false);
     }
   }
   async function issue(parentRole: ParentRole) {
     if (!client.current) return;
-    await action(
-      async () => setInvite(await client.current!.createInvitation(parentRole)),
-      "The invitation could not be created. Check your connection and the administrator setup guide.",
-    );
+    const captured = accountKey;
+    await action(async () => {
+      const issued = await client.current!.createInvitation(parentRole);
+      if (activeAccount.current === captured) setInvite(issued);
+    }, "The invitation could not be created. Check your connection and the administrator setup guide.");
   }
   const descriptions: Record<Connection["status"], string> = {
     "not-configured":
@@ -279,7 +255,6 @@ export function FamilySetup({ role }: { role: Role }) {
           disabled={busy}
           onClick={() =>
             void action(async () => {
-              setConnection({ status: "checking" });
               setInvite(null);
               await client.current!.signOut();
             }, "Disconnect did not finish. Please try again.")

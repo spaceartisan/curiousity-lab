@@ -192,3 +192,147 @@ test("Insights owner has Google setup without a parent code prompt", async ({
     fullPage: true,
   });
 });
+
+// Synthetic transport only inside this browser test. Production has no fixture switch.
+async function mockConnectedFamily(page: import("@playwright/test").Page) {
+  await page.route("**/assets/client-*.js", async (route) => {
+    await route.fulfill({
+      contentType: "text/javascript",
+      body: `
+      export function familyClient(config, role) {
+        return { watch(notify) { notify({ status: "approved", uid: "synthetic-player", membership: { schemaVersion: 1, familyId: "synthetic-family", subjectId: "synthetic-subject", role, status: "active" } }); return () => {}; }, watchDevices(id, notify) { notify([]); return () => {}; } };
+      }
+    `,
+    });
+  });
+}
+for (const role of ["play", "companion", "insights"]) {
+  test(`${role} shows the connected home without claiming shared activity`, async ({
+    page,
+  }, info) => {
+    await mockConnectedFamily(page);
+    await page.goto(`/curiousity-lab/${role}/`);
+    if (role === "play")
+      await expect(
+        page.getByText(/Connected to your family. Your games stay/),
+      ).toBeVisible();
+    else {
+      await expect(
+        page.getByRole("heading", { name: "Connected to your family" }),
+      ).toBeVisible();
+      await expect(
+        page.getByText(/Activity sharing has not started/),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: "Manage family connection" }),
+      ).toBeVisible();
+    }
+    await page.screenshot({
+      path: info.outputPath(`${role}-connected-synthetic.png`),
+      fullPage: true,
+    });
+  });
+}
+test("connected Play saves explicit sharing preparation locally across reload and deletes copies", async ({
+  page,
+}, info) => {
+  await mockConnectedFamily(page);
+  await page.goto("/curiousity-lab/play/");
+  await expect(
+    page.getByText(/Connected to your family. Your games stay/),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Saved on this device", { exact: true }),
+  ).toBeVisible();
+  await page.evaluate(async () => {
+    const request = indexedDB.open("curiosity-lab:v1:play:guest", 1);
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    const tx = db.transaction("state", "readwrite");
+    tx.objectStore("state").put(
+      {
+        schemaVersion: 1,
+        installationRole: "play",
+        authenticatedUid: null,
+        preferences: {
+          theme: "light",
+          textSize: "normal",
+          sound: false,
+          volume: 0.25,
+          history: true,
+          welcomeDone: true,
+        },
+        drafts: {},
+        creations: [],
+        sessions: [
+          {
+            id: "synthetic-session",
+            schemaVersion: 1,
+            appVersion: "0.4.0",
+            contentVersion: "1",
+            game: "sudoku",
+            puzzleId: "synthetic-puzzle",
+            startedAt: "2020-01-01T00:00:00.000Z",
+            endedAt: "2020-01-01T00:01:00.000Z",
+            activeMs: 60000,
+            hints: 1,
+            undos: 0,
+            outcome: "completed",
+            mode: "4x4:Relaxed",
+            attempt: 1,
+            source: "local-guest",
+          },
+        ],
+      },
+      "current",
+    );
+    await new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+  });
+  await page.reload();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await expect(
+    page.getByText("0 prepared records on this device · Not uploaded"),
+  ).toBeVisible();
+  await page.getByLabel(/This is my personal device; keep/).check();
+  await page.getByLabel(/Insights: activity/).check();
+  await page.getByLabel(/Companion: activity names/).check();
+  await page.getByRole("button", { name: "Save preparation choices" }).click();
+  await expect(
+    page.getByText("Choices saved on this device. Nothing was uploaded."),
+  ).toBeVisible();
+  await page
+    .getByText("Select older activity explicitly", { exact: true })
+    .click();
+  await page.getByLabel(/sudoku · 4x4:Relaxed/).check();
+  await page.getByRole("button", { name: "Prepare selected activity" }).click();
+  await expect(
+    page.getByText("2 prepared records on this device · Not uploaded"),
+  ).toBeVisible();
+  await page.reload();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await expect(
+    page.getByText("2 prepared records on this device · Not uploaded"),
+  ).toBeVisible();
+  await page
+    .locator(".sharing-preparation")
+    .screenshot({ path: info.outputPath("sharing-preparation-synthetic.png") });
+  await page
+    .getByRole("button", {
+      name: "Stop preparation and remove prepared copies",
+    })
+    .click();
+  await expect(
+    page.getByText("0 prepared records on this device · Not uploaded"),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > innerWidth,
+    ),
+  ).toBe(false);
+});

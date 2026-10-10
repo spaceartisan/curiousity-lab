@@ -1,3 +1,13 @@
+# v0.4.0 validation
+
+48 unit/component tests passed locally, including ten new preparation cases for account isolation, historical selection, idempotent retries, recipient minimization, deletion and approval loss. Strict TypeScript, production build and static PWA validation passed.
+
+CI gates deployment on all unit checks, 22 Firestore emulator scenarios and 22 desktop/phone browser scenarios. New browser cases use a synthetic transport supplied solely by Playwright interception; production has no test identity switch. They cover connected home states and local preparation persistence/deletion. Screenshots with `synthetic` in their names contain fictional test data, not live family records. Check the current commit's workflow for deployment and browser results.
+
+The owner reports all three devices are connected. This release requires no new Firebase rules: every remote activity read/write remains denied. Local preparation is optional and never authorizes a future upload. Existing history requires explicit individual selection. Automatic backup, decryption/restore, private uploads and dashboards remain launch gates. Preparation records are separate from the guest JSON export; that export retains its schema-v1 format and does not transfer account choices or prepared copies. Activity recorded while approval is unavailable stays local and can be selected explicitly later.
+
+---
+
 # v0.3.0 validation
 
 ## Current checks

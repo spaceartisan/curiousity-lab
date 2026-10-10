@@ -27,6 +27,10 @@ import { stopAudio, playNotes } from "./games/audio";
 import { specimens } from "./content/specimens";
 import { incomingInvitation } from "./family/invitations";
 import { FamilySetup } from "./family/FamilySetup";
+import { useFamilyConnection } from "./family/useFamilyConnection";
+import { SharingPreparation } from "./sharing/SharingPreparation";
+import { usePreparation } from "./sharing/usePreparation";
+import { clearAllPreparations } from "./sharing/local";
 import "./styles.css";
 const base = import.meta.env.BASE_URL;
 const titles: Record<GameKind, string> = {
@@ -203,6 +207,8 @@ export function InstallPage() {
   );
 }
 export function App({ appRole }: { appRole: Role }) {
+  const family = useFamilyConnection(appRole);
+  const connected = family.connection.status === "approved";
   const [state, setState] = useState<LocalState | null>(null),
     [error, setError] = useState(""),
     [saved, setSaved] = useState(false),
@@ -213,6 +219,7 @@ export function App({ appRole }: { appRole: Role }) {
     [demo, setDemo] = useState(false),
     [review, setReview] = useState<LocalState | null>(null),
     [updateReady, setUpdateReady] = useState<ServiceWorker | null>(null);
+  const preparationError = usePreparation(family, state);
   const stateRef = useRef(state),
     screenRef = useRef(screen),
     clock = useRef(new ActivityClock(performance.now())),
@@ -605,13 +612,20 @@ export function App({ appRole }: { appRole: Role }) {
                 <Icon name="lab" />
               </div>
             </section>
+            {preparationError && <p role="alert">{preparationError}</p>}
+            {connected && (
+              <div className="connection-note" role="status">
+                Connected to your family. Your games stay on this device.
+                Optional sharing choices are in Settings.
+              </div>
+            )}
             {!prefs.welcomeDone && (
               <div className="welcome-note">
                 <strong>Make yourself at home.</strong>
                 <p>
                   Your puzzles and creations save on this device. Activity
                   history is optional, stays here, and can be switched off in
-                  Settings. Family sharing is not connected yet.
+                  Settings. Connecting your family does not start sharing.
                 </p>
                 <div className="actions">
                   <button
@@ -734,16 +748,28 @@ export function App({ appRole }: { appRole: Role }) {
             </section>
             <div className="empty-family">
               <Icon name={appRole} />
-              <h2>Family sharing is not connected</h2>
+              <h2>
+                {connected
+                  ? "Connected to your family"
+                  : family.connection.status === "checking"
+                    ? "Checking your family connection…"
+                    : family.connection.status === "revoked"
+                      ? "This device’s connection was removed"
+                      : family.connection.status === "unavailable"
+                        ? "Family connection could not be checked"
+                        : "Family sharing is not connected"}
+              </h2>
               <button className="primary" onClick={() => setScreen("connect")}>
-                {appRole === "insights"
-                  ? "Connect your family"
-                  : "Enter a connection code"}
+                {connected
+                  ? "Manage family connection"
+                  : appRole === "insights"
+                    ? "Connect your family"
+                    : "Enter a connection code"}
               </button>
               <p>
-                This first release keeps Play data on its own device. No family
-                records are fetched here. Secure sign-in, approved membership,
-                and consent come in a later pass.
+                {connected
+                  ? "Your connection is ready. Activity sharing has not started, so there are no shared records to show yet."
+                  : "Connect once to join your family. Activity stays on Play’s device until sharing is separately enabled."}
               </p>
               <button onClick={() => setDemo(!demo)}>
                 {demo ? "Close fictional example" : "View a fictional example"}
@@ -908,7 +934,7 @@ export function App({ appRole }: { appRole: Role }) {
                 ? "Connect your family"
                 : "Connect your app"}
             </h1>
-            <FamilySetup role={appRole} />
+            <FamilySetup role={appRole} context={family} />
           </div>
         )}
         {screen === "settings" && (
@@ -1004,19 +1030,30 @@ export function App({ appRole }: { appRole: Role }) {
                   working.
                 </p>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     if (
                       window.confirm(
-                        "Clear recorded activity history? Saved puzzles and creations will remain.",
+                        "Clear recorded activity history and prepared copies? Saved puzzles and creations will remain.",
                       )
-                    )
-                      setState((s) => (s ? { ...s, sessions: [] } : s));
+                    ) {
+                      try {
+                        if (appRole === "play") await clearAllPreparations();
+                        setState((s) => (s ? { ...s, sessions: [] } : s));
+                      } catch {
+                        setError(
+                          "Prepared copies could not be cleared. Please try again; your history has not been removed.",
+                        );
+                      }
+                    }
                   }}
                 >
                   Clear activity history
                 </button>
               </section>
-              <FamilySetup role={appRole} />
+              <FamilySetup role={appRole} context={family} />
+              {appRole === "play" && (
+                <SharingPreparation context={family} state={state} />
+              )}
               <section>
                 <h2>Backup & recovery</h2>
                 <p>
@@ -1062,9 +1099,16 @@ export function App({ appRole }: { appRole: Role }) {
                         "Remove all local data for this app, including progress, creations, and history? Download a backup first if you want to keep it.",
                       )
                     ) {
-                      await clearState(appRole);
-                      setState(emptyState(appRole));
-                      setScreen("home");
+                      try {
+                        if (appRole === "play") await clearAllPreparations();
+                        await clearState(appRole);
+                        setState(emptyState(appRole));
+                        setScreen("home");
+                      } catch {
+                        setError(
+                          "Local data could not be fully removed. Please try again.",
+                        );
+                      }
                     }
                   }}
                 >
@@ -1082,7 +1126,9 @@ export function App({ appRole }: { appRole: Role }) {
                   Each role has its own icon and launch link. Installation on
                   the family’s actual devices still needs verification.
                 </p>
-                <p className="muted">Version {APP_VERSION} · Local prototype</p>
+                <p className="muted">
+                  Version {APP_VERSION} · Sharing preparation
+                </p>
               </section>
             </div>
           </>

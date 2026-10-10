@@ -1069,3 +1069,22 @@ summary {
   background: var(--paper);
   border-radius: 1.25rem;
 }
+
+.connection-note {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+}
+.sharing-preparation .check-label {
+  margin: 1rem 0;
+  align-items: flex-start;
+}
+.history-selection {
+  max-height: 20rem;
+  overflow-y: auto;
+  margin: 1rem 0;
+}
+.sharing-preparation details {
+  margin: 1.5rem 0;
+}
