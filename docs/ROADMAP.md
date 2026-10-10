@@ -9,7 +9,7 @@ This is intentionally the start of the staged design. Demo dashboards are not co
 ## Next: finish Phase 1 and usability review
 
 - Review screenshots and use the app on actual phone/tablet devices; verify 200% text/zoom, VoiceOver/keyboard paths, touch targets, separate home-screen installs, and Web Audio on iOS/Android.
-- Expand and independently review the image pack, with per-image license/provenance and optional hematology images. Refine workbench interactions with player feedback.
+- Expand and independently review the image pack, with per-image license/provenance and optional hematology images. Optional specimen cards, direct exploration, comparison and per-slide note continuity arrived in v0.8.0; refine the workbench with player feedback and add a dedicated notebook browser/last-viewed continuity.
 - Review and grow word/music content with player feedback. Word-search variety arrived in v0.6.0; music exercise variety, real rhythm attempts, score/pattern/ear views and in-game guidance arrived in v0.7.0. Actual-device audio/accessibility review and independent music-content review remain.
 - Calibrate Sudoku solving-technique tiers beyond naked singles before offering advanced difficulty. Preserve deterministic content versions and migrations.
 - Expand undo/skip/help consistency and make conflict/backup recovery explicit; test browser crash and storage-quota failure paths.
@@ -37,6 +37,10 @@ Four fixed, versioned boards preserve the original garden save while adding row/
 ## v0.7.0 — Music exercise variety and truthful replay
 
 Four original phrase exercises, four melody comparisons and three rhythm patterns replace the single-example flows while retaining free piano and old saves. In-game sound/volume, staff/pattern/ear views, slower playback and candidate previews support different ways to play. Rhythm progress survives reload; repeat/new buttons create separate attempt IDs. Ephemeral relative-spacing feedback adapts to player pace and optional extra flexibility; it produces no timing score, failure or persistent tap trace. Changing views/pace does not restart a completed attempt. Piano recordings survive switching activities. Actual iOS/Android audio, VoiceOver and independent notation/content review remain unverified. This does not complete the architecture document; laboratory expansion, private sync/reporting and production launch gates remain.
+
+## v0.8.0 — Optional specimen-to-notebook journey
+
+Two original fictional specimen cards frame the existing real teaching images, with explicit source/sample separation. The player can enter the microscope directly, skip/revisit any stage, compare separate full-source images with attribution, choose “Not sure” and save a blank or annotated notebook page. Per-slide notes/view settings survive switching/reload. Finished view changes do not create another attempt; explicit repeats do, without limits. Notebook revisits now bind the actual specimen ID and preserve legacy source identity. New local records distinguish workbench/free exploration and workflow content versions. The two-image starter, absent hematology, dedicated notebook continuity, independent scientific review, real device accessibility and private sync/reporting remain unfinished.
 
 ## Phase 2b — Optional approved family sync
 

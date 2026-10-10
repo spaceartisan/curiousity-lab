@@ -1,3 +1,11 @@
+# v0.8.0
+
+- Added two authored, versioned fictional laboratory specimen cards, direct microscope exploration and optional, skippable specimen/observation/comparison stages. Stories explicitly distinguish their fictional sample from the real CDC teaching image.
+- Added a responsive comparison of separate credited source images; no claim of matching fields, calibrated magnification, identification or diagnosis.
+- Preserved separate notes, observations and view settings when switching slides and reloading. Added “Not sure”, repeat exploration and one notebook save per finished attempt; changes to presentation do not create new attempts.
+- Fixed notebook revisit IDs to match the actual asset, preserved legacy IDs/content versions, and attached workflow/free-exploration context to new notebook entries and session modes. Existing exports and restores remain schema-v1 compatible.
+- The collection remains two images. Hematology, independent specialist review, family activity uploads/reporting and real-device launch checks are unfinished.
+
 # v0.7.0
 
 - Expanded Music Studio to four original phrase exercises, four melody comparisons and three rhythm patterns with stable puzzle IDs and content versions.

@@ -1,5 +1,5 @@
 import { validateGame } from "./validate-game";
-export const APP_VERSION = "0.7.0";
+export const APP_VERSION = "0.8.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {
@@ -42,6 +42,9 @@ export interface Creation {
   text?: string;
   zoom?: number;
   pan?: number[];
+  labExperience?: "workbench" | "explorer";
+  labWorkflowVersion?: 1;
+  labDomain?: "microbiology";
 }
 export interface Preferences {
   theme: "light" | "dark";
@@ -152,6 +155,10 @@ export function validateState(
         (!Array.isArray(c.pan) ||
           c.pan.length !== 2 ||
           c.pan.some((n) => !Number.isFinite(n) || Math.abs(n) > 35))) ||
+      (c.labExperience !== undefined &&
+        !["workbench", "explorer"].includes(c.labExperience)) ||
+      (c.labWorkflowVersion !== undefined && c.labWorkflowVersion !== 1) ||
+      (c.labDomain !== undefined && c.labDomain !== "microbiology") ||
       !["melody", "notebook"].includes(c.kind) ||
       (c.notes &&
         (!Array.isArray(c.notes) ||

@@ -1211,3 +1211,44 @@ summary {
   padding: 0.5rem 0 1rem;
   border-bottom: 1px solid var(--line);
 }
+
+.lab-slide-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.lab-slide-card .specimen-card {
+  width: 100%;
+}
+.lab-shortcuts {
+  margin-bottom: 1.2rem;
+}
+.lab-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.lab-comparison article {
+  min-width: 0;
+}
+.lab-comparison img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.5;
+  object-fit: contain;
+  background: #111e1d;
+  border-radius: 12px;
+}
+.lab-comparison h3,
+.lab-case h3 {
+  overflow-wrap: anywhere;
+}
+.lab-comparison a {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .lab-comparison {
+    grid-template-columns: 1fr;
+  }
+}

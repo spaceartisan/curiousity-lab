@@ -1,5 +1,6 @@
 import { generateSudoku, validSudoku, type Size } from "../games/sudoku-engine";
 import { searchBoard, searchPacks } from "../content/words";
+import { specimens } from "../content/specimens";
 import { exerciseCount, type MusicMode } from "../content/music";
 const record = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
@@ -99,21 +100,39 @@ export function validateGame(kind: string, value: unknown): boolean {
         value.taps === undefined ||
         value.solved === (value.taps === 4))
     );
-  if (kind === "lab")
+  if (kind === "lab") {
+    const page = (v: unknown): boolean =>
+      record(v) &&
+      Number.isInteger(v.specimen) &&
+      Number(v.specimen) >= 0 &&
+      Number(v.specimen) < specimens.length &&
+      typeof v.zoom === "number" &&
+      Number.isFinite(v.zoom) &&
+      v.zoom >= 1 &&
+      v.zoom <= 3 &&
+      Array.isArray(v.pan) &&
+      v.pan.length === 2 &&
+      v.pan.every(
+        (x) => typeof x === "number" && Number.isFinite(x) && Math.abs(x) <= 35,
+      ) &&
+      strings(v.observations, 12) &&
+      typeof v.text === "string" &&
+      v.text.length <= 1000;
     return (
-      Number.isInteger(value.specimen) &&
-      Number(value.specimen) >= 0 &&
-      Number(value.specimen) < 2 &&
-      ["desk", "microscope", "observations"].includes(String(value.stage)) &&
-      typeof value.zoom === "number" &&
-      value.zoom >= 1 &&
-      value.zoom <= 3 &&
-      Array.isArray(value.pan) &&
-      value.pan.length === 2 &&
-      value.pan.every((x) => typeof x === "number" && Math.abs(x) <= 35) &&
-      strings(value.observations, 12) &&
-      typeof value.text === "string" &&
-      value.text.length <= 1000
+      page(value) &&
+      ["desk", "case", "microscope", "observations", "compare"].includes(
+        String(value.stage),
+      ) &&
+      (value.experience === undefined ||
+        ["workbench", "explorer"].includes(String(value.experience))) &&
+      (value.workflowRevision === undefined || value.workflowRevision === 1) &&
+      (value.pages === undefined ||
+        (Array.isArray(value.pages) &&
+          value.pages.length <= specimens.length &&
+          value.pages.every(page) &&
+          new Set(value.pages.map((p) => p.specimen)).size ===
+            value.pages.length))
     );
+  }
   return false;
 }

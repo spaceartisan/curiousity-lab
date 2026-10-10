@@ -26,6 +26,13 @@ import { Laboratory } from "./games/Laboratory";
 import { ActivityClock } from "./games/activity-clock";
 import { stopAudio, playNotes } from "./games/audio";
 import { specimens } from "./content/specimens";
+import {
+  labMode,
+  labPuzzle,
+  blankLabPage,
+  selectLabSlide,
+  type LabData,
+} from "./content/laboratory";
 import { incomingInvitation } from "./family/invitations";
 import { FamilySetup } from "./family/FamilySetup";
 import { useFamilyConnection } from "./family/useFamilyConnection";
@@ -64,6 +71,8 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
       : undefined;
   const oldMusic =
     previous?.game === "music" ? (previous.data as MusicData) : undefined;
+  const oldLab =
+    previous?.game === "lab" ? (previous.data as LabData) : undefined;
   const data =
     game === "sudoku"
       ? generateSudoku(oldSudoku?.size || 9, seed, oldSudoku?.tier || "Classic")
@@ -101,12 +110,11 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
                 flexibility: oldMusic?.flexibility ?? "gentle",
               }
             : {
-                specimen: 0,
-                stage: "desk",
-                zoom: 1,
-                pan: [0, 0],
-                observations: [],
-                text: "",
+                ...blankLabPage(samePuzzle && oldLab ? oldLab.specimen : 0),
+                stage: samePuzzle && oldLab ? "microscope" : "desk",
+                experience: oldLab?.experience ?? "workbench",
+                workflowRevision: 1,
+                pages: oldLab?.pages ?? [],
               };
   return {
     id: crypto.randomUUID(),
@@ -120,7 +128,7 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
             ? searchBoard((data as { pack: number }).pack).id
             : game === "music"
               ? musicPuzzle(data as MusicData)
-              : specimens[0].id,
+              : labPuzzle(data as LabData),
     startedAt: new Date().toISOString(),
     activeMs: 0,
     hints: 0,
@@ -130,7 +138,9 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
         ? `${oldSudoku?.size || 9}x${oldSudoku?.size || 9}:${oldSudoku?.tier || "Classic"}`
         : game === "music"
           ? (data as MusicData).mode
-          : "explore",
+          : game === "lab"
+            ? labMode(data as LabData)
+            : "explore",
     data,
   };
 }
@@ -152,7 +162,10 @@ function archive(
               ? "word-search-2"
               : draft.game === "music" && draft.puzzleId !== "music-studio-v1"
                 ? "music-exercises-1"
-                : "starter-1",
+                : draft.game === "lab" &&
+                    (draft.data as LabData).workflowRevision === 1
+                  ? "lab-workflow-1"
+                  : "starter-1",
           game: draft.game,
           puzzleId: draft.puzzleId,
           startedAt: draft.startedAt,
@@ -441,7 +454,7 @@ export function App({ appRole }: { appRole: Role }) {
             game === "sudoku"
               ? `sudoku-${(data as { size: number; seed: number }).size}-${(data as { seed: number }).seed}`
               : game === "lab"
-                ? specimens[(data as { specimen: number }).specimen].id
+                ? labPuzzle(data as LabData)
                 : game === "music"
                   ? musicPuzzle(data as MusicData)
                   : old.puzzleId,
@@ -1214,21 +1227,41 @@ export function App({ appRole }: { appRole: Role }) {
                             }
                             setState((s) => {
                               if (!s) return s;
-                              const d = newDraft("lab");
+                              const data: LabData = {
+                                specimen: index,
+                                stage: "microscope",
+                                zoom: c.zoom || 1,
+                                pan: c.pan || [0, 0],
+                                observations: c.observations || [],
+                                text: c.text || "",
+                                pages: s.drafts.lab
+                                  ? selectLabSlide(
+                                      s.drafts.lab.data as LabData,
+                                      index,
+                                      c.labExperience ?? "workbench",
+                                      "microscope",
+                                    ).pages
+                                  : [],
+                                ...(c.labWorkflowVersion === 1
+                                  ? {
+                                      workflowRevision: 1,
+                                      experience:
+                                        c.labExperience ?? "workbench",
+                                    }
+                                  : {}),
+                              };
+                              const next = s.drafts.lab
+                                ? archive(s, s.drafts.lab, "unfinished")
+                                : s;
                               return {
-                                ...s,
+                                ...next,
                                 drafts: {
-                                  ...s.drafts,
+                                  ...next.drafts,
                                   lab: {
-                                    ...d,
-                                    data: {
-                                      specimen: index,
-                                      stage: "microscope",
-                                      zoom: c.zoom || 1,
-                                      pan: c.pan || [0, 0],
-                                      observations: c.observations || [],
-                                      text: c.text || "",
-                                    },
+                                    ...newDraft("lab"),
+                                    data,
+                                    puzzleId: labPuzzle(data),
+                                    mode: labMode(data),
                                   },
                                 },
                               };

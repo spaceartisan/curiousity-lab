@@ -1,39 +1,94 @@
 import { useState } from "react";
 import { specimens } from "../content/specimens";
+import {
+  labWorkflows,
+  labMode,
+  selectLabSlide,
+  type LabData,
+  type LabStage,
+  type LabExperience,
+} from "../content/laboratory";
 import type { GameProps } from "./types";
-export interface LabData {
-  specimen: number;
-  stage: "desk" | "microscope" | "observations";
-  zoom: number;
-  pan: number[];
-  observations: string[];
-  text: string;
+export type { LabData } from "../content/laboratory";
+function ImageSource({ index }: { index: number }) {
+  const s = specimens[index];
+  return (
+    <details>
+      <summary>Image description & source</summary>
+      <p>{s.description}</p>
+      <p className="muted">
+        Digital zoom enlarges this image; it adds no new detail. No calibrated
+        scale is displayed.
+      </p>
+      <p>{s.credit}</p>
+      <a href={s.sourceUrl} target="_blank" rel="noreferrer">
+        CDC source and public-domain record
+      </a>
+    </details>
+  );
 }
-export function Laboratory({ draft, update, create, finish }: GameProps) {
+export function Laboratory({
+  draft,
+  update,
+  create,
+  finish,
+  repeat,
+}: GameProps) {
   const d = draft.data as LabData;
   const [message, setMessage] = useState("");
-  const s = specimens[d.specimen % specimens.length];
-  function set(p: Partial<LabData>) {
-    update({ ...d, ...p });
+  const s = specimens[d.specimen];
+  const workflow = labWorkflows[d.specimen];
+  const other = (d.specimen + 1) % specimens.length;
+  function set(p: Partial<LabData>, view = false) {
+    update({ ...d, ...p }, { view });
   }
-  function open(index: number) {
-    set({
-      specimen: index,
-      stage: "microscope",
-      zoom: 1,
-      pan: [0, 0],
-      observations: [],
-      text: "",
+  function stage(value: LabStage) {
+    set({ stage: value }, true);
+    setMessage("");
+  }
+  function open(
+    index: number,
+    experience: LabExperience = d.experience ?? "workbench",
+    target: LabStage = "microscope",
+  ) {
+    const data = selectLabSlide(d, index, experience, target);
+    update(data, {
+      mode: labMode(data),
+      view: index === d.specimen && labMode(data) === draft.mode,
     });
     setMessage("");
   }
   const pan = (dx: number, dy: number) =>
-    set({
-      pan: [
-        Math.max(-35, Math.min(35, d.pan[0] + dx)),
-        Math.max(-35, Math.min(35, d.pan[1] + dy)),
-      ],
+    set(
+      {
+        pan: [
+          Math.max(-35, Math.min(35, d.pan[0] + dx)),
+          Math.max(-35, Math.min(35, d.pan[1] + dy)),
+        ],
+      },
+      true,
+    );
+  function save() {
+    if (draft.finalized) return;
+    create({
+      kind: "notebook",
+      title: s.title,
+      specimenId: s.id,
+      observations: d.observations,
+      text: d.text,
+      zoom: d.zoom,
+      pan: d.pan,
+      ...(d.workflowRevision === 1
+        ? {
+            labExperience: d.experience ?? "workbench",
+            labWorkflowVersion: 1,
+            labDomain: "microbiology" as const,
+          }
+        : {}),
     });
+    setMessage("Saved to your Lab Notebook in My Creations.");
+    finish("explored");
+  }
   return (
     <>
       <p>
@@ -41,39 +96,69 @@ export function Laboratory({ draft, update, create, finish }: GameProps) {
         you. Every step is optional.
       </p>
       <nav className="tabs" aria-label="Workbench stages">
-        <button
-          aria-pressed={d.stage === "desk"}
-          onClick={() => set({ stage: "desk" })}
-        >
+        <button aria-pressed={d.stage === "desk"} onClick={() => stage("desk")}>
           Specimen desk
         </button>
         <button
+          aria-pressed={d.stage === "case"}
+          onClick={() => open(d.specimen, "workbench", "case")}
+        >
+          Specimen card
+        </button>
+        <button
           aria-pressed={d.stage === "microscope"}
-          onClick={() => set({ stage: "microscope" })}
+          onClick={() => stage("microscope")}
         >
           Microscope
         </button>
         <button
           aria-pressed={d.stage === "observations"}
-          onClick={() => set({ stage: "observations" })}
+          onClick={() => stage("observations")}
         >
           Observations
+        </button>
+        <button
+          aria-pressed={d.stage === "compare"}
+          onClick={() => stage("compare")}
+        >
+          Compare views
         </button>
       </nav>
       {d.stage === "desk" ? (
         <>
+          <div className="lab-shortcuts subtle-panel">
+            <div>
+              <h2>Your workbench</h2>
+              <p>Follow a specimen card, or go straight to a familiar image.</p>
+            </div>
+            <div className="actions">
+              <button
+                className="primary"
+                onClick={() => open(d.specimen, "explorer")}
+              >
+                Explore Microscope
+              </button>
+              <button onClick={() => open(d.specimen, "workbench", "case")}>
+                Start a Lab Session
+              </button>
+            </div>
+          </div>
           <p className="eyebrow">Microbiology desk · Starter collection</p>
           <div className="specimen-grid">
-            {specimens.map((s, i) => (
-              <button
-                className="specimen-card"
-                key={s.id}
-                onClick={() => open(i)}
-              >
-                <img src={import.meta.env.BASE_URL + s.asset} alt="" />
-                <strong>{s.title}</strong>
-                <span>Explore specimen →</span>
-              </button>
+            {specimens.map((asset, i) => (
+              <article className="lab-slide-card" key={asset.id}>
+                <button
+                  className="specimen-card"
+                  onClick={() => open(i, "explorer")}
+                >
+                  <img src={import.meta.env.BASE_URL + asset.asset} alt="" />
+                  <strong>{asset.title}</strong>
+                  <span>Explore specimen →</span>
+                </button>
+                <button onClick={() => open(i, "workbench", "case")}>
+                  Open specimen card: {labWorkflows[i].title}
+                </button>
+              </article>
             ))}
           </div>
           <div className="subtle-panel">
@@ -89,14 +174,43 @@ export function Laboratory({ draft, update, create, finish }: GameProps) {
           <div className="section-heading">
             <div>
               <p className="eyebrow">
-                Real microscopy · Fictional teaching specimen
+                Real microscopy ·{" "}
+                {d.experience === "explorer"
+                  ? "Free exploration"
+                  : "Fictional teaching specimen"}
               </p>
               <h2>{s.title}</h2>
             </div>
-            <button onClick={() => open((d.specimen + 1) % specimens.length)}>
-              Next specimen
-            </button>
+            <button onClick={() => open(other)}>Next specimen</button>
           </div>
+          {d.stage === "case" && (
+            <section
+              className="lab-case subtle-panel"
+              aria-label="Fictional specimen card"
+            >
+              <p className="eyebrow">
+                Fictional specimen card · All steps optional
+              </p>
+              <h3>{workflow.title}</h3>
+              <p>{workflow.fictionalCaseStatement}</p>
+              <p className="muted">
+                This story is imagined. The CDC image is a separate teaching
+                example, not an image of this fictional specimen.
+              </p>
+              <p>{workflow.prompt}</p>
+              <div className="actions">
+                <button className="primary" onClick={() => stage("microscope")}>
+                  Examine prepared view
+                </button>
+                <button onClick={() => stage("observations")}>
+                  Skip to observations
+                </button>
+                <button onClick={() => stage("desk")}>
+                  Choose another specimen
+                </button>
+              </div>
+            </section>
+          )}
           {d.stage === "microscope" && (
             <>
               <div
@@ -113,6 +227,7 @@ export function Laboratory({ draft, update, create, finish }: GameProps) {
                       "ArrowDown",
                       "+",
                       "-",
+                      "=",
                     ].includes(e.key)
                   )
                     e.preventDefault();
@@ -120,8 +235,10 @@ export function Laboratory({ draft, update, create, finish }: GameProps) {
                   if (e.key === "ArrowRight") pan(5, 0);
                   if (e.key === "ArrowUp") pan(0, -5);
                   if (e.key === "ArrowDown") pan(0, 5);
-                  if (e.key === "+") set({ zoom: Math.min(3, d.zoom + 0.25) });
-                  if (e.key === "-") set({ zoom: Math.max(1, d.zoom - 0.25) });
+                  if (e.key === "+" || e.key === "=")
+                    set({ zoom: Math.min(3, d.zoom + 0.25) }, true);
+                  if (e.key === "-")
+                    set({ zoom: Math.max(1, d.zoom - 0.25) }, true);
                 }}
               >
                 <img
@@ -137,7 +254,9 @@ export function Laboratory({ draft, update, create, finish }: GameProps) {
                 <button
                   aria-label="Zoom out"
                   disabled={d.zoom <= 1}
-                  onClick={() => set({ zoom: Math.max(1, d.zoom - 0.25) })}
+                  onClick={() =>
+                    set({ zoom: Math.max(1, d.zoom - 0.25) }, true)
+                  }
                 >
                   − Zoom
                 </button>
@@ -145,11 +264,13 @@ export function Laboratory({ draft, update, create, finish }: GameProps) {
                 <button
                   aria-label="Zoom in"
                   disabled={d.zoom >= 3}
-                  onClick={() => set({ zoom: Math.min(3, d.zoom + 0.25) })}
+                  onClick={() =>
+                    set({ zoom: Math.min(3, d.zoom + 0.25) }, true)
+                  }
                 >
                   + Zoom
                 </button>
-                <button onClick={() => set({ zoom: 1, pan: [0, 0] })}>
+                <button onClick={() => set({ zoom: 1, pan: [0, 0] }, true)}>
                   Reset view
                 </button>
               </div>
@@ -159,76 +280,112 @@ export function Laboratory({ draft, update, create, finish }: GameProps) {
                 <button onClick={() => pan(0, -5)}>Move up</button>
                 <button onClick={() => pan(0, 5)}>Move down</button>
               </div>
-              <details>
-                <summary>Image description & source</summary>
-                <p>{s.description}</p>
-                <p className="muted">
-                  Digital zoom enlarges this image; it adds no new detail. No
-                  calibrated scale is displayed.
-                </p>
-                <p>{s.credit}</p>
-                <a href={s.sourceUrl} target="_blank" rel="noreferrer">
-                  CDC source and public-domain record
-                </a>
-              </details>
-              <button
-                className="primary"
-                onClick={() => set({ stage: "observations" })}
-              >
-                Record an observation
-              </button>
+              <ImageSource index={d.specimen} />
+              <div className="actions">
+                <button
+                  className="primary"
+                  onClick={() => stage("observations")}
+                >
+                  Record an observation
+                </button>
+                <button onClick={() => stage("compare")}>
+                  Compare with another image
+                </button>
+              </div>
             </>
           )}
-          <fieldset>
-            <legend>
-              What catches your eye? <span className="muted">Optional</span>
-            </legend>
-            <div className="actions">
-              {s.observations.map((o) => (
-                <button
-                  key={o}
-                  aria-pressed={d.observations.includes(o)}
-                  onClick={() =>
-                    set({
-                      observations: d.observations.includes(o)
-                        ? d.observations.filter((x) => x !== o)
-                        : [...d.observations, o],
-                    })
-                  }
-                >
-                  {o}
+          {d.stage === "compare" && (
+            <section aria-label="Optional image comparison">
+              <p>
+                Two separate source images, shown at their full view. They are
+                not fields from the same specimen or the same magnification.
+                Compare whatever interests you; there is no required answer.
+              </p>
+              <div className="lab-comparison">
+                {[d.specimen, other].map((index) => (
+                  <article key={specimens[index].id}>
+                    <h3>
+                      {specimens[index].title}
+                      {index === d.specimen
+                        ? " · Your current slide"
+                        : " · Another image"}
+                    </h3>
+                    <img
+                      src={import.meta.env.BASE_URL + specimens[index].asset}
+                      alt={specimens[index].description}
+                    />
+                    <ImageSource index={index} />
+                  </article>
+                ))}
+              </div>
+              <div className="actions">
+                <button onClick={() => stage("microscope")}>
+                  Back to microscope
                 </button>
-              ))}
-            </div>
-            <label>
-              Your notebook note{" "}
-              <textarea
-                maxLength={1000}
-                rows={3}
-                value={d.text}
-                onChange={(e) => set({ text: e.target.value })}
-                placeholder="Add a thought, or leave this blank."
-              />
-            </label>
-          </fieldset>
-          <button
-            className="primary"
-            onClick={() => {
-              create({
-                kind: "notebook",
-                title: s.title,
-                specimenId: s.id,
-                observations: d.observations,
-                text: d.text,
-                zoom: d.zoom,
-                pan: d.pan,
-              });
-              setMessage("Saved to your Lab Notebook in My Creations.");
-              finish("explored");
-            }}
-          >
-            Save to Lab Notebook
-          </button>
+                <button onClick={() => stage("observations")}>
+                  Skip comparison
+                </button>
+              </div>
+            </section>
+          )}
+          {(d.stage === "microscope" || d.stage === "observations") && (
+            <fieldset>
+              <legend>
+                What catches your eye? <span className="muted">Optional</span>
+              </legend>
+              <div className="actions">
+                {[...s.observations, "Not sure"].map((o) => (
+                  <button
+                    key={o}
+                    aria-pressed={d.observations.includes(o)}
+                    onClick={() =>
+                      set({
+                        observations: d.observations.includes(o)
+                          ? d.observations.filter((x) => x !== o)
+                          : [...d.observations, o],
+                      })
+                    }
+                  >
+                    {o}
+                  </button>
+                ))}
+              </div>
+              <label>
+                Your notebook note{" "}
+                <textarea
+                  maxLength={1000}
+                  rows={3}
+                  value={d.text}
+                  onChange={(e) => set({ text: e.target.value })}
+                  placeholder="Add a thought, or leave this blank."
+                />
+              </label>
+            </fieldset>
+          )}
+          <div className="actions">
+            <button
+              className="primary"
+              disabled={!!draft.finalized}
+              onClick={save}
+            >
+              Save to Lab Notebook
+            </button>
+            {draft.finalized && repeat && (
+              <button onClick={repeat}>Explore this slide again</button>
+            )}
+            {d.stage !== "microscope" && (
+              <button onClick={() => stage("microscope")}>
+                Jump to microscope
+              </button>
+            )}
+            <button onClick={() => stage("desk")}>Back to specimen desk</button>
+          </div>
+          {draft.finalized && (
+            <p className="muted">
+              This exploration is finished. You can keep looking, change a note,
+              or explore again.
+            </p>
+          )}
         </>
       )}
       <p role="status">{message}</p>

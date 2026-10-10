@@ -1,3 +1,13 @@
+# v0.8.0 validation
+
+Locally: 83 unit/component tests passed, including eight new laboratory cases for authored source mapping and mode/ID separation, legacy save identity, bounded malformed restore rejection, independent per-slide notes/views, skipping every stage/blank notebook saving, credited comparison, seven separate repeat attempts, reload continuity and correct notebook-revisit IDs (including legacy second-slide entries). Thirteen archive/remote cases passed; the age-only case was skipped locally. TypeScript, production build and scoped PWA/provenance validation passed.
+
+CI gates deployment on 83 unit/component tests, fourteen archive/remote tests with age, twenty-two Firestore security cases plus the encrypted emulator recovery drill, and thirty-four desktop/phone browser scenarios. The new scenario exercises the fictional card offline, skipped stages, keyboard zoom/pan, separate notes across switches and offline reload, cached comparison images/credits, notebook revisit, seven repeats and 320-pixel/200% text layouts. Check the current commit's workflow result for actual completion.
+
+No new image or scientific assertion is introduced. The two existing images retain their provenance and pending independent specialist review; they are explicitly separate sources, not fields from one sample or equivalent magnification. New stories are original fictional framing. No real family data, tap trace, diagnostic score or activity upload is used. Real phone/VoiceOver behavior, full image collection, dedicated notebook continuity, cloud/reporting and production recovery gates remain unfinished.
+
+---
+
 # v0.7.0 validation
 
 Locally: 75 unit/component tests passed, including eleven new music/audio cases for content bounds/answer variation, relative rhythm feedback, legacy save validation, preserved piano recordings, distinct rhythm replay IDs, all four phrases, view changes after completion, deliberate sound activation, rejected audio, timer cleanup/reduced motion, nonuniform audio scheduling, live volume changes/zero and cancellation during audio unlock. Thirteen archive/remote cases passed with the age-only test skipped locally. TypeScript, production build and PWA validation passed.
