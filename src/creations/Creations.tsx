@@ -83,6 +83,7 @@ export function Creations(props: Props) {
         <label>
           Order by
           <select
+            aria-label="Order by"
             value={sort}
             onChange={(e) => {
               setSort(e.target.value as CollectionSort);
