@@ -36,13 +36,11 @@ test("hidden-single Sudoku explains, saves notes, undoes and replays offline wit
     await navigator.serviceWorker.ready;
   });
   await page.getByRole("button", { name: "Settings", exact: true }).click();
-  await page
-    .getByLabel("Restore this app’s JSON backup")
-    .setInputFiles({
-      name: "fictional-sudoku-backup.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(state)),
-    });
+  await page.getByLabel("Restore this app’s JSON backup").setInputFiles({
+    name: "fictional-sudoku-backup.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(state)),
+  });
   await expect(
     page.getByRole("region", { name: "Restore preview" }),
   ).toBeVisible();
@@ -158,20 +156,25 @@ test("hidden-single Sudoku explains, saves notes, undoes and replays offline wit
   await expect(
     page.getByText("Saved on this device", { exact: true }),
   ).toBeVisible();
-  const persisted = await page.evaluate(async () => {
-    const db: IDBDatabase = await new Promise((resolve, reject) => {
-      const req = indexedDB.open("curiosity-lab:v1:play:guest", 1);
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
+  const readPersisted = () =>
+    page.evaluate(async () => {
+      const db: IDBDatabase = await new Promise((resolve, reject) => {
+        const req = indexedDB.open("curiosity-lab:v1:play:guest", 1);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+      const result: any = await new Promise((resolve, reject) => {
+        const req = db.transaction("state").objectStore("state").get("current");
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+      db.close();
+      return result;
     });
-    const result: any = await new Promise((resolve, reject) => {
-      const req = db.transaction("state").objectStore("state").get("current");
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
-    });
-    db.close();
-    return result;
-  });
+  await expect
+    .poll(async () => (await readPersisted()).drafts.sudoku.id)
+    .not.toBe("fictional-sudoku-attempt");
+  const persisted = await readPersisted();
   expect(persisted.sessions).toHaveLength(1);
   expect(persisted.sessions[0]).toMatchObject({
     id: "fictional-sudoku-attempt",
@@ -197,5 +200,5 @@ test("hidden-single Sudoku explains, saves notes, undoes and replays offline wit
   ).toHaveValue("Classic");
   await expect(
     page.getByRole("option", { name: "Hidden singles", exact: true }),
-  ).toBeDisabled();
+  ).toHaveJSProperty("disabled", true);
 });
