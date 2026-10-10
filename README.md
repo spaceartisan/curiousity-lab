@@ -1,1 +1,67 @@
-# curiousity-lab
+# Curiosity Lab
+
+A calm, adult-respectful collection of puzzles, music, and microscopy. One React / TypeScript / Vite codebase builds three independently scoped app entries:
+
+- **[Play](https://spaceartisan.github.io/curiousity-lab/play/)** — local puzzles and saved creations.
+- **[Companion](https://spaceartisan.github.io/curiousity-lab/companion/)** — companion overview; family connection pending.
+- **[Insights](https://spaceartisan.github.io/curiousity-lab/insights/)** — context-preserving local export review; family connection pending.
+
+These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
+
+## First release · v0.1.0
+
+This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. No Firebase project is connected. No personal records, emails, service credentials, or private design document are published here.
+
+Play includes:
+
+- Reproducible, unique-solution Sudoku in 9×9, 6×6, and 4×4 grids, pencil notes, undo, hints, optional checking, and saved progress. Both current tiers are verified solvable with naked singles; Classic has fewer givens. These are provisional game difficulty tiers, not clinical measures.
+- Two curated Word Connections packs and a starter Word Search.
+- Free piano with symbolic melody saving, complete-the-phrase, melody matching, and rhythm exploration. Web Audio sound is off by default and starts only after a gesture. Notation can be shown or hidden.
+- A process-first laboratory workbench, two licensed CDC microscopy images cached offline, accessible digital zoom and movement controls, optional observations, and saved Lab Notebook entries. Hematology and the larger reviewed image pack are pending.
+- My Creations, light/dark themes, larger text, JSON backup/restore, CSV session export, and explicit deletion controls.
+- IndexedDB progress saves separated by app role. Optional activity history starts off; it stays on this device. With it off, active-time/hint/undo summaries are not accumulated. Game state necessary for save/resume is still stored.
+
+Companion and Insights open directly to their own views. Fictional examples are clearly labeled and only appear when requested. Neither app reads Play's browser database. Insights can explicitly inspect a selected Play backup **in memory**, without uploading or persisting it.
+
+## Develop
+
+Node 22.12+ (CI uses Node 24).
+
+```sh
+npm ci
+npm run dev
+```
+
+Open `/curiousity-lab/play/`, `/curiousity-lab/companion/`, or `/curiousity-lab/insights/` on the Vite server. For the exact production/offline build:
+
+```sh
+npm run check
+npm run preview
+```
+
+The build base is `/curiousity-lab/`. If the repository is renamed or moved to a custom domain, update `vite.config.ts`, `scripts/build-pwa.mjs`, documentation and validation expectations together. Do not change an installed app's identity casually.
+
+## Checks and deployment
+
+`npm run check` runs the game, persistence, consent, and component tests, strict TypeScript, the production build, and structural PWA/provenance validation. The GitHub workflow then runs Chromium desktop/phone smoke tests (including offline microscopy), captures screenshots in its **browser-evidence** artifact, and deploys only when validation passes.
+
+**One-time repository setup:** In GitHub, open **Settings → Pages → Source → GitHub Actions**. If the first deploy fails because Pages is disabled, enable this setting and rerun the failed deploy job; no source push is needed.
+
+For browser tests locally (requires Playwright's browser installation): `npx playwright install chromium`, then `npm run build && npm run test:e2e`. Screenshots and traces are ignored by Git and retained in CI artifacts. See [validation status](docs/VALIDATION.md) for what has actually been run.
+
+## Privacy and release boundaries
+
+This app supports enjoyable exploration; it is not a diagnostic instrument or disease score. No remote collection, analytics SDK, camera, microphone, passive sensing, or public leaderboard is included. Public visitors are local-only.
+
+The included Firestore rules **deny everything** as a safe placeholder. They are not an implementation of family sync. Later cloud access must require individual authentication, trusted admin-approved membership and subject grants, consent, and emulator-tested rules. A six-digit confirmation code can never grant access. Same-origin apps may share browser infrastructure; role scopes alone do not authorize access or guarantee independent operating-system installations.
+
+**Do not treat v0.1.0 as the connected family-production launch.** Auth, private sync, membership provisioning, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
+
+## Image credits
+
+The first pack uses individual public-domain CDC PHIL records, credited in the viewer and [image provenance](public/media/provenance.json). The source images are bundled, not hotlinked. CDC does not endorse this app.
+
+- PHIL 26402: CDC / Dr. Libero Ajello, unidentified fungal structures.
+- PHIL 10041: CDC / Segrid McAllister; photograph Janice Haney Carr, digitally colorized bacterial SEM.
+
+Labels were cross-checked with the source captions and images; independent subject-matter review is pending. No identification quiz is enabled. Digital zoom adds no new optical detail. Source captions describe the source image, not a real patient or local specimen.

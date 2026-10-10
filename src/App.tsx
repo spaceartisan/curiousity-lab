@@ -1,0 +1,1250 @@
+import React, { useEffect, useRef, useState } from "react";
+import {
+  APP_VERSION,
+  emptyState,
+  validateState,
+  type LocalState,
+  type Role,
+  type GameKind,
+  type Draft,
+  type Creation,
+} from "./storage/contracts";
+import {
+  loadState,
+  saveState,
+  clearState,
+  download,
+  sessionsCsv,
+} from "./storage/local";
+import { Icon } from "./ui/Icon";
+import { Sudoku } from "./games/Sudoku";
+import { generateSudoku } from "./games/sudoku-engine";
+import { Connections, WordSearch } from "./games/Words";
+import { Music } from "./games/Music";
+import { Laboratory } from "./games/Laboratory";
+import { ActivityClock } from "./games/activity-clock";
+import { stopAudio, playNotes } from "./games/audio";
+import { specimens } from "./content/specimens";
+import "./styles.css";
+const base = import.meta.env.BASE_URL;
+const titles: Record<GameKind, string> = {
+  sudoku: "Sudoku",
+  connections: "Word Connections",
+  search: "Word Search",
+  music: "Music Studio",
+  lab: "My Laboratory",
+};
+export function relativeTime(utc: string, now = Date.now()) {
+  const delta = now - Date.parse(utc);
+  if (!Number.isFinite(delta) || delta < 0)
+    return "on " + new Date(utc).toLocaleDateString();
+  if (delta < 60000) return "just now";
+  if (delta < 3600000) return `${Math.floor(delta / 60000)} minutes ago`;
+  if (delta < 86400000) return `${Math.floor(delta / 3600000)} hours ago`;
+  return "on " + new Date(utc).toLocaleDateString();
+}
+function newDraft(game: GameKind, previous?: Draft): Draft {
+  const seed = crypto.getRandomValues(new Uint32Array(1))[0];
+  const oldSudoku =
+    previous?.game === "sudoku"
+      ? (previous.data as { size: 4 | 6 | 9; tier: "Relaxed" | "Classic" })
+      : undefined;
+  const data =
+    game === "sudoku"
+      ? generateSudoku(oldSudoku?.size || 9, seed, oldSudoku?.tier || "Classic")
+      : game === "connections"
+        ? {
+            pack: previous
+              ? (Number((previous.data as { pack: number }).pack) + 1) % 2
+              : 0,
+            solved: [],
+            selected: [],
+          }
+        : game === "search"
+          ? { found: [] }
+          : game === "music"
+            ? { mode: "piano", notes: [], title: "My melody", solved: false }
+            : {
+                specimen: 0,
+                stage: "desk",
+                zoom: 1,
+                pan: [0, 0],
+                observations: [],
+                text: "",
+              };
+  return {
+    id: crypto.randomUUID(),
+    game,
+    puzzleId:
+      game === "sudoku"
+        ? `sudoku-${oldSudoku?.size || 9}-${seed}`
+        : game === "connections"
+          ? `connections-${(data as { pack: number }).pack}`
+          : game === "search"
+            ? "quiet-garden-v1"
+            : game === "music"
+              ? "music-studio-v1"
+              : specimens[0].id,
+    startedAt: new Date().toISOString(),
+    activeMs: 0,
+    hints: 0,
+    undos: 0,
+    mode:
+      game === "sudoku"
+        ? `${oldSudoku?.size || 9}x${oldSudoku?.size || 9}:${oldSudoku?.tier || "Classic"}`
+        : game === "music"
+          ? "piano"
+          : "explore",
+    data,
+  };
+}
+function archive(
+  state: LocalState,
+  draft: Draft,
+  outcome: "completed" | "explored" | "unfinished",
+): LocalState {
+  if (draft.finalized) return state;
+  const sessions = state.preferences.history
+    ? [
+        ...state.sessions,
+        {
+          id: draft.id,
+          schemaVersion: 1 as const,
+          appVersion: APP_VERSION,
+          contentVersion: "starter-1",
+          game: draft.game,
+          puzzleId: draft.puzzleId,
+          startedAt: draft.startedAt,
+          endedAt: new Date().toISOString(),
+          activeMs: Math.round(draft.activeMs),
+          hints: draft.hints,
+          undos: draft.undos,
+          outcome,
+          mode: draft.mode,
+          attempt:
+            state.sessions.filter(
+              (s) => s.puzzleId === draft.puzzleId && s.mode === draft.mode,
+            ).length + 1,
+          source: "local-guest" as const,
+        },
+      ]
+    : state.sessions;
+  return {
+    ...state,
+    sessions,
+    drafts: { ...state.drafts, [draft.game]: { ...draft, finalized: true } },
+  };
+}
+export class Boundary extends React.Component<
+  { children: React.ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? (
+      <main>
+        <h1>Let's take a fresh look.</h1>
+        <p>This screen could not open. Your saved data has not been deleted.</p>
+        <button onClick={() => location.reload()}>Reload the app</button>
+      </main>
+    ) : (
+      this.props.children
+    );
+  }
+}
+export function InstallPage() {
+  return (
+    <main className="install-page">
+      <div className="brand">
+        <Icon name="lab" />
+        <span>Curiosity Lab</span>
+      </div>
+      <h1>
+        A little room
+        <br />
+        for discovery.
+      </h1>
+      <p>
+        Games, music, and a familiar laboratory desk.
+        <br />
+        Choose an installation link during setup.
+      </p>
+      <div className="install-links">
+        {(["play", "companion", "insights"] as Role[]).map((r) => (
+          <a className="install-link" href={base + r + "/"} key={r}>
+            <Icon name={r === "play" ? "creations" : r} />
+            <strong>
+              {r === "play"
+                ? "Play"
+                : r === "companion"
+                  ? "Companion"
+                  : "Insights"}
+            </strong>
+            <span>
+              {r === "play"
+                ? "Open games"
+                : r === "companion"
+                  ? "Open companion view"
+                  : "Open insights view"}{" "}
+              →
+            </span>
+          </a>
+        ))}
+      </div>
+      <p className="muted">
+        Local preview · Family sharing is not connected in this first release.
+      </p>
+    </main>
+  );
+}
+export function App({ appRole }: { appRole: Role }) {
+  const [state, setState] = useState<LocalState | null>(null),
+    [error, setError] = useState(""),
+    [saved, setSaved] = useState(false),
+    [screen, setScreen] = useState<
+      GameKind | "home" | "settings" | "creations"
+    >("home"),
+    [paused, setPaused] = useState(false),
+    [demo, setDemo] = useState(false),
+    [review, setReview] = useState<LocalState | null>(null),
+    [updateReady, setUpdateReady] = useState<ServiceWorker | null>(null);
+  const stateRef = useRef(state),
+    screenRef = useRef(screen),
+    clock = useRef(new ActivityClock(performance.now())),
+    heading = useRef<HTMLHeadingElement>(null);
+  stateRef.current = state;
+  screenRef.current = screen;
+  useEffect(() => {
+    let active = true;
+    loadState(appRole)
+      .then((s) => {
+        if (active) setState(s);
+      })
+      .catch(() => {
+        if (active)
+          setError(
+            "Saved data could not be opened. It has not been deleted. Try reloading, or export an existing backup before starting fresh.",
+          );
+      });
+    return () => {
+      active = false;
+    };
+  }, [appRole]);
+  useEffect(() => {
+    if (!state) return;
+    setSaved(false);
+    const timer = setTimeout(() => {
+      saveState(state)
+        .then(() => {
+          if (stateRef.current === state) {
+            setSaved(true);
+            setError("");
+          }
+        })
+        .catch(() =>
+          setError(
+            "This device could not save your latest changes. Keep this page open and download a backup in Settings.",
+          ),
+        );
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [state]);
+  useEffect(() => {
+    heading.current?.focus();
+    stopAudio();
+    setPaused(false);
+  }, [screen]);
+  useEffect(() => {
+    const add = (delta: number) => {
+      const activeScreen = screenRef.current;
+      if (
+        delta > 0 &&
+        activeScreen !== "home" &&
+        activeScreen !== "settings" &&
+        activeScreen !== "creations"
+      )
+        setState((s) => {
+          if (!s) return s;
+          const d = s.drafts[activeScreen];
+          if (!d || d.finalized || !s.preferences.history) return s;
+          return {
+            ...s,
+            drafts: {
+              ...s.drafts,
+              [activeScreen]: { ...d, activeMs: d.activeMs + delta },
+            },
+          };
+        });
+    };
+    const interacted = () => clock.current.interact(performance.now());
+    const visibility = () => {
+      add(clock.current.visibility(performance.now(), !document.hidden));
+      if (document.hidden) stopAudio();
+    };
+    const flush = () => {
+      const current = stateRef.current;
+      if (current) void saveState(current).catch(() => undefined);
+    };
+    document.addEventListener("visibilitychange", visibility);
+    window.addEventListener("pagehide", flush);
+    for (const event of ["pointerdown", "keydown"] as const)
+      document.addEventListener(event, interacted);
+    const timer = setInterval(
+      () => add(clock.current.sample(performance.now())),
+      1000,
+    );
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", visibility);
+      window.removeEventListener("pagehide", flush);
+      for (const event of ["pointerdown", "keydown"] as const)
+        document.removeEventListener(event, interacted);
+    };
+  }, []);
+  useEffect(() => {
+    clock.current.pause(
+      performance.now(),
+      paused ||
+        screen === "home" ||
+        screen === "settings" ||
+        screen === "creations",
+    );
+    clock.current.interact(performance.now());
+  }, [screen, paused]);
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+    navigator.serviceWorker
+      .register(base + appRole + "/sw.js", { scope: base + appRole + "/" })
+      .then((reg) => {
+        if (reg.waiting) setUpdateReady(reg.waiting);
+        reg.addEventListener("updatefound", () => {
+          const worker = reg.installing;
+          worker?.addEventListener("statechange", () => {
+            if (
+              worker.state === "installed" &&
+              navigator.serviceWorker.controller
+            )
+              setUpdateReady(worker);
+          });
+        });
+      })
+      .catch(() =>
+        setError(
+          "Offline setup could not finish. Games still work while this page is open.",
+        ),
+      );
+  }, [appRole]);
+  function open(game: GameKind) {
+    setState((s) =>
+      s
+        ? {
+            ...s,
+            drafts: { ...s.drafts, [game]: s.drafts[game] ?? newDraft(game) },
+          }
+        : s,
+    );
+    setScreen(game);
+  }
+  function replay() {
+    if (!state || !(screen in titles)) return;
+    const game = screen as GameKind;
+    setState((s) => {
+      if (!s) return s;
+      const old = s.drafts[game];
+      const archived = old ? archive(s, old, "unfinished") : s;
+      return {
+        ...archived,
+        drafts: { ...archived.drafts, [game]: newDraft(game, old) },
+      };
+    });
+  }
+  function update(
+    data: unknown,
+    metrics?: { hint?: boolean; undo?: boolean; mode?: string },
+  ) {
+    const game = screen as GameKind;
+    setState((s) => {
+      if (!s) return s;
+      const old = s.drafts[game];
+      if (!old) return s;
+      let d = old;
+      let next = s;
+      const newContent =
+        game === "sudoku" &&
+        (data as { seed: number }).seed !== (old.data as { seed: number }).seed;
+      const newSpecimen =
+        game === "lab" &&
+        (data as { specimen: number }).specimen !==
+          (old.data as { specimen: number }).specimen;
+      if (
+        old.finalized ||
+        newContent ||
+        newSpecimen ||
+        (metrics?.mode && metrics.mode !== old.mode)
+      ) {
+        next = archive(s, old, "unfinished");
+        d = {
+          ...newDraft(game),
+          data,
+          puzzleId:
+            game === "sudoku"
+              ? `sudoku-${(data as { size: number; seed: number }).size}-${(data as { seed: number }).seed}`
+              : game === "lab"
+                ? specimens[(data as { specimen: number }).specimen].id
+                : old.puzzleId,
+          mode: metrics?.mode || old.mode,
+        };
+      }
+      return {
+        ...next,
+        drafts: {
+          ...next.drafts,
+          [game]: {
+            ...d,
+            data,
+            hints: s.preferences.history
+              ? d.hints + (metrics?.hint ? 1 : 0)
+              : 0,
+            undos: s.preferences.history
+              ? d.undos + (metrics?.undo ? 1 : 0)
+              : 0,
+          },
+        },
+      };
+    });
+  }
+  function finish(outcome: "completed" | "explored" | "unfinished") {
+    const game = screen as GameKind;
+    setState((s) =>
+      s && s.drafts[game] ? archive(s, s.drafts[game]!, outcome) : s,
+    );
+  }
+  function create(item: Omit<Creation, "id" | "savedAt">) {
+    setState((s) =>
+      s
+        ? {
+            ...s,
+            creations: [
+              ...s.creations,
+              {
+                ...item,
+                id: crypto.randomUUID(),
+                savedAt: new Date().toISOString(),
+              },
+            ],
+          }
+        : s,
+    );
+  }
+  async function importFile(file: File, inspect = false) {
+    try {
+      if (file.size > 10_000_000) throw Error("Backup is too large");
+      const parsed: unknown = JSON.parse(await file.text());
+      validateState(parsed, inspect ? "play" : appRole);
+      if (inspect) {
+        setReview(parsed);
+        return;
+      }
+      if (
+        !window.confirm(
+          "Replace this app’s local progress, creations, and history with this backup?",
+        )
+      )
+        return;
+      await saveState(parsed);
+      setState(parsed);
+      setError("");
+    } catch {
+      setError(
+        "This file is not a supported backup for this app. Your existing data is unchanged.",
+      );
+    }
+  }
+  if (!state)
+    return (
+      <main>
+        <h1>Curiosity Lab</h1>
+        <p>{error || "Opening your desk…"}</p>
+        {error && (
+          <>
+            <button onClick={() => location.reload()}>Try again</button>
+            <button
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Remove the unreadable local save and start fresh?",
+                  )
+                ) {
+                  void clearState(appRole).then(() => {
+                    setState(emptyState(appRole));
+                    setError("");
+                  });
+                }
+              }}
+            >
+              Start fresh
+            </button>
+          </>
+        )}
+      </main>
+    );
+  const prefs = state.preferences;
+  const changePrefs = (p: Partial<typeof prefs>) =>
+    setState((s) => {
+      if (!s) return s;
+      const drafts =
+        p.history !== undefined && p.history !== s.preferences.history
+          ? Object.fromEntries(
+              Object.entries(s.drafts).map(([key, d]) => [
+                key,
+                {
+                  ...d,
+                  id: crypto.randomUUID(),
+                  startedAt: new Date().toISOString(),
+                  activeMs: 0,
+                  hints: 0,
+                  undos: 0,
+                },
+              ]),
+            )
+          : s.drafts;
+      return { ...s, drafts, preferences: { ...s.preferences, ...p } };
+    });
+  const game = screen in titles ? (screen as GameKind) : null;
+  const draft = game ? state.drafts[game] : null;
+  const props = draft ? { draft, update, finish, create, replay } : null;
+  return (
+    <div className={`app theme-${prefs.theme} text-${prefs.textSize}`}>
+      <a className="skip-link" href="#content">
+        Skip to content
+      </a>
+      <header className="topbar">
+        <button
+          className="brand"
+          onClick={() => setScreen("home")}
+          aria-label="Curiosity Lab home"
+        >
+          <Icon name="lab" />
+          <span>
+            Curiosity Lab{" "}
+            <small>
+              {appRole === "play"
+                ? "Play"
+                : appRole === "companion"
+                  ? "Companion"
+                  : "Insights"}
+            </small>
+          </span>
+        </button>
+        <button
+          className="settings-button"
+          onClick={() => setScreen("settings")}
+        >
+          <Icon name="settings" small />
+          Settings
+        </button>
+      </header>
+      <main id="content">
+        {error && (
+          <p className="notice" role="alert">
+            {error}
+          </p>
+        )}
+        {updateReady && (
+          <div className="notice">
+            An update is ready. Your progress is saved before updating.{" "}
+            <button
+              onClick={async () => {
+                try {
+                  await saveState(state);
+                  navigator.serviceWorker.addEventListener(
+                    "controllerchange",
+                    () => location.reload(),
+                    { once: true },
+                  );
+                  updateReady.postMessage({ type: "ACTIVATE_UPDATE" });
+                } catch {
+                  setError(
+                    "Please download a backup before updating; your latest save could not be written.",
+                  );
+                }
+              }}
+            >
+              Update now
+            </button>
+          </div>
+        )}
+        {screen !== "home" && (
+          <button className="back-button" onClick={() => setScreen("home")}>
+            <Icon name="back" small />
+            {appRole === "play" ? "Back to games" : "Back to overview"}
+          </button>
+        )}
+        {screen === "home" && appRole === "play" ? (
+          <>
+            <section className="welcome">
+              <p className="eyebrow">Your curiosity belongs here</p>
+              <h1 ref={heading} tabIndex={-1}>
+                What would you like
+                <br />
+                to explore?
+              </h1>
+              <p>
+                A puzzle, a melody, a closer look.
+                <br />
+                There is always time to come back.
+              </p>
+              <div className="welcome-mark" aria-hidden="true">
+                <Icon name="lab" />
+              </div>
+            </section>
+            {!prefs.welcomeDone && (
+              <div className="welcome-note">
+                <strong>Make yourself at home.</strong>
+                <p>
+                  Your puzzles and creations save on this device. Activity
+                  history is optional, stays here, and can be switched off in
+                  Settings. Family sharing is not connected yet.
+                </p>
+                <div className="actions">
+                  <button
+                    className="primary"
+                    onClick={() =>
+                      changePrefs({ welcomeDone: true, history: false })
+                    }
+                  >
+                    Play without activity history
+                  </button>
+                  <button
+                    onClick={() =>
+                      changePrefs({ welcomeDone: true, history: true })
+                    }
+                  >
+                    Keep activity history on this device
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className="library-grid">
+              {[
+                {
+                  title: "Numbers",
+                  icon: "numbers",
+                  text: "Settle into a Sudoku.",
+                  game: "sudoku",
+                },
+                {
+                  title: "Words",
+                  icon: "words",
+                  text: "Find a familiar connection.",
+                  game: "connections",
+                },
+                {
+                  title: "Music",
+                  icon: "music",
+                  text: "Hear, play, and make a melody.",
+                  game: "music",
+                },
+                {
+                  title: "My Laboratory",
+                  icon: "lab",
+                  text: "Take a closer look at your desk.",
+                  game: "lab",
+                },
+                {
+                  title: "My Creations",
+                  icon: "creations",
+                  text: "Your melodies and lab notebook.",
+                  game: "creations",
+                },
+              ].map((card, i) => {
+                const previous = state.sessions
+                  .filter((s) => s.game === card.game)
+                  .at(-1);
+                return (
+                  <button
+                    key={card.title}
+                    className={`library-card card-${i}`}
+                    onClick={() =>
+                      card.game === "creations"
+                        ? setScreen("creations")
+                        : open(card.game as GameKind)
+                    }
+                  >
+                    <span className="card-top">
+                      <Icon name={card.icon} />
+                      <span aria-hidden="true">↗</span>
+                    </span>
+                    <h2>{card.title}</h2>
+                    <p>{card.text}</p>
+                    <span className="card-history">
+                      {state.drafts[card.game as GameKind] &&
+                      !state.drafts[card.game as GameKind]?.finalized
+                        ? "A saved activity to continue"
+                        : previous
+                          ? `Last played: ${relativeTime(previous.endedAt)}`
+                          : card.game === "creations"
+                            ? `${state.creations.length} saved creations`
+                            : "Explore whenever you like"}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="word-choice">
+              <span>Another way to enjoy words</span>
+              <button onClick={() => open("search")}>Open Word Search →</button>
+            </div>
+          </>
+        ) : screen === "home" ? (
+          <>
+            <section className="welcome">
+              <p className="eyebrow">
+                {appRole === "companion"
+                  ? "A companion to curiosity"
+                  : "A thoughtful view of activity"}
+              </p>
+              <h1 ref={heading} tabIndex={-1}>
+                {appRole === "companion"
+                  ? "The little things<br/>worth sharing."
+                  : "Keep the context.<br/>Follow the curiosity."}
+              </h1>
+              <p>
+                {appRole === "companion"
+                  ? "Favorite activities, saved discoveries, and ideas for time together."
+                  : "Review recorded activity with its source, versions, and limits."}
+              </p>
+            </section>
+            <div className="empty-family">
+              <Icon name={appRole} />
+              <h2>Family sharing is not connected</h2>
+              <p>
+                This first release keeps Play data on its own device. No family
+                records are fetched here. Secure sign-in, approved membership,
+                and consent come in a later pass.
+              </p>
+              <button onClick={() => setDemo(!demo)}>
+                {demo ? "Close fictional example" : "View a fictional example"}
+              </button>
+            </div>
+            {demo && (
+              <section className="demo-panel">
+                <p className="eyebrow">Fictional example · No family data</p>
+                {appRole === "companion" ? (
+                  <>
+                    <h2>A few things to revisit together</h2>
+                    <div className="summary-grid">
+                      <article>
+                        <Icon name="music" />
+                        <h3>A melody saved</h3>
+                        <p>“Morning notes” is ready to hear again.</p>
+                      </article>
+                      <article>
+                        <Icon name="lab" />
+                        <h3>A notebook discovery</h3>
+                        <p>Fungal forms were added to the notebook.</p>
+                      </article>
+                    </div>
+                    <p>
+                      Conversation idea: “Would you like to show me your
+                      favorite slide?”
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h2>Recorded activity</h2>
+                    <p>
+                      Compare activities only when content, difficulty, and
+                      presentation match. Duration does not establish enjoyment
+                      or cognitive change.
+                    </p>
+                    <div className="table-wrap">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Activity</th>
+                            <th>Context</th>
+                            <th>Active time</th>
+                            <th>Outcome</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Sudoku</td>
+                            <td>9×9 Classic · first attempt</td>
+                            <td>8 min</td>
+                            <td>Completed</td>
+                          </tr>
+                          <tr>
+                            <td>Laboratory</td>
+                            <td>Free exploration · PHIL 26402</td>
+                            <td>3 min</td>
+                            <td>Explored</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
+              </section>
+            )}
+            {appRole === "insights" && (
+              <>
+                <section className="subtle-panel">
+                  <h2>Review a local Play export</h2>
+                  <p>
+                    Choose a backup from Play to inspect it in this tab. It is
+                    not uploaded, merged, or stored in Insights.
+                  </p>
+                  <label className="file-control">
+                    Open Play JSON backup
+                    <input
+                      type="file"
+                      accept=".json,application/json"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) void importFile(file, true);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                  {review && (
+                    <>
+                      <p>
+                        {review.sessions.length} recorded sessions ·{" "}
+                        {review.creations.length} creations · Local guest source
+                      </p>
+                      <button onClick={() => setReview(null)}>
+                        Close imported review
+                      </button>
+                      <div className="table-wrap">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Activity / version</th>
+                              <th>Content / mode</th>
+                              <th>Attempt</th>
+                              <th>Active time</th>
+                              <th>Hints / undo</th>
+                              <th>Outcome</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {review.sessions.map((s) => (
+                              <tr key={s.id}>
+                                <td>
+                                  {titles[s.game]} · {s.appVersion}
+                                </td>
+                                <td>
+                                  {s.puzzleId}
+                                  <br />
+                                  {s.mode} · {s.contentVersion}
+                                </td>
+                                <td>{s.attempt}</td>
+                                <td>{(s.activeMs / 60000).toFixed(1)} min</td>
+                                <td>
+                                  {s.hints} / {s.undos}
+                                </td>
+                                <td>{s.outcome}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <button
+                        onClick={() =>
+                          download(
+                            sessionsCsv(review),
+                            "curiosity-lab-reviewed-sessions.csv",
+                            "text/csv",
+                          )
+                        }
+                      >
+                        Export reviewed CSV
+                      </button>
+                    </>
+                  )}
+                </section>
+                <section className="subtle-panel">
+                  <h2>Installation links</h2>
+                  <div className="actions">
+                    {(["play", "companion", "insights"] as Role[]).map((r) => (
+                      <a href={base + r + "/"} key={r}>
+                        Curiosity Lab — {r[0].toUpperCase() + r.slice(1)}
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              </>
+            )}
+          </>
+        ) : null}
+        {screen === "settings" && (
+          <>
+            <p className="eyebrow">A comfortable place to play</p>
+            <h1 ref={heading} tabIndex={-1}>
+              Settings
+            </h1>
+            <div className="settings-grid">
+              <section>
+                <h2>Look & sound</h2>
+                <label>
+                  Theme{" "}
+                  <select
+                    value={prefs.theme}
+                    onChange={(e) =>
+                      changePrefs({ theme: e.target.value as "light" | "dark" })
+                    }
+                  >
+                    <option value="light">Warm light</option>
+                    <option value="dark">Quiet dark</option>
+                  </select>
+                </label>
+                <label>
+                  Text size{" "}
+                  <select
+                    value={prefs.textSize}
+                    onChange={(e) =>
+                      changePrefs({
+                        textSize: e.target.value as "normal" | "large",
+                      })
+                    }
+                  >
+                    <option value="normal">Comfortable</option>
+                    <option value="large">Larger</option>
+                  </select>
+                </label>
+                <label className="check-label">
+                  <input
+                    type="checkbox"
+                    checked={prefs.sound}
+                    onChange={(e) => {
+                      stopAudio();
+                      changePrefs({ sound: e.target.checked });
+                    }}
+                  />
+                  Sound on
+                </label>
+                <label>
+                  Volume{" "}
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={prefs.volume}
+                    onChange={(e) =>
+                      changePrefs({ volume: Number(e.target.value) })
+                    }
+                  />
+                </label>
+                <button
+                  disabled={!prefs.sound}
+                  onClick={() =>
+                    playNotes([0, 2, 4], prefs.volume).catch(() =>
+                      setError(
+                        "Sound could not start. Check your device volume and try again.",
+                      ),
+                    )
+                  }
+                >
+                  Try a few notes
+                </button>
+              </section>
+              <section>
+                <h2>Your data, your choice</h2>
+                <p>
+                  Puzzle progress and things you save stay on this device.
+                  Optional history records active time, puzzle version, hints,
+                  and undo counts. Nothing is sent to a server.
+                </p>
+                <label className="check-label">
+                  <input
+                    type="checkbox"
+                    checked={prefs.history}
+                    onChange={(e) => changePrefs({ history: e.target.checked })}
+                  />
+                  Keep activity history on this device
+                </label>
+                <p className="muted">
+                  Switching off stops new history records. Existing history
+                  stays until you clear it. Saved progress and creations keep
+                  working.
+                </p>
+                <button
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Clear recorded activity history? Saved puzzles and creations will remain.",
+                      )
+                    )
+                      setState((s) => (s ? { ...s, sessions: [] } : s));
+                  }}
+                >
+                  Clear activity history
+                </button>
+              </section>
+              <section>
+                <h2>Backup & recovery</h2>
+                <p>
+                  Download a JSON backup to keep progress and creations. CSV
+                  includes recorded session summaries.
+                </p>
+                <div className="actions">
+                  <button
+                    onClick={() =>
+                      download(state, `curiosity-lab-${appRole}-backup.json`)
+                    }
+                  >
+                    Download JSON backup
+                  </button>
+                  <button
+                    onClick={() =>
+                      download(
+                        sessionsCsv(state),
+                        `curiosity-lab-${appRole}-sessions.csv`,
+                        "text/csv",
+                      )
+                    }
+                  >
+                    Download session CSV
+                  </button>
+                </div>
+                <label className="file-control">
+                  Restore this app’s JSON backup
+                  <input
+                    type="file"
+                    accept=".json,application/json"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) void importFile(file);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+                <button
+                  onClick={async () => {
+                    if (
+                      window.confirm(
+                        "Remove all local data for this app, including progress, creations, and history? Download a backup first if you want to keep it.",
+                      )
+                    ) {
+                      await clearState(appRole);
+                      setState(emptyState(appRole));
+                      setScreen("home");
+                    }
+                  }}
+                >
+                  Remove this app’s local data
+                </button>
+              </section>
+              <section>
+                <h2>Install this app</h2>
+                <p>
+                  On iPhone or iPad: open this app link in Safari, tap Share,
+                  then Add to Home Screen. On Android or desktop: use the
+                  browser’s Install app option when offered.
+                </p>
+                <p>
+                  Each role has its own icon and launch link. Installation on
+                  the family’s actual devices still needs verification.
+                </p>
+                <p className="muted">Version {APP_VERSION} · Local prototype</p>
+              </section>
+            </div>
+          </>
+        )}
+        {screen === "creations" && (
+          <>
+            <p className="eyebrow">Made and discovered by you</p>
+            <h1 ref={heading} tabIndex={-1}>
+              My Creations
+            </h1>
+            {!state.creations.length ? (
+              <div className="empty-family">
+                <Icon name="creations" />
+                <h2>A place for your discoveries</h2>
+                <p>
+                  Save a melody or a lab notebook entry, and find it here
+                  whenever you like.
+                </p>
+                <button onClick={() => open("music")}>Open Music Studio</button>
+                <button onClick={() => open("lab")}>Open My Laboratory</button>
+              </div>
+            ) : (
+              <div className="creation-grid">
+                {[...state.creations].reverse().map((c) => (
+                  <article className="creation" key={c.id}>
+                    <Icon name={c.kind === "melody" ? "music" : "lab"} />
+                    <p className="eyebrow">
+                      {c.kind === "melody" ? "Melody" : "Lab Notebook"}
+                    </p>
+                    <h2>{c.title}</h2>
+                    <p className="muted">Saved {relativeTime(c.savedAt)}</p>
+                    {c.kind === "melody" ? (
+                      <button
+                        onClick={() => {
+                          if (prefs.sound)
+                            void playNotes(c.notes || [], prefs.volume).catch(
+                              () =>
+                                setError(
+                                  "Sound could not start. Check your volume and try again.",
+                                ),
+                            );
+                          else
+                            setError(
+                              "Turn sound on in Settings to hear your melody.",
+                            );
+                        }}
+                      >
+                        Hear it again
+                      </button>
+                    ) : (
+                      <>
+                        <p>{c.observations?.join(" · ")}</p>
+                        <p>{c.text}</p>
+                        <button
+                          onClick={() => {
+                            const index = specimens.findIndex(
+                              (s) => s.id === c.specimenId,
+                            );
+                            if (index < 0) {
+                              setError(
+                                "This specimen is not available in the current content pack. Your note is preserved.",
+                              );
+                              return;
+                            }
+                            setState((s) => {
+                              if (!s) return s;
+                              const d = newDraft("lab");
+                              return {
+                                ...s,
+                                drafts: {
+                                  ...s.drafts,
+                                  lab: {
+                                    ...d,
+                                    data: {
+                                      specimen: index,
+                                      stage: "microscope",
+                                      zoom: c.zoom || 1,
+                                      pan: c.pan || [0, 0],
+                                      observations: c.observations || [],
+                                      text: c.text || "",
+                                    },
+                                  },
+                                },
+                              };
+                            });
+                            setScreen("lab");
+                          }}
+                        >
+                          Revisit specimen
+                        </button>
+                      </>
+                    )}
+                    <button
+                      className="text-button"
+                      onClick={() => {
+                        if (window.confirm("Remove this saved creation?"))
+                          setState((s) =>
+                            s
+                              ? {
+                                  ...s,
+                                  creations: s.creations.filter(
+                                    (x) => x.id !== c.id,
+                                  ),
+                                }
+                              : s,
+                          );
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </article>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+        {game && props && (
+          <>
+            <div className="game-heading">
+              <div>
+                <p className="eyebrow">A little discovery, at your pace</p>
+                <h1 ref={heading} tabIndex={-1}>
+                  {titles[game]}
+                </h1>
+              </div>
+              <div className="actions">
+                <button onClick={() => setPaused(!paused)}>
+                  {paused ? "Resume" : "Pause"}
+                </button>
+                <button
+                  onClick={() => {
+                    finish(
+                      game === "lab" || game === "music"
+                        ? "explored"
+                        : "unfinished",
+                    );
+                    setScreen("home");
+                  }}
+                >
+                  Finish for now
+                </button>
+                <button
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Start a new activity? Your current attempt will finish.",
+                      )
+                    )
+                      replay();
+                  }}
+                >
+                  New activity
+                </button>
+              </div>
+            </div>
+            {paused ? (
+              <section className="pause-panel">
+                <h2>Your place is kept.</h2>
+                <p>Come back whenever you like.</p>
+                <button className="primary" onClick={() => setPaused(false)}>
+                  Resume
+                </button>
+              </section>
+            ) : (
+              <section className="game-surface">
+                {game === "sudoku" ? (
+                  <Sudoku key={props.draft.id} {...props} />
+                ) : game === "connections" ? (
+                  <Connections key={props.draft.id} {...props} />
+                ) : game === "search" ? (
+                  <WordSearch key={props.draft.id} {...props} />
+                ) : game === "music" ? (
+                  <Music
+                    key={props.draft.id}
+                    {...props}
+                    sound={prefs.sound}
+                    volume={prefs.volume}
+                  />
+                ) : (
+                  <Laboratory key={props.draft.id} {...props} />
+                )}
+              </section>
+            )}
+          </>
+        )}
+      </main>
+      <footer>
+        <span>Curiosity Lab · A place to explore</span>
+        <span aria-live="polite">
+          {saved ? "Saved on this device" : "Saving on this device…"}
+        </span>
+      </footer>
+    </div>
+  );
+}

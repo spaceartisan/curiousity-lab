@@ -1,0 +1,40 @@
+[
+  {
+    "assetId": "phil-26402-r1",
+    "kind": "real_micrograph",
+    "sourceName": "CDC Public Health Image Library",
+    "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=26402",
+    "sourceImageId": "26402",
+    "licenseOrPublicDomainBasis": "Individual PHIL record states public domain; redistribution requires attribution.",
+    "attributionText": "CDC / Dr. Libero Ajello",
+    "licenseReviewedAtUtc": "2026-10-10",
+    "scientificReviewStatus": "Source caption cross-check and visual inspection; independent specialist review pending",
+    "pixelDimensions": [
+      700,
+      476
+    ],
+    "sha256": "00782b3e152fc95c3bab51982d4af67bfd7e2606453c5c2eba92e7f7037ff1a9",
+    "canUseForIdentificationQuestion": false,
+    "allowedQuestionIds": [],
+    "file": "phil-26402.jpg"
+  },
+  {
+    "assetId": "phil-10041-r1",
+    "kind": "real_micrograph",
+    "sourceName": "CDC Public Health Image Library",
+    "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=10041",
+    "sourceImageId": "10041",
+    "licenseOrPublicDomainBasis": "Individual PHIL record states public domain; redistribution requires attribution.",
+    "attributionText": "CDC / Segrid McAllister; photo Janice Haney Carr",
+    "licenseReviewedAtUtc": "2026-10-10",
+    "scientificReviewStatus": "Source caption cross-check and visual inspection; independent specialist review pending",
+    "pixelDimensions": [
+      700,
+      412
+    ],
+    "sha256": "803697983f5c3829c6dfc86d2512dfaa518f6b22f50e87ab683a3747bde05e6f",
+    "canUseForIdentificationQuestion": false,
+    "allowedQuestionIds": [],
+    "file": "phil-10041.jpg"
+  }
+]
