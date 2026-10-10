@@ -10,7 +10,7 @@ export default defineConfig({
     { name: "phone-chromium", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: "npm run preview",
+    command: "npm run preview -- --host 127.0.0.1",
     url: "http://127.0.0.1:4173/curiousity-lab/",
     reuseExistingServer: !process.env.CI,
   },

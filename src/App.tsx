@@ -25,6 +25,7 @@ import { Laboratory } from "./games/Laboratory";
 import { ActivityClock } from "./games/activity-clock";
 import { stopAudio, playNotes } from "./games/audio";
 import { specimens } from "./content/specimens";
+import { FamilySetup } from "./family/FamilySetup";
 import "./styles.css";
 const base = import.meta.env.BASE_URL;
 const titles: Record<GameKind, string> = {
@@ -987,6 +988,7 @@ export function App({ appRole }: { appRole: Role }) {
                   Clear activity history
                 </button>
               </section>
+              <FamilySetup role={appRole} />
               <section>
                 <h2>Backup & recovery</h2>
                 <p>

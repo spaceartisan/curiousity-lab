@@ -6,9 +6,20 @@ import {
   copyFile,
 } from "node:fs/promises";
 import { join } from "node:path";
+import { loadEnv } from "vite";
+import { parseWebConfig } from "../src/family/contracts.ts";
+const config = parseWebConfig(
+  loadEnv("production", process.cwd(), "VITE_").VITE_FIREBASE_CONFIG,
+);
+const cloud = config
+  ? ` https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://${config.authDomain}`
+  : "";
+const frames = config
+  ? `frame-src https://${config.authDomain} https://accounts.google.com; `
+  : "frame-src 'none'; ";
+const authScript = config ? " https://apis.google.com" : "";
 const base = "/curiousity-lab/";
-const csp =
-  "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
+const csp = `default-src 'self'; script-src 'self'${authScript}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'${cloud}; ${frames} worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'`;
 for (const file of [
   "dist/index.html",
   ...["play", "companion", "insights"].map((r) => `dist/${r}/index.html`),

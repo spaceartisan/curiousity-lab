@@ -14,7 +14,11 @@ This is intentionally the start of the staged design. Demo dashboards are not co
 - Calibrate Sudoku solving-technique tiers beyond naked singles before offering advanced difficulty. Preserve deterministic content versions and migrations.
 - Expand undo/skip/help consistency and make conflict/backup recovery explicit; test browser crash and storage-quota failure paths.
 
-## Phase 2 — Optional approved family sync
+## v0.2.0 — Phase 2a: account connection foundation
+
+Selected-control contrast corrected. Optional Google sign-in in Settings; per-role Firebase Auth namespaces; server-only approval checks using memory cache; trusted owner provisioning with identity/email verification; setup guide and environment-driven public config; positive/negative emulator tests. All browser activity reads/writes remain closed. No guest enrollment or data upload occurs.
+
+## Phase 2b — Optional approved family sync
 
 Dedicated user-owned Firebase project, verified individual Auth, trusted membership provisioning, subject grants, consent, offline outbox, idempotent reconciliation, account-cache purge, and positive/negative emulator tests. Anonymous visitors must have no private reads and no remote writes. Never silently enroll guest records into another person's data. Companion summaries must be separately authorized rather than hidden raw-event reads.
 

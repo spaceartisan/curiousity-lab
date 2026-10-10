@@ -18,8 +18,15 @@ jobs:
         with:
           node-version: "24"
           cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
       - run: npm ci
+      - run: npm run test:rules
       - run: npm run check
+        env:
+          VITE_FIREBASE_CONFIG: ${{ vars.FIREBASE_WEB_CONFIG }}
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4

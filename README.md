@@ -8,9 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## First release · v0.1.0
+## Current release · v0.2.0
 
-This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. No Firebase project is connected. No personal records, emails, service credentials, or private design document are published here.
+This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. Firebase Google sign-in and trusted account approval are available when configured. Activity sharing remains disabled. No personal records, emails, service credentials, or private design document are published here.
 
 Play includes:
 
@@ -22,6 +22,10 @@ Play includes:
 - IndexedDB progress saves separated by app role. Optional activity history starts off; it stays on this device. With it off, active-time/hint/undo summaries are not accumulated. Game state necessary for save/resume is still stored.
 
 Companion and Insights open directly to their own views. Fictional examples are clearly labeled and only appear when requested. Neither app reads Play's browser database. Insights can explicitly inspect a selected Play backup **in memory**, without uploading or persisting it.
+
+## Firebase account setup
+
+You can create the dedicated Spark/Firestore project now. Follow [the Firebase setup guide](docs/FIREBASE_SETUP.md) for Google sign-in, the public web configuration, security rules, and trusted account provisioning. Configure the `FIREBASE_WEB_CONFIG` repository variable and rerun the workflow to enable the connection panel without a new code push. Parents do not need to sign in for local play.
 
 ## Develop
 
@@ -43,7 +47,7 @@ The build base is `/curiousity-lab/`. If the repository is renamed or moved to a
 
 ## Checks and deployment
 
-`npm run check` runs the game, persistence, consent, and component tests, strict TypeScript, the production build, and structural PWA/provenance validation. The GitHub workflow then runs Chromium desktop/phone smoke tests (including offline microscopy), captures screenshots in its **browser-evidence** artifact, and deploys only when validation passes.
+`npm run test:rules` runs 11 emulator security scenarios (Java 21+ required). CI gates deployment on these tests as well as browser checks. `npm run check` runs the game, persistence, consent, and component tests, strict TypeScript, the production build, and structural PWA/provenance validation. The GitHub workflow then runs Chromium desktop/phone smoke tests (including offline microscopy), captures screenshots in its **browser-evidence** artifact, and deploys only when validation passes.
 
 **One-time repository setup:** In GitHub, open **Settings → Pages → Source → GitHub Actions**. If the first deploy fails because Pages is disabled, enable this setting and rerun the failed deploy job; no source push is needed.
 
@@ -51,11 +55,11 @@ For browser tests locally (requires Playwright's browser installation): `npx pla
 
 ## Privacy and release boundaries
 
-This app supports enjoyable exploration; it is not a diagnostic instrument or disease score. No remote collection, analytics SDK, camera, microphone, passive sensing, or public leaderboard is included. Public visitors are local-only.
+This app supports enjoyable exploration; it is not a diagnostic instrument or disease score. No remote activity collection, analytics tracking, camera, microphone, passive sensing, or public leaderboard is included. Public visitors are local-only.
 
-The included Firestore rules **deny everything** as a safe placeholder. They are not an implementation of family sync. Later cloud access must require individual authentication, trusted admin-approved membership and subject grants, consent, and emulator-tested rules. A six-digit confirmation code can never grant access. Same-origin apps may share browser infrastructure; role scopes alone do not authorize access or guarantee independent operating-system installations.
+The included Firestore rules allow a verified account to read only its own approval directory and scoped membership. All browser writes and protected activity reads remain denied. Sign-in checks never upload existing guest saves. Named Firebase apps separate role login keys and Firestore uses memory-only caching. Later activity sync still requires consent, account-bound storage, and tested uploads. A six-digit confirmation code can never grant access. Same-origin apps may share browser infrastructure; role scopes alone do not authorize access or guarantee independent operating-system installations.
 
-**Do not treat v0.1.0 as the connected family-production launch.** Auth, private sync, membership provisioning, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
+**Do not treat v0.2.0 as the connected family-production launch.** Private sync, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
 
 ## Image credits
 

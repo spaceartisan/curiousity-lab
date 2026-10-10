@@ -83,3 +83,43 @@ for (const role of ["companion", "insights"])
       .getAttribute("href");
     expect(manifest).toBe("./manifest.webmanifest");
   });
+
+test("settings stays local-only and selected controls remain readable", async ({
+  page,
+}, info) => {
+  await page.goto("/curiousity-lab/play/");
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Family connection" }),
+  ).toBeVisible();
+  // CI may have the optional public web config, but never real auth/family fixtures.
+  const prompt = page.getByRole("button", { name: "Sign in with Google" });
+  if (await prompt.isVisible()) await expect(prompt).toBeEnabled();
+  await page.getByRole("combobox", { name: "Theme", exact: true }).selectOption("dark");
+  await page.screenshot({
+    path: info.outputPath("settings-dark.png"),
+    fullPage: true,
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    ),
+  ).toBe(false);
+  await page.getByRole("button", { name: "Back to games" }).click();
+  await page.getByRole("button", { name: /Music Hear/ }).click();
+  const selected = page.getByRole("button", {
+    name: "Free piano",
+    exact: true,
+  });
+  await expect(selected).toHaveAttribute("aria-pressed", "true");
+  const colors = await selected.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { text: style.color, background: style.backgroundColor };
+  });
+  expect(colors.text).toBe("rgb(20, 40, 35)");
+  expect(colors.background).toBe("rgb(178, 220, 200)");
+  await page.screenshot({
+    path: info.outputPath("music-dark.png"),
+    fullPage: true,
+  });
+});

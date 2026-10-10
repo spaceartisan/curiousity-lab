@@ -1,3 +1,11 @@
+# v0.2.0
+
+- Corrected selected-tab contrast in light and dark themes and hidden skip-link capture positioning.
+- Added optional Google account setup with per-role login keys, trusted-device persistence choice, server-confirmed approval, revocation and wrong-role handling.
+- Added account-directory/member read rules; all private activity reads and browser writes remain denied.
+- Added trusted provisioning CLI, Firebase setup guide, optional CI web config, and emulator security gate.
+- Preserved v0.1.0 local saves and kept uploads disabled.
+
 # Changelog
 
 ## 0.1.0 — 2026-10-10

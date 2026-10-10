@@ -1,8 +1,23 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Phase 0/1: there is no browser Firebase adapter. Keep every remote
-    // operation denied until admin membership + consent rules are tested.
+    function verified() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    // Trusted owner provisioning only. No browser, including Insights, can
+    // enroll itself, edit roles, create a tenant, or redeem a short code.
+    match /accountDirectory/{uid} {
+      allow get: if verified() && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+    match /families/{familyId}/members/{uid} {
+      allow get: if verified() && request.auth.uid == uid
+        && get(/databases/$(database)/documents/accountDirectory/$(uid)).data.familyId == familyId
+        && get(/databases/$(database)/documents/accountDirectory/$(uid)).data.status == 'active';
+      allow list, write: if false;
+    }
+    // Stage 2a is connection/approval only. All activity, subjects, summaries,
+    // consent, events and creations remain closed until the sync release.
     match /{document=**} { allow read, write: if false; }
   }
 }
