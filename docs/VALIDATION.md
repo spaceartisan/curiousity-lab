@@ -1,5 +1,7 @@
 # v0.5.0 validation
 
+Backup automation follow-up: six additional Node tests cover private destination restrictions, API host/redirect boundaries, twelve weekly/twelve monthly retention, missing/stale/future or altered audits, checksum-gated publication, and deletion ordering. Local archive suite: thirteen passed and the age-only test skipped; existing 56 unit/component tests and build/PWA checks passed. Google setup script passed Bash syntax checking but has not been executed against production. The opt-in weekly workflow is not evidence of an actual backup. Review this commit's CI result for encryption/emulator/browser completion.
+
 Locally: 56 unit/component tests passed, including durable pre-restore retention, role isolation, preview/cancellation, undo, quota failure, history erasure and restore-versus-sharing isolation. Seven archive tests passed; one age encryption test was explicitly skipped because age is not installed locally. Strict TypeScript, production build and PWA checks passed. Local Java is 17, so emulator verification runs in CI with Java 21.
 
 CI gates deployment on 56 unit tests, all eight archive tests with encryption enabled, 22 Firestore security scenarios plus the actual encrypted synthetic emulator recovery drill, and 26 Chromium desktop/phone scenarios. New browser scenarios exercise JSON preview, cancel, persistent undo, full deletion and malformed/wrong-app rejection. Review the current commit's workflow result for actual completion. Recovery screenshots use fictional data only.

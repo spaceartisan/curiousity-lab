@@ -59,7 +59,9 @@ Automatic weekly **real** backups are not enabled. Connecting them still require
 1. A dedicated private backup repository or explicitly approved equivalent, with constrained write credentials that cannot change application source.
 2. Verified Spark-compatible Google read access, preferably OIDC/WIF. Do not enable billing or substitute a long-lived key without the owner's decision. Firebase's managed export service requires billing; this tooling uses document reads instead. See [Firebase managed export requirements](https://firebase.google.com/docs/firestore/manage-data/export-import).
 3. The offline-held real age key and its public recipient, with controlled verification of a real encrypted archive.
-4. Twelve weekly plus twelve monthly archives, a deletion inventory, successful timestamp/hash audit and failure/staleness notification after eight days.
+4. Activate and verify the implemented weekly private-release workflow, twelve weekly plus twelve monthly retention, deletion inventory, timestamp/hash audit and daily failure/staleness checks. Verify owner failure notifications after eight days.
 5. A tested consistency policy and account-recovery procedure, including re-pairing a lost anonymous parent identity.
 
 Private activity uploads remain disabled until a verified recent independent archive exists and a controlled real-data recovery has succeeded. Local recovery and synthetic drills are progress toward that gate, not a claim that the gate is complete.
+
+The automatic workflow and owner-only connection procedure are now prepared in [BACKUP_SETUP.md](BACKUP_SETUP.md). `BACKUP_ENABLED` is opt-in; no destination, secret, Google identity, real key or production archive was configured or created by this implementation pass.

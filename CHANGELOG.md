@@ -1,5 +1,7 @@
 # v0.5.0
 
+- Backup follow-up: prepared opt-in weekly encrypted private-release archives, twelve weekly/twelve monthly retention, checksum-gated publication, deletion audit and daily eight-day freshness failures. Added owner-only setup and narrowly restricted Google federation script. No production setup or real backup was performed.
+
 - Added local JSON restore previews and durable copies of the three newest pre-restore saves, with undo, quota-failure handling and deletion coverage.
 - Kept restored history out of automatic sharing preparation and preserved schema-v1 exports.
 - Added typed canonical Firestore archive tooling, authenticated age encryption, checksum/count/grant validation and emulator-only recovery.

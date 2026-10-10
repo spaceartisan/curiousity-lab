@@ -63,6 +63,8 @@ The included Firestore rules support owner-only family setup, unpredictable sing
 
 See [backup and recovery](docs/BACKUP_RECOVERY.md) for device-local undo, the encrypted archive tools, synthetic monthly drills and the remaining real-backup setup. No production export, new credential or billing change is included.
 
+The opt-in weekly private-release workflow, retention and daily freshness checks are prepared. Follow the [owner-only connection guide](docs/BACKUP_SETUP.md) to activate them; parents have no backup setup steps.
+
 ## Image credits
 
 The first pack uses individual public-domain CDC PHIL records, credited in the viewer and [image provenance](public/media/provenance.json). The source images are bundled, not hotlinked. CDC does not endorse this app.

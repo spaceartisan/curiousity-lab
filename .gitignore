@@ -13,3 +13,4 @@ playwright-report/
 *.age
 *.agekey
 backup-private/
+gha-creds-*.json

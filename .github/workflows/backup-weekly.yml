@@ -1,0 +1,62 @@
+name: Private weekly database backup
+on:
+  schedule:
+    - cron: "17 9 * * 0"
+    - cron: "47 10 * * *"
+  workflow_dispatch:
+    inputs:
+      operation:
+        type: choice
+        options: [health, export]
+        default: health
+permissions:
+  contents: read
+concurrency:
+  group: private-database-backup
+  cancel-in-progress: false
+jobs:
+  backup:
+    if: vars.BACKUP_ENABLED == 'true' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      BACKUP_REPOSITORY: ${{ vars.BACKUP_REPOSITORY }}
+      BACKUP_PROJECT_ID: curiousity-lab
+      BACKUP_AGE_RECIPIENT: ${{ vars.BACKUP_AGE_RECIPIENT }}
+      BACKUP_CONSISTENCY_APPROVED: ${{ vars.BACKUP_CONSISTENCY_APPROVED }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Choose operation
+        id: operation
+        env:
+          REQUESTED: ${{ inputs.operation }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          if [ "$REQUESTED" = export ] || [ "$SCHEDULE" = '17 9 * * 0' ]; then
+            echo 'value=export' >> "$GITHUB_OUTPUT"
+          else
+            echo 'value=health' >> "$GITHUB_OUTPUT"
+          fi
+      - run: npm ci
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
+        if: steps.operation.outputs.value == 'export'
+        with:
+          workload_identity_provider: ${{ vars.BACKUP_WIF_PROVIDER }}
+          service_account: ${{ vars.BACKUP_SERVICE_ACCOUNT }}
+      - if: steps.operation.outputs.value == 'export'
+        run: sudo apt-get update && sudo apt-get install -y age
+      - name: Run backup or freshness check
+        env:
+          OPERATION: ${{ steps.operation.outputs.value }}
+          BACKUP_REPOSITORY_TOKEN: ${{ secrets.BACKUP_REPOSITORY_TOKEN }}
+        run: node scripts/backup/weekly.mjs "$OPERATION"
+# Opt-in only. No production decryption identity, plaintext artifacts or billing changes.
