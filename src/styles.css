@@ -1277,3 +1277,17 @@ summary {
 .game-heading h1 {
   overflow-wrap: anywhere;
 }
+.connections-workspace {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.connections-workspace .actions button {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.connections-selection {
+  padding: 0.7rem;
+  background: var(--hover);
+  border-radius: 10px;
+}

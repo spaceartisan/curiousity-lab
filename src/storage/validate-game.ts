@@ -1,5 +1,5 @@
 import { generateSudoku, validSudoku, type Size } from "../games/sudoku-engine";
-import { searchBoard, searchPacks } from "../content/words";
+import { connections, searchBoard, searchPacks } from "../content/words";
 import { specimens } from "../content/specimens";
 import { exerciseCount, type MusicMode } from "../content/music";
 const record = (v: unknown): v is Record<string, unknown> =>
@@ -51,14 +51,32 @@ export function validateGame(kind: string, value: unknown): boolean {
         h.notes.every((v) => values(v, 1, value.size)),
     );
   }
-  if (kind === "connections")
+  if (kind === "connections") {
+    if (
+      !Number.isInteger(value.pack) ||
+      Number(value.pack) < 0 ||
+      Number(value.pack) >= connections.length ||
+      !strings(value.solved, 4) ||
+      !strings(value.selected, 4)
+    )
+      return false;
+    const pack = connections[Number(value.pack)];
+    const solved = value.solved as string[],
+      selected = value.selected as string[];
+    const remaining = pack.groups
+      .filter((g) => !solved.includes(g.title))
+      .flatMap((g) => g.words);
     return (
-      Number.isInteger(value.pack) &&
-      Number(value.pack) >= 0 &&
-      Number(value.pack) < 2 &&
-      strings(value.solved, 4) &&
-      strings(value.selected, 4)
+      new Set(solved).size === solved.length &&
+      new Set(selected).size === selected.length &&
+      solved.every((title) => pack.groups.some((g) => g.title === title)) &&
+      selected.every((w) => remaining.includes(w)) &&
+      (value.order === undefined ||
+        (Number.isInteger(value.order) &&
+          Number(value.order) >= 0 &&
+          Number(value.order) <= 31))
     );
+  }
   if (kind === "search") {
     const pack = value.pack === undefined ? 0 : value.pack;
     return (

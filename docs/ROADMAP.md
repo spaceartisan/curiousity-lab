@@ -10,7 +10,7 @@ This is intentionally the start of the staged design. Demo dashboards are not co
 
 - Review screenshots and use the app on actual phone/tablet devices; verify 200% text/zoom, VoiceOver/keyboard paths, touch targets, separate home-screen installs, and Web Audio on iOS/Android.
 - Expand and independently review the image pack, with per-image license/provenance and optional hematology images. Optional specimen cards, direct exploration, comparison and per-slide note continuity arrived in v0.8.0; refine the workbench with player feedback and add a dedicated notebook browser/last-viewed continuity.
-- Review and grow word/music content with player feedback. Word-search variety arrived in v0.6.0; music exercise variety, real rhythm attempts, score/pattern/ear views and in-game guidance arrived in v0.7.0. Actual-device audio/accessibility review and independent music-content review remain.
+- Review and grow word/music content with player feedback. Word-search variety arrived in v0.6.0; music exercise variety, real rhythm attempts, score/pattern/ear views and in-game guidance arrived in v0.7.0. Word Connections expanded to eight packs with progressive assistance, in-progress undo and same-board replay in v0.9.0. Actual-device accessibility and independent word/music-content review remain.
 - Calibrate Sudoku solving-technique tiers beyond naked singles before offering advanced difficulty. Preserve deterministic content versions and migrations.
 - Expand undo/skip/help consistency and make conflict/backup recovery explicit; test browser crash and storage-quota failure paths.
 
@@ -41,6 +41,10 @@ Four original phrase exercises, four melody comparisons and three rhythm pattern
 ## v0.8.0 — Optional specimen-to-notebook journey
 
 Two original fictional specimen cards frame the existing real teaching images, with explicit source/sample separation. The player can enter the microscope directly, skip/revisit any stage, compare separate full-source images with attribution, choose “Not sure” and save a blank or annotated notebook page. Per-slide notes/view settings survive switching/reload. Finished view changes do not create another attempt; explicit repeats do, without limits. Notebook revisits now bind the actual specimen ID and preserve legacy source identity. New local records distinguish workbench/free exploration and workflow content versions. The two-image starter, absent hematology, dedicated notebook continuity, independent scientific review, real device accessibility and private sync/reporting remain unfinished.
+
+## v0.9.0 — Word Connections variety and assistance
+
+Eight fixed, authored packs retain the first two boards and old `connections-0`/`connections-1` identities. Six new boards have stable authored IDs and content version `connections-2`. Category/one-word/four-word hints, in-progress group undo, shuffle, keyboard selection/Escape and same-board replay support different ways to play. All progress/presentation is local and offline; completed attempts remain immutable and replay starts a separate attempt. Saved data validates actual board membership and unique selections. Independent language/ambiguity review, puzzle preference feedback, full document work and device/production gates remain.
 
 ## Phase 2b — Optional approved family sync
 

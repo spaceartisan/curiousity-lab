@@ -6,40 +6,89 @@ import {
   wordPath,
 } from "../content/words";
 import type { GameProps } from "./types";
-export interface ConnectionsData {
-  pack: number;
-  solved: string[];
-  selected: string[];
-}
+import {
+  matchingConnection,
+  connectionWords,
+  type ConnectionsData,
+} from "./connections-engine";
+export type { ConnectionsData } from "./connections-engine";
 export interface SearchData {
   pack?: number;
   found: string[];
 }
-export function Connections({ draft, update, finish, replay }: GameProps) {
+export function Connections({
+  draft,
+  update,
+  finish,
+  replay,
+  repeat,
+}: GameProps) {
   const d = draft.data as ConnectionsData;
-  const pack = connections[d.pack % connections.length];
+  const pack = connections[d.pack];
   const [message, setMessage] = useState("");
+  const [hintStep, setHintStep] = useState(0);
   const left = pack.groups.filter((g) => !d.solved.includes(g.title));
-  const words = left.flatMap((g) => g.words).sort((a, b) => a.localeCompare(b));
+  const words = connectionWords(d);
+  const complete = d.solved.length === pack.groups.length;
   function check() {
-    const group = left.find((g) =>
-      g.words.every((w) => d.selected.includes(w)),
-    );
+    if (complete) return;
+    const group = matchingConnection(d);
     if (!group) {
-      setMessage("Try a different connection, or ask for a hint.");
+      setMessage(
+        "These words have different connections. Try another grouping, or use a hint.",
+      );
       return;
     }
     const solved = [...d.solved, group.title];
     update({ ...d, solved, selected: [] });
+    setHintStep(0);
     setMessage(`Connected: ${group.title}.`);
-    if (solved.length === 4) finish("completed");
+    if (solved.length === pack.groups.length) finish("completed");
   }
+  function hint() {
+    const group = left[0];
+    if (!group) return;
+    if (hintStep === 0) setMessage(`Look for ${group.title.toLowerCase()}.`);
+    else if (hintStep === 1)
+      setMessage(
+        `One word in ${group.title.toLowerCase()} is ${group.words[0]}.`,
+      );
+    else {
+      setMessage(
+        `Four words for ${group.title.toLowerCase()} are selected. Choose Connect when you like.`,
+      );
+    }
+    update(hintStep === 2 ? { ...d, selected: [...group.words] } : d, {
+      hint: true,
+    });
+    setHintStep(Math.min(2, hintStep + 1));
+  }
+  const groupSelected = left[0]?.words.every((w) => d.selected.includes(w));
   return (
-    <>
+    <div className="connections-workspace">
+      <h2>{pack.title}</h2>
       <p>
-        Find four words that belong together. Select them, then choose
-        “Connect.”
+        {d.solved.length} of {pack.groups.length} connections found · Puzzle{" "}
+        {d.pack + 1} of {connections.length}
       </p>
+      <p id="connections-instructions">
+        Find four words that belong together. Select them, then choose
+        “Connect.” There is no time limit or limit on tries.
+      </p>
+      <details>
+        <summary>How to play & get help</summary>
+        <p>
+          Select a word to add it; select it again to remove it. You can choose
+          up to four words. Clear selection or press Escape to start your
+          selection again.
+        </p>
+        <p>
+          Hints can name a category, show one word, then select all four words
+          for you. Undo last connection brings back the most recently solved
+          group while a puzzle is in progress. Replay this puzzle starts a fresh
+          attempt on the same board.
+        </p>
+      </details>
       <div className="solved-groups">
         {pack.groups
           .filter((g) => d.solved.includes(g.title))
@@ -50,18 +99,42 @@ export function Connections({ draft, update, finish, replay }: GameProps) {
             </div>
           ))}
       </div>
-      <div className="word-grid">
+      <p className="connections-selection" aria-live="polite">
+        Selected: {d.selected.length ? d.selected.join(" · ") : "none"} ·{" "}
+        {d.selected.length} of 4
+      </p>
+      <div
+        className="word-grid"
+        role="group"
+        aria-label="Connection words"
+        aria-describedby="connections-instructions"
+        onKeyDown={(e) => {
+          if (e.key === "Escape" && d.selected.length) {
+            e.preventDefault();
+            update({ ...d, selected: [] });
+            setMessage("Selection cleared.");
+          }
+        }}
+      >
         {words.map((w) => (
           <button
             key={w}
             aria-pressed={d.selected.includes(w)}
             onClick={() => {
-              const selected = d.selected.includes(w)
-                ? d.selected.filter((x) => x !== w)
-                : d.selected.length < 4
-                  ? [...d.selected, w]
-                  : d.selected;
-              update({ ...d, selected });
+              if (complete) return;
+              if (d.selected.length === 4 && !d.selected.includes(w)) {
+                setMessage(
+                  "Four words are selected. Remove one or clear the selection to choose another.",
+                );
+                return;
+              }
+              update({
+                ...d,
+                selected: d.selected.includes(w)
+                  ? d.selected.filter((x) => x !== w)
+                  : [...d.selected, w],
+              });
+              setMessage("");
             }}
           >
             {w}
@@ -71,31 +144,60 @@ export function Connections({ draft, update, finish, replay }: GameProps) {
       <div className="actions">
         <button
           className="primary"
-          disabled={d.selected.length !== 4}
+          disabled={complete || d.selected.length !== 4}
           onClick={check}
         >
           Connect
         </button>
-        <button onClick={() => update({ ...d, selected: [] })}>
+        <button
+          disabled={!d.selected.length}
+          onClick={() => {
+            update({ ...d, selected: [] });
+            setMessage("Selection cleared.");
+          }}
+        >
           Clear selection
         </button>
         <button
-          disabled={!left.length}
+          disabled={complete || (hintStep === 2 && !!groupSelected)}
+          onClick={hint}
+        >
+          {hintStep === 0
+            ? "Hint"
+            : hintStep === 1
+              ? "Show one word"
+              : "Show four words"}
+        </button>
+        <button
+          disabled={complete || !d.solved.length}
           onClick={() => {
-            setMessage(
-              `Look for ${left[0].title.toLowerCase()}. One word is ${left[0].words[0]}.`,
+            const title = d.solved[d.solved.length - 1];
+            update(
+              { ...d, solved: d.solved.slice(0, -1), selected: [] },
+              { undo: true },
             );
-            update(d, { hint: true });
+            setHintStep(0);
+            setMessage(`Returned ${title.toLowerCase()} to the board.`);
           }}
         >
-          Hint
+          Undo last connection
         </button>
+        <button
+          disabled={complete}
+          onClick={() => {
+            update({ ...d, order: ((d.order ?? 0) % 31) + 1 }, { view: true });
+            setMessage("Word positions changed. Your selection is kept.");
+          }}
+        >
+          Shuffle words
+        </button>
+        {repeat && <button onClick={repeat}>Replay this puzzle</button>}
         <button onClick={replay}>Another puzzle</button>
       </div>
       <p role="status">
-        {d.solved.length === 4 ? "You found all four connections." : message}
+        {complete ? "You found all four connections." : message}
       </p>
-    </>
+    </div>
   );
 }
 export function WordSearch({

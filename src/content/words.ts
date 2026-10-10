@@ -1,6 +1,7 @@
 export const connections = [
   {
     id: "garden-and-craft-v1",
+    title: "Garden and craft",
     groups: [
       { title: "In the garden", words: ["TULIP", "DAHLIA", "IRIS", "ROSE"] },
       {
@@ -16,6 +17,7 @@ export const connections = [
   },
   {
     id: "nature-and-home-v1",
+    title: "Nature and home",
     groups: [
       { title: "Trees", words: ["MAPLE", "OAK", "BIRCH", "ELM"] },
       {
@@ -24,6 +26,102 @@ export const connections = [
       },
       { title: "Fabrics", words: ["LINEN", "COTTON", "SILK", "WOOL"] },
       { title: "Bodies of water", words: ["LAKE", "RIVER", "POND", "OCEAN"] },
+    ],
+  },
+  {
+    id: "travel-and-reading-v1",
+    title: "Travel and reading",
+    groups: [
+      { title: "Ways to travel", words: ["BICYCLE", "CANOE", "TRAM", "FERRY"] },
+      { title: "Small birds", words: ["ROBIN", "SPARROW", "FINCH", "WREN"] },
+      {
+        title: "Parts of a book",
+        words: ["CHAPTER", "INDEX", "PREFACE", "GLOSSARY"],
+      },
+      { title: "Flat shapes", words: ["CIRCLE", "TRIANGLE", "SQUARE", "OVAL"] },
+    ],
+  },
+  {
+    id: "kitchen-and-stitching-v1",
+    title: "Kitchen and stitching",
+    groups: [
+      { title: "Cooking methods", words: ["ROAST", "STEAM", "SIMMER", "BAKE"] },
+      {
+        title: "Needlework tools",
+        words: ["NEEDLE", "THIMBLE", "HOOP", "BOBBIN"],
+      },
+      {
+        title: "Root vegetables",
+        words: ["CARROT", "PARSNIP", "TURNIP", "RADISH"],
+      },
+      { title: "Seasons", words: ["SPRING", "SUMMER", "AUTUMN", "WINTER"] },
+    ],
+  },
+  {
+    id: "music-and-sky-v1",
+    title: "Music and sky",
+    groups: [
+      {
+        title: "Number of performers",
+        words: ["SOLO", "DUET", "TRIO", "QUARTET"],
+      },
+      {
+        title: "Objects in space",
+        words: ["COMET", "ASTEROID", "PLANET", "MOON"],
+      },
+      {
+        title: "Punctuation marks",
+        words: ["COMMA", "COLON", "DASH", "PERIOD"],
+      },
+      { title: "Footwear", words: ["BOOT", "SANDAL", "SLIPPER", "LOAFER"] },
+    ],
+  },
+  {
+    id: "garden-and-patterns-v1",
+    title: "Garden and patterns",
+    groups: [
+      { title: "Culinary herbs", words: ["BASIL", "THYME", "SAGE", "DILL"] },
+      {
+        title: "Times of day",
+        words: ["DAWN", "MORNING", "AFTERNOON", "DUSK"],
+      },
+      {
+        title: "Fabric patterns",
+        words: ["STRIPED", "SPOTTED", "CHECKERED", "PLAIN"],
+      },
+      { title: "Containers", words: ["BASKET", "JAR", "BOX", "BAG"] },
+    ],
+  },
+  {
+    id: "room-and-measures-v1",
+    title: "Room and measures",
+    groups: [
+      {
+        title: "Furniture",
+        words: ["SOFA", "ARMCHAIR", "DRESSER", "BOOKCASE"],
+      },
+      {
+        title: "Polygons",
+        words: ["PENTAGON", "HEXAGON", "OCTAGON", "DECAGON"],
+      },
+      {
+        title: "Citrus fruits",
+        words: ["ORANGE", "LEMON", "LIME", "GRAPEFRUIT"],
+      },
+      { title: "Units of length", words: ["INCH", "FOOT", "YARD", "MILE"] },
+    ],
+  },
+  {
+    id: "weather-and-plants-v1",
+    title: "Weather and plants",
+    groups: [
+      { title: "Precipitation", words: ["RAIN", "SNOW", "HAIL", "SLEET"] },
+      { title: "Landforms", words: ["VALLEY", "CANYON", "PLATEAU", "HILL"] },
+      {
+        title: "Keyboard instruments",
+        words: ["PIANO", "ORGAN", "ACCORDION", "HARPSICHORD"],
+      },
+      { title: "Parts of a plant", words: ["ROOT", "STEM", "LEAF", "FLOWER"] },
     ],
   },
 ];

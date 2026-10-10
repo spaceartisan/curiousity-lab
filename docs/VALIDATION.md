@@ -1,3 +1,13 @@
+# v0.9.0 validation
+
+Locally: 91 unit/component tests passed, including eight new Connections cases covering all eight packs' disjoint four-word groups and exact matching, original board/ID preservation, malformed restore rejection, deterministic shuffle/selection preservation, three progressive hint levels and undo metrics, mixed/fifth-word/Escape behavior, completion/replay IDs and content versions, eight-board cycling, legacy remount and history-off exclusion. Thirteen archive/remote cases passed with the age-only test skipped locally. TypeScript, production build and scoped PWA/provenance validation passed.
+
+CI gates deployment on 91 unit/component tests, fourteen archive/remote tests with age, twenty-two Firestore security cases plus the encrypted emulator recovery drill, and thirty-six desktop/phone browser scenarios. The new scenario covers offline hint/undo, selection and shuffled-order reload, Enter/Escape, all eight packs, 320-pixel/200% text and 48-pixel word targets, duplicate-free completed attempts and same-board replay. Check this commit's workflow result for actual completion.
+
+Hints count deliberate help requests, not mistakes; a mixed grouping records no penalty. Undo is available before completion; completed boards offer fresh replay rather than changing a filed session. Original two boards retain `starter-1` metadata. No family activity upload or clinical inference is added. Independent language/ambiguity review and real phone/VoiceOver checks remain; content is original authored material rather than copied daily puzzles.
+
+---
+
 # v0.8.0 validation
 
 Locally: 83 unit/component tests passed, including eight new laboratory cases for authored source mapping and mode/ID separation, legacy save identity, bounded malformed restore rejection, independent per-slide notes/views, skipping every stage/blank notebook saving, credited comparison, seven separate repeat attempts, reload continuity and correct notebook-revisit IDs (including legacy second-slide entries). Thirteen archive/remote cases passed; the age-only case was skipped locally. TypeScript, production build and scoped PWA/provenance validation passed.

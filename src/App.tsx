@@ -18,7 +18,8 @@ import {
 import { Icon } from "./ui/Icon";
 import { Sudoku } from "./games/Sudoku";
 import { generateSudoku } from "./games/sudoku-engine";
-import { searchBoard, searchPacks } from "./content/words";
+import { connections, searchBoard, searchPacks } from "./content/words";
+import { connectionsPuzzle } from "./games/connections-engine";
 import { Connections, WordSearch } from "./games/Words";
 import { Music, type MusicData } from "./games/Music";
 import { exerciseCount, musicPuzzle } from "./content/music";
@@ -79,7 +80,9 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
       : game === "connections"
         ? {
             pack: previous
-              ? (Number((previous.data as { pack: number }).pack) + 1) % 2
+              ? (Number((previous.data as { pack: number }).pack) +
+                  (samePuzzle ? 0 : 1)) %
+                connections.length
               : 0,
             solved: [],
             selected: [],
@@ -123,7 +126,7 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
       game === "sudoku"
         ? `sudoku-${oldSudoku?.size || 9}-${seed}`
         : game === "connections"
-          ? `connections-${(data as { pack: number }).pack}`
+          ? connectionsPuzzle((data as { pack: number }).pack)
           : game === "search"
             ? searchBoard((data as { pack: number }).pack).id
             : game === "music"
@@ -158,14 +161,17 @@ function archive(
           schemaVersion: 1 as const,
           appVersion: APP_VERSION,
           contentVersion:
-            draft.game === "search" && draft.puzzleId !== "quiet-garden-v1"
-              ? "word-search-2"
-              : draft.game === "music" && draft.puzzleId !== "music-studio-v1"
-                ? "music-exercises-1"
-                : draft.game === "lab" &&
-                    (draft.data as LabData).workflowRevision === 1
-                  ? "lab-workflow-1"
-                  : "starter-1",
+            draft.game === "connections" &&
+            (draft.data as { pack: number }).pack >= 2
+              ? "connections-2"
+              : draft.game === "search" && draft.puzzleId !== "quiet-garden-v1"
+                ? "word-search-2"
+                : draft.game === "music" && draft.puzzleId !== "music-studio-v1"
+                  ? "music-exercises-1"
+                  : draft.game === "lab" &&
+                      (draft.data as LabData).workflowRevision === 1
+                    ? "lab-workflow-1"
+                    : "starter-1",
           game: draft.game,
           puzzleId: draft.puzzleId,
           startedAt: draft.startedAt,

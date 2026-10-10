@@ -1,3 +1,10 @@
+# v0.9.0
+
+- Expanded Word Connections from two to eight original themed packs; retained the original boards, legacy puzzle IDs and historical content versions.
+- Added progressive category/one-word/four-word help, undo of the last solved group during play, optional deterministic shuffle, selected-word summary, keyboard Escape and same-board replay.
+- Completed attempts are filed once and remain finished; replay creates another ID/attempt, while shuffling keeps selection and the current attempt. There are no lives, penalties or timed limits.
+- Strengthened restore validation for actual group titles, remaining words, unique selections/solved groups and bounded presentation order. New packs use stable authored IDs and `connections-2` content metadata.
+
 # v0.8.0
 
 - Added two authored, versioned fictional laboratory specimen cards, direct microscope exploration and optional, skippable specimen/observation/comparison stages. Stories explicitly distinguish their fictional sample from the real CDC teaching image.
