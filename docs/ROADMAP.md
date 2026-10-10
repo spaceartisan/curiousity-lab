@@ -26,6 +26,10 @@ Owner self-service Google setup; separate single-use, expiring invitations for P
 
 Always-on role connection status reaches the home screens. Play has separate local preparation choices for Insights details and coarse Companion moments, personal-device storage confirmation, explicit individual historical selection and optional future records. Prepared copies are bound to project, UID, family, subject and role; session/recipient IDs deduplicate retries. Switching or reconnecting accounts never enrolls preexisting history. Disabling a recipient removes its pending copies; clearing history/local data removes preparations across previous local accounts. No upload path or new Firestore activity permissions exist. Fresh consent is required in a later upload release.
 
+## v0.5.0 — Safe local restore and encrypted recovery drills
+
+JSON restore previews changes and requires confirmation in the app. The previous save is kept before replacement, with the three newest undo copies retained locally. Restored history cannot enter automatic sharing preparation; local deletion includes undo copies. Privileged archive tooling recursively exports the default Firestore database, validates typed records/checksums/counts/selected grant cross-references, compresses and encrypts before writing ciphertext. Production restore is absent; recovery tooling only stages an empty local demo emulator. CI and a monthly synthetic workflow verify authenticated decryption and actual emulator recovery. Real automatic weekly backups, private storage, credentials, retention, staleness notification and controlled real-source recovery remain required before uploads.
+
 ## Phase 2b — Optional approved family sync
 
 Dedicated user-owned Firebase project, owner Google Auth and invitation-approved anonymous parent identities, subject grants, consent, offline outbox, idempotent reconciliation, account-cache purge, and positive/negative emulator tests. Unpaired visitors cannot read/write private activity. Never silently enroll guest records into another person's data. Companion summaries must be separately authorized rather than hidden raw-event reads.

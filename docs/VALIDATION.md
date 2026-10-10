@@ -1,3 +1,13 @@
+# v0.5.0 validation
+
+Locally: 56 unit/component tests passed, including durable pre-restore retention, role isolation, preview/cancellation, undo, quota failure, history erasure and restore-versus-sharing isolation. Seven archive tests passed; one age encryption test was explicitly skipped because age is not installed locally. Strict TypeScript, production build and PWA checks passed. Local Java is 17, so emulator verification runs in CI with Java 21.
+
+CI gates deployment on 56 unit tests, all eight archive tests with encryption enabled, 22 Firestore security scenarios plus the actual encrypted synthetic emulator recovery drill, and 26 Chromium desktop/phone scenarios. New browser scenarios exercise JSON preview, cancel, persistent undo, full deletion and malformed/wrong-app rejection. Review the current commit's workflow result for actual completion. Recovery screenshots use fictional data only.
+
+The monthly synthetic workflow has no real database credentials, archive destination or production decryption key. Its schedule is configured, not evidence of a monthly run having occurred. Real automatic weekly backup remains unconfigured; no private activity permissions were opened and no real export or billing change was made. The archive's two-pass comparison is not a transactional snapshot. See the recovery runbook for launch gates and scope.
+
+---
+
 # v0.4.0 validation
 
 48 unit/component tests passed locally, including ten new preparation cases for account isolation, historical selection, idempotent retries, recipient minimization, deletion and approval loss. Strict TypeScript, production build and static PWA validation passed.

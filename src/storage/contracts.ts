@@ -1,5 +1,5 @@
 import { validateGame } from "./validate-game";
-export const APP_VERSION = "0.4.0";
+export const APP_VERSION = "0.5.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {
@@ -113,6 +113,9 @@ export function validateState(
   for (const s of v.sessions)
     if (
       !s ||
+      s.schemaVersion !== 1 ||
+      typeof s.appVersion !== "string" ||
+      typeof s.contentVersion !== "string" ||
       typeof s.id !== "string" ||
       !["sudoku", "connections", "search", "music", "lab"].includes(s.game) ||
       !Number.isFinite(s.activeMs) ||

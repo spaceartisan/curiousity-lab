@@ -1,3 +1,20 @@
+# v0.5.0
+
+- Added local JSON restore previews and durable copies of the three newest pre-restore saves, with undo, quota-failure handling and deletion coverage.
+- Kept restored history out of automatic sharing preparation and preserved schema-v1 exports.
+- Added typed canonical Firestore archive tooling, authenticated age encryption, checksum/count/grant validation and emulator-only recovery.
+- Added an encrypted synthetic recovery drill to the deployment gate and a monthly synthetic workflow. Real backups and private uploads remain disabled.
+
+# v0.4.0
+
+- Added account-bound local sharing preparation with separate Insights and Companion payloads, explicit historical selection, optional future records and deletion controls.
+- Connected home-screen status to the role-specific family connection.
+
+# v0.3.0
+
+- Added owner Google setup, code-only anonymous parent pairing, expiring single-use invitations and device revocation.
+- Fixed Companion and Insights header line breaks.
+
 # v0.2.1
 
 - Connected the owner-provided public `curiousity-lab` web configuration by default across all three apps.

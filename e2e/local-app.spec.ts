@@ -327,11 +327,9 @@ test.describe("synthetic connected family", () => {
     await expect(
       page.getByText("2 prepared records on this device · Not uploaded"),
     ).toBeVisible();
-    await page
-      .locator(".sharing-preparation")
-      .screenshot({
-        path: info.outputPath("sharing-preparation-synthetic.png"),
-      });
+    await page.locator(".sharing-preparation").screenshot({
+      path: info.outputPath("sharing-preparation-synthetic.png"),
+    });
     await page
       .getByRole("button", {
         name: "Stop preparation and remove prepared copies",
@@ -346,4 +344,118 @@ test.describe("synthetic connected family", () => {
       ),
     ).toBe(false);
   });
+});
+
+test("local backup preview, cancellation, restore, undo and full deletion", async ({
+  page,
+}, info) => {
+  await page.goto("/curiousity-lab/play/");
+  await page
+    .getByRole("button", { name: "Play without activity history" })
+    .click();
+  await expect(
+    page.getByText("Saved on this device", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  const backup = {
+    schemaVersion: 1,
+    installationRole: "play",
+    authenticatedUid: null,
+    preferences: {
+      theme: "light",
+      textSize: "normal",
+      sound: false,
+      volume: 0.25,
+      history: false,
+      welcomeDone: true,
+    },
+    drafts: {},
+    sessions: [],
+    creations: [
+      {
+        id: "synthetic-notebook",
+        kind: "notebook",
+        title: "Fictional backup notebook",
+        savedAt: "2026-10-10T00:00:00.000Z",
+        text: "Fictional specimen notes",
+      },
+    ],
+  };
+  const file = {
+    name: "synthetic-play-backup.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(backup)),
+  };
+  await page.getByLabel("Restore this app’s JSON backup").setInputFiles(file);
+  const preview = page.getByRole("region", { name: "Restore preview" });
+  await expect(preview).toBeVisible();
+  await preview.screenshot({
+    path: info.outputPath("restore-preview-synthetic.png"),
+  });
+  await page.getByRole("button", { name: "Cancel restore" }).click();
+  await expect(preview).not.toBeVisible();
+  await expect(
+    page.getByText("Previous saves before restoring (0)"),
+  ).toBeVisible();
+  await page.getByLabel("Restore this app’s JSON backup").setInputFiles(file);
+  await page
+    .getByRole("button", { name: "Restore this backup", exact: true })
+    .click();
+  await expect(page.getByText(/Backup restored on this device/)).toBeVisible();
+  await page.reload();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByText("Previous saves before restoring (1)").click();
+  await page.getByRole("button", { name: "Review previous save 1" }).click();
+  await expect(
+    page.getByText("Previous local save", { exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Restore this backup", exact: true })
+    .click();
+  await expect(page.getByText(/Backup restored on this device/)).toBeVisible();
+  await page
+    .locator(".recovery-panel")
+    .screenshot({ path: info.outputPath("restore-undo-synthetic.png") });
+  page.once("dialog", (dialog) => dialog.accept());
+  await page
+    .getByRole("button", { name: "Remove this app’s local data", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await expect(
+    page.getByText("Previous saves before restoring (0)"),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > innerWidth,
+    ),
+  ).toBe(false);
+});
+test("corrupt and wrong-role backups cannot replace local data", async ({
+  page,
+}) => {
+  await page.goto("/curiousity-lab/play/");
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  for (const bytes of [
+    "broken json",
+    JSON.stringify({ schemaVersion: 1, installationRole: "insights" }),
+  ]) {
+    await page
+      .getByLabel("Restore this app’s JSON backup")
+      .setInputFiles({
+        name: "unsupported.json",
+        mimeType: "application/json",
+        buffer: Buffer.from(bytes),
+      });
+    await expect(
+      page.getByText(
+        "This file is not a supported backup for this app. Your existing data is unchanged.",
+      ),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("region", { name: "Restore preview" }),
+    ).not.toBeVisible();
+  }
+  await expect(
+    page.getByText("Previous saves before restoring (0)"),
+  ).toBeVisible();
 });

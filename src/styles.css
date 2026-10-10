@@ -1088,3 +1088,30 @@ summary {
 .sharing-preparation details {
   margin: 1.5rem 0;
 }
+
+.restore-preview {
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+}
+.restore-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9em;
+}
+.restore-preview th,
+.restore-preview td {
+  padding: 0.65rem 0.4rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.recovery-copies {
+  margin-top: 1.5rem;
+}
+.recovery-copy {
+  padding: 0.5rem 0 1rem;
+  border-bottom: 1px solid var(--line);
+}

@@ -8,3 +8,8 @@ playwright-report/
 *.local
 
 *-debug.log
+
+# Private backups and offline decryption identities never enter source.
+*.age
+*.agekey
+backup-private/

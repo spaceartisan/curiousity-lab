@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   APP_VERSION,
   emptyState,
-  validateState,
   type LocalState,
   type Role,
   type GameKind,
@@ -31,6 +30,12 @@ import { useFamilyConnection } from "./family/useFamilyConnection";
 import { SharingPreparation } from "./sharing/SharingPreparation";
 import { usePreparation } from "./sharing/usePreparation";
 import { clearAllPreparations } from "./sharing/local";
+import { RecoveryPanel } from "./storage/RecoveryPanel";
+import {
+  parseBackup,
+  clearRecovery,
+  clearRecoveryHistory,
+} from "./storage/recovery";
 import "./styles.css";
 const base = import.meta.env.BASE_URL;
 const titles: Record<GameKind, string> = {
@@ -219,7 +224,9 @@ export function App({ appRole }: { appRole: Role }) {
     [demo, setDemo] = useState(false),
     [review, setReview] = useState<LocalState | null>(null),
     [updateReady, setUpdateReady] = useState<ServiceWorker | null>(null);
-  const preparationError = usePreparation(family, state);
+  const [restoreEpoch, setRestoreEpoch] = useState(0);
+  const [restoreBusy, setRestoreBusy] = useState(false);
+  const preparationError = usePreparation(family, state, restoreEpoch);
   const stateRef = useRef(state),
     screenRef = useRef(screen),
     clock = useRef(new ActivityClock(performance.now())),
@@ -243,7 +250,7 @@ export function App({ appRole }: { appRole: Role }) {
     };
   }, [appRole]);
   useEffect(() => {
-    if (!state) return;
+    if (!state || restoreBusy) return;
     setSaved(false);
     const timer = setTimeout(() => {
       saveState(state)
@@ -260,7 +267,7 @@ export function App({ appRole }: { appRole: Role }) {
         );
     }, 200);
     return () => clearTimeout(timer);
-  }, [state]);
+  }, [state, restoreBusy]);
   useEffect(() => {
     heading.current?.focus();
     stopAudio();
@@ -452,22 +459,11 @@ export function App({ appRole }: { appRole: Role }) {
   }
   async function importFile(file: File, inspect = false) {
     try {
-      if (file.size > 10_000_000) throw Error("Backup is too large");
-      const parsed: unknown = JSON.parse(await file.text());
-      validateState(parsed, inspect ? "play" : appRole);
+      const parsed = await parseBackup(file, inspect ? "play" : appRole);
       if (inspect) {
         setReview(parsed);
         return;
       }
-      if (
-        !window.confirm(
-          "Replace this app’s local progress, creations, and history with this backup?",
-        )
-      )
-        return;
-      await saveState(parsed);
-      setState(parsed);
-      setError("");
     } catch {
       setError(
         "This file is not a supported backup for this app. Your existing data is unchanged.",
@@ -535,6 +531,7 @@ export function App({ appRole }: { appRole: Role }) {
       <header className="topbar">
         <button
           className="brand"
+          disabled={restoreBusy}
           onClick={() => setScreen("home")}
           aria-label="Curiosity Lab home"
         >
@@ -552,6 +549,7 @@ export function App({ appRole }: { appRole: Role }) {
         </button>
         <button
           className="settings-button"
+          disabled={restoreBusy}
           onClick={() => setScreen("settings")}
         >
           <Icon name="settings" small />
@@ -589,7 +587,11 @@ export function App({ appRole }: { appRole: Role }) {
           </div>
         )}
         {screen !== "home" && (
-          <button className="back-button" onClick={() => setScreen("home")}>
+          <button
+            className="back-button"
+            disabled={restoreBusy}
+            onClick={() => setScreen("home")}
+          >
             <Icon name="back" small />
             {appRole === "play" ? "Back to games" : "Back to overview"}
           </button>
@@ -1030,6 +1032,7 @@ export function App({ appRole }: { appRole: Role }) {
                   working.
                 </p>
                 <button
+                  disabled={restoreBusy}
                   onClick={async () => {
                     if (
                       window.confirm(
@@ -1038,6 +1041,7 @@ export function App({ appRole }: { appRole: Role }) {
                     ) {
                       try {
                         if (appRole === "play") await clearAllPreparations();
+                        await clearRecoveryHistory(appRole);
                         setState((s) => (s ? { ...s, sessions: [] } : s));
                       } catch {
                         setError(
@@ -1054,45 +1058,20 @@ export function App({ appRole }: { appRole: Role }) {
               {appRole === "play" && (
                 <SharingPreparation context={family} state={state} />
               )}
+              <RecoveryPanel
+                onRestoreBusy={setRestoreBusy}
+                role={appRole}
+                state={state}
+                onRestore={(next) => {
+                  setRestoreEpoch((epoch) => epoch + 1);
+                  setState(next);
+                  setError("");
+                }}
+              />
               <section>
-                <h2>Backup & recovery</h2>
-                <p>
-                  Download a JSON backup to keep progress and creations. CSV
-                  includes recorded session summaries.
-                </p>
-                <div className="actions">
-                  <button
-                    onClick={() =>
-                      download(state, `curiosity-lab-${appRole}-backup.json`)
-                    }
-                  >
-                    Download JSON backup
-                  </button>
-                  <button
-                    onClick={() =>
-                      download(
-                        sessionsCsv(state),
-                        `curiosity-lab-${appRole}-sessions.csv`,
-                        "text/csv",
-                      )
-                    }
-                  >
-                    Download session CSV
-                  </button>
-                </div>
-                <label className="file-control">
-                  Restore this app’s JSON backup
-                  <input
-                    type="file"
-                    accept=".json,application/json"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) void importFile(file);
-                      e.target.value = "";
-                    }}
-                  />
-                </label>
+                <h2>Remove local data</h2>
                 <button
+                  disabled={restoreBusy}
                   onClick={async () => {
                     if (
                       window.confirm(
@@ -1101,6 +1080,7 @@ export function App({ appRole }: { appRole: Role }) {
                     ) {
                       try {
                         if (appRole === "play") await clearAllPreparations();
+                        await clearRecovery(appRole);
                         await clearState(appRole);
                         setState(emptyState(appRole));
                         setScreen("home");
@@ -1126,9 +1106,7 @@ export function App({ appRole }: { appRole: Role }) {
                   Each role has its own icon and launch link. Installation on
                   the family’s actual devices still needs verification.
                 </p>
-                <p className="muted">
-                  Version {APP_VERSION} · Sharing preparation
-                </p>
+                <p className="muted">Version {APP_VERSION} · Local recovery</p>
               </section>
             </div>
           </>

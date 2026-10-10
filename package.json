@@ -1,18 +1,21 @@
 {
   "name": "curiosity-lab",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc --noEmit && vite build && node --experimental-strip-types scripts/build-pwa.mjs",
     "test": "vitest run",
-    "check": "npm run test && npm run build && node scripts/validate-build.mjs",
+    "check": "npm run test && npm run test:backup && npm run build && node scripts/validate-build.mjs",
     "preview": "vite preview --host 0.0.0.0 --port 4173",
     "test:e2e": "playwright test",
     "format": "prettier --write src tests scripts e2e *.ts *.json *.html play companion insights docs README.md .github/workflows",
-    "test:rules": "firebase emulators:exec --only firestore --project demo-curiosity-lab \"node --test security-tests/firestore.test.mjs\"",
-    "family:provision": "node scripts/provision-family.mjs"
+    "test:rules": "firebase emulators:exec --only firestore --project demo-curiosity-lab \"node --test --test-concurrency=1 security-tests/*.test.mjs\"",
+    "family:provision": "node scripts/provision-family.mjs",
+    "test:backup": "node --test backup-tests/*.test.mjs",
+    "backup:export": "node scripts/backup/export.mjs",
+    "backup:restore": "node scripts/backup/restore.mjs"
   },
   "engines": {
     "node": ">=22.12"

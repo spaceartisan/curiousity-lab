@@ -242,4 +242,27 @@ describe("local preparation privacy", () => {
     );
     await screen.findByText("1 prepared records on this device · Not uploaded");
   });
+  it("never enrolls restored history even when its dates follow future-choice consent", async () => {
+    await saveChoices(a, choices);
+    const initial = emptyState("play");
+    const hook = renderHook(
+      ({ state, epoch }) => usePreparation(context(), state, epoch),
+      { initialProps: { state: initial, epoch: 0 } },
+    );
+    hook.rerender({
+      state: { ...initial, sessions: [session("restored")] },
+      epoch: 1,
+    });
+    expect((await readPreparation(a)).records).toHaveLength(0);
+    hook.rerender({
+      state: {
+        ...initial,
+        sessions: [session("restored"), session("new-after-restore")],
+      },
+      epoch: 1,
+    });
+    await waitFor(async () =>
+      expect((await readPreparation(a)).records).toHaveLength(2),
+    );
+  });
 });

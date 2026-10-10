@@ -6,17 +6,24 @@ import { sharingScope, scopeKey, prepareSessions } from "./local";
 export function usePreparation(
   context: FamilyContext,
   state: LocalState | null,
+  restoreEpoch = 0,
 ) {
   const scope = sharingScope(context);
   const key = scope ? scopeKey(scope) : "";
   const sessions = state?.sessions;
-  const seen = useRef<{ key: string; ids: Set<string> } | null>(null);
+  const seen = useRef<{ key: string; epoch: number; ids: Set<string> } | null>(
+    null,
+  );
   const [error, setError] = useState("");
   useEffect(() => {
     let active = true;
     if (!sessions) return;
     const previous = seen.current;
-    seen.current = { key, ids: new Set(sessions.map((session) => session.id)) };
+    seen.current = {
+      key,
+      epoch: restoreEpoch,
+      ids: new Set(sessions.map((session) => session.id)),
+    };
     setError("");
     // Loading, reconnecting or switching accounts never enrolls existing history.
     // Only sessions newly recorded while this account is approved are eligible.
@@ -24,6 +31,7 @@ export function usePreparation(
       !scope ||
       !previous ||
       previous.key !== key ||
+      previous.epoch !== restoreEpoch ||
       state?.installationRole !== "play"
     )
       return;
@@ -38,6 +46,6 @@ export function usePreparation(
     return () => {
       active = false;
     };
-  }, [key, sessions]);
+  }, [key, sessions, restoreEpoch]);
   return error;
 }

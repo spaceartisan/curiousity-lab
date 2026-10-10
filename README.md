@@ -8,7 +8,7 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.4.0
+## Current release · v0.5.0
 
 This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. Owner Google sign-in and code-only parent invitations are available after enabling Anonymous Auth and publishing the included Firebase rules. Activity sharing remains disabled. No personal records, emails, service credentials, or private design document are published here.
 
@@ -18,7 +18,7 @@ Play includes:
 - Two curated Word Connections packs and a starter Word Search.
 - Free piano with symbolic melody saving, complete-the-phrase, melody matching, and rhythm exploration. Web Audio sound is off by default and starts only after a gesture. Notation can be shown or hidden.
 - A process-first laboratory workbench, two licensed CDC microscopy images cached offline, accessible digital zoom and movement controls, optional observations, and saved Lab Notebook entries. Hematology and the larger reviewed image pack are pending.
-- My Creations, light/dark themes, larger text, JSON backup/restore, CSV session export, and explicit deletion controls.
+- My Creations, light/dark themes, larger text, JSON backup/restore with a review step and three durable undo copies, CSV session export, and explicit deletion controls.
 - IndexedDB progress saves separated by app role. Optional activity history starts off; it stays on this device. With it off, active-time/hint/undo summaries are not accumulated. Game state necessary for save/resume is still stored.
 
 Companion and Insights open directly to their own views. Fictional examples are clearly labeled and only appear when requested. Neither app reads Play's browser database. Insights can explicitly inspect a selected Play backup **in memory**, without uploading or persisting it.
@@ -47,7 +47,7 @@ The build base is `/curiousity-lab/`. If the repository is renamed or moved to a
 
 ## Checks and deployment
 
-`npm run test:rules` runs 22 emulator security scenarios (Java 21+ required). CI gates deployment on these tests as well as browser checks. `npm run check` runs the game, persistence, consent, and component tests, strict TypeScript, the production build, and structural PWA/provenance validation. The GitHub workflow then runs Chromium desktop/phone smoke tests (including offline microscopy), captures screenshots in its **browser-evidence** artifact, and deploys only when validation passes.
+`npm run test:rules` runs 22 emulator security scenarios plus an encrypted synthetic backup recovery drill (Java 21+ and age required). CI gates deployment on these tests as well as browser checks. `npm run check` runs the game, persistence, consent, and component tests, strict TypeScript, the production build, and structural PWA/provenance validation. The GitHub workflow then runs Chromium desktop/phone smoke tests (including offline microscopy), captures screenshots in its **browser-evidence** artifact, and deploys only when validation passes.
 
 **One-time repository setup:** In GitHub, open **Settings → Pages → Source → GitHub Actions**. If the first deploy fails because Pages is disabled, enable this setting and rerun the failed deploy job; no source push is needed.
 
@@ -59,7 +59,9 @@ This app supports enjoyable exploration; it is not a diagnostic instrument or di
 
 The included Firestore rules support owner-only family setup, unpredictable single-use invitation codes, hidden anonymous parent identities, atomic membership creation and owner device revocation. Parents need no email or password. Unpaired visitors cannot enumerate families or read/write activity. Sign-in/pairing never uploads existing guest saves. Named Firebase apps separate role login keys, and Firestore uses memory-only caching. Play now offers optional, account-bound local preparation choices with separate Insights details and coarse Companion summaries. Older history requires individual selection. Only new recorded sessions while the same account is approved are eligible for future preparation; loading, reconnecting and switching accounts do not enroll existing history. No activity is uploaded. A later release must obtain fresh upload consent after automatic independent backup and tested recovery are ready. Same-origin apps may share browser infrastructure; role scopes alone do not guarantee independent operating-system installations.
 
-**Do not treat v0.4.0 as the connected family-production launch.** Private sync, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
+**Do not treat v0.5.0 as the connected family-production launch.** Private sync, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
+
+See [backup and recovery](docs/BACKUP_RECOVERY.md) for device-local undo, the encrypted archive tools, synthetic monthly drills and the remaining real-backup setup. No production export, new credential or billing change is included.
 
 ## Image credits
 
