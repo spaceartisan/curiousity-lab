@@ -712,9 +712,19 @@ export function App({ appRole }: { appRole: Role }) {
                   : "A thoughtful view of activity"}
               </p>
               <h1 ref={heading} tabIndex={-1}>
-                {appRole === "companion"
-                  ? "The little things<br/>worth sharing."
-                  : "Keep the context.<br/>Follow the curiosity."}
+                {appRole === "companion" ? (
+                  <>
+                    The little things
+                    <br />
+                    worth sharing.
+                  </>
+                ) : (
+                  <>
+                    Keep the context.
+                    <br />
+                    Follow the curiosity.
+                  </>
+                )}
               </h1>
               <p>
                 {appRole === "companion"
