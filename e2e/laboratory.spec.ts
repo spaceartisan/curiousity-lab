@@ -121,11 +121,22 @@ test("optional laboratory journey keeps separate notes offline and permits repea
     path: info.outputPath("laboratory-comparison-large-text.png"),
     fullPage: true,
   });
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= window.innerWidth,
-    ),
-  ).toBe(true);
+  const layout = await page.evaluate(() => ({
+    width: window.innerWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+    overflowing: Array.from(document.querySelectorAll("body *"))
+      .filter((el) => el.getBoundingClientRect().right > window.innerWidth + 1)
+      .map((el) => ({
+        tag: el.tagName,
+        className: el.className,
+        text: el.textContent?.slice(0, 60),
+        right: el.getBoundingClientRect().right,
+      }))
+      .slice(0, 20),
+  }));
+  expect(layout.scrollWidth, JSON.stringify(layout)).toBeLessThanOrEqual(
+    layout.width,
+  );
   const button = await page
     .getByRole("button", { name: "Back to microscope" })
     .boundingBox();

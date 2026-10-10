@@ -1270,3 +1270,10 @@ summary {
   min-width: 0;
   max-width: 100%;
 }
+.game-heading > div {
+  min-width: 0;
+  max-width: 100%;
+}
+.game-heading h1 {
+  overflow-wrap: anywhere;
+}
