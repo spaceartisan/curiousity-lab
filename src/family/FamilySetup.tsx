@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Role } from "../storage/contracts";
-import { parseWebConfig, type Connection } from "./contracts";
+import { resolveWebConfig, type Connection } from "./contracts";
+import deployment from "../../firebase/web-config.json";
 import type { FamilyClient } from "./client";
 
 export function FamilySetup({ role }: { role: Role }) {
@@ -23,7 +24,10 @@ export function FamilySetup({ role }: { role: Role }) {
     let active = true,
       stop = () => {};
     try {
-      const config = parseWebConfig(import.meta.env.VITE_FIREBASE_CONFIG);
+      const config = resolveWebConfig(
+        import.meta.env.VITE_FIREBASE_CONFIG,
+        deployment,
+      );
       if (!config) return;
       setConnection({ status: "checking" });
       // Unconfigured builds never load or initialize Firebase.

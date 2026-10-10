@@ -8,7 +8,7 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.2.0
+## Current release · v0.2.1
 
 This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. Firebase Google sign-in and trusted account approval are available when configured. Activity sharing remains disabled. No personal records, emails, service credentials, or private design document are published here.
 
@@ -25,7 +25,7 @@ Companion and Insights open directly to their own views. Fictional examples are 
 
 ## Firebase account setup
 
-You can create the dedicated Spark/Firestore project now. Follow [the Firebase setup guide](docs/FIREBASE_SETUP.md) for Google sign-in, the public web configuration, security rules, and trusted account provisioning. Configure the `FIREBASE_WEB_CONFIG` repository variable and rerun the workflow to enable the connection panel without a new code push. Parents do not need to sign in for local play.
+You can create the dedicated Spark/Firestore project now. Follow [the Firebase setup guide](docs/FIREBASE_SETUP.md) for Google sign-in, the public web configuration, security rules, and trusted account provisioning. The registered `curiousity-lab` public web project is now the default. No repository variable is required. An optional `FIREBASE_WEB_CONFIG` variable overrides it; set it to `local-only` to disable account connections. Parents do not need to sign in for local play.
 
 ## Develop
 
@@ -59,7 +59,7 @@ This app supports enjoyable exploration; it is not a diagnostic instrument or di
 
 The included Firestore rules allow a verified account to read only its own approval directory and scoped membership. All browser writes and protected activity reads remain denied. Sign-in checks never upload existing guest saves. Named Firebase apps separate role login keys and Firestore uses memory-only caching. Later activity sync still requires consent, account-bound storage, and tested uploads. A six-digit confirmation code can never grant access. Same-origin apps may share browser infrastructure; role scopes alone do not authorize access or guarantee independent operating-system installations.
 
-**Do not treat v0.2.0 as the connected family-production launch.** Private sync, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
+**Do not treat v0.2.1 as the connected family-production launch.** Private sync, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
 
 ## Image credits
 

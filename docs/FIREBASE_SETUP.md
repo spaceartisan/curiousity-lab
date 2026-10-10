@@ -1,4 +1,4 @@
-# Firebase setup — v0.2.0 connection pilot
+# Firebase setup — v0.2.1 connection pilot
 
 You can create the database now. This release supports account sign-in and trusted approval checks; **activity upload and family dashboards are not enabled yet**. Keep the initial test to your own account and synthetic data. Continue playing locally while connected features are built.
 
@@ -10,7 +10,11 @@ You can create the database now. This release supports account sign-in and trust
 4. Under **Build → Authentication**, click Get started. Enable **Google** under Sign-in method and select a project support email. Under **Settings → Authorized domains**, add `spaceartisan.github.io`. Domain only: no `https://` and no repository path. Add `localhost` only if testing locally.
 5. Under **Project settings → General**, register a **Web app** (`</>` icon), with a label such as “Curiosity Lab”. Firebase Hosting is unnecessary; GitHub Pages hosts the site.
 
-## 2. Share the public web configuration
+## 2. Public web configuration (already connected in code)
+
+The supplied `curiousity-lab` web configuration is included in `firebase/web-config.json` as the default for all three apps. Analytics is disabled, and no Storage or messaging service is initialized. **You do not need to create a repository variable for this project.** Complete the Firestore rules and Google provider/domain settings below.
+
+### Optional override for another deployment
 
 Copy the web app's `firebaseConfig` object from Project settings. Send me its **apiKey, authDomain, projectId, and appId** so I can check the configuration. These identify the public web app; the Firestore rules, authenticated identity, and trusted approval enforce privacy.
 
@@ -27,7 +31,7 @@ For GitHub Actions, store this single JSON object as a **repository variable** n
 }
 ```
 
-Use the exact four values from Firebase. The workflow exposes only this public configuration through `VITE_FIREBASE_CONFIG`. Empty variable builds a local-only app. After changing it, run the workflow using **Actions → Validate and publish Curiosity Lab → Run workflow**; another source push is unnecessary. For local development, copy `.env.example` to `.env.local` and fill the same JSON value.
+Use the exact four values from Firebase. The workflow exposes only this public configuration through `VITE_FIREBASE_CONFIG`. An empty variable uses the committed public web configuration. Set the variable to `local-only` for a local-only build. After changing it, run the workflow using **Actions → Validate and publish Curiosity Lab → Run workflow**; another source push is unnecessary. For local development, copy `.env.example` to `.env.local` and fill the same JSON value.
 
 ## 3. Publish the tested rules
 

@@ -1,3 +1,9 @@
+# v0.2.1
+
+- Connected the owner-provided public `curiousity-lab` web configuration by default across all three apps.
+- Kept Analytics, Storage, messaging and activity uploads disabled.
+- Preserved optional configuration overrides and added explicit `local-only` mode.
+
 # v0.2.0
 
 - Corrected selected-tab contrast in light and dark themes and hidden skip-link capture positioning.

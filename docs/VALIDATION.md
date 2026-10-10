@@ -21,3 +21,9 @@ Real Google sign-in/provider/authorized-domain verification awaits the dedicated
 ## Prior evidence
 
 v0.1.0: 18 local tests and six Chromium CI tests passed in run 38071544901. Its screenshot review found selected-tab contrast and skip-link capture issues; both corrections are included in v0.2.0.
+
+## v0.2.1 configuration follow-up
+
+The owner-provided public Firebase project configuration is now the default. Configuration resolution has a regression for the default project, blank CI variable, explicit override, and local-only mode. No Analytics, Storage or messaging service is initialized. Production Google sign-in and access approval still require provider/domain settings and trusted grants.
+
+v0.2.0 CI completed successfully (run 38073656890): all 27 local tests, 11 emulator scenarios and eight browser tests passed; deployment succeeded. Desktop Settings and phone Music screenshots were reviewed.

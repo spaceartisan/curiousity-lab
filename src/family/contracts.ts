@@ -13,6 +13,13 @@ export interface Membership {
   role: Role;
   status: "active" | "revoked";
 }
+export function resolveWebConfig(
+  override: string | undefined,
+  deployment: unknown,
+): WebConfig | null {
+  if (override?.trim() === "local-only") return null;
+  return parseWebConfig(override?.trim() || JSON.stringify(deployment));
+}
 const opaqueId = /^[A-Za-z0-9_-]{16,100}$/;
 export function parseWebConfig(text: string | undefined): WebConfig | null {
   if (!text?.trim()) return null;

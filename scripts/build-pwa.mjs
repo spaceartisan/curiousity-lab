@@ -7,9 +7,10 @@ import {
 } from "node:fs/promises";
 import { join } from "node:path";
 import { loadEnv } from "vite";
-import { parseWebConfig } from "../src/family/contracts.ts";
-const config = parseWebConfig(
+import { resolveWebConfig } from "../src/family/contracts.ts";
+const config = resolveWebConfig(
   loadEnv("production", process.cwd(), "VITE_").VITE_FIREBASE_CONFIG,
+  JSON.parse(await readFile("firebase/web-config.json", "utf8")),
 );
 const cloud = config
   ? ` https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://${config.authDomain}`

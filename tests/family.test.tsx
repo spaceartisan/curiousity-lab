@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { FamilySetup } from "../src/family/FamilySetup";
 import {
+  resolveWebConfig,
   parseWebConfig,
   parseMembership,
   hasApproval,
@@ -13,6 +14,17 @@ const config = {
   appId: "1:123456:web:abcdef",
 };
 describe("family setup boundaries", () => {
+  it("uses the registered public project by default, accepts an override, and supports explicit local-only builds", () => {
+    expect(resolveWebConfig(undefined, config)).toEqual(config);
+    expect(resolveWebConfig("", config)).toEqual(config);
+    expect(resolveWebConfig("local-only", config)).toBeNull();
+    const other = {
+      ...config,
+      projectId: "curiosity-other",
+      authDomain: "curiosity-other.firebaseapp.com",
+    };
+    expect(resolveWebConfig(JSON.stringify(other), config)).toEqual(other);
+  });
   it("unconfigured builds stay local-only with no sign-in button", () => {
     render(<FamilySetup role="play" />);
     expect(screen.getByText(/nothing is uploaded/)).toBeInTheDocument();

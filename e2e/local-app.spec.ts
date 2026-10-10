@@ -94,8 +94,16 @@ test("settings stays local-only and selected controls remain readable", async ({
   ).toBeVisible();
   // CI may have the optional public web config, but never real auth/family fixtures.
   const prompt = page.getByRole("button", { name: "Sign in with Google" });
-  if (await prompt.isVisible()) await expect(prompt).toBeEnabled();
-  await page.getByRole("combobox", { name: "Theme", exact: true }).selectOption("dark");
+  const policy = await page
+    .locator('meta[http-equiv="Content-Security-Policy"]')
+    .getAttribute("content");
+  if (policy?.includes("firestore.googleapis.com")) {
+    await expect(prompt).toBeVisible();
+    await expect(prompt).toBeEnabled();
+  } else await expect(prompt).not.toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Theme", exact: true })
+    .selectOption("dark");
   await page.screenshot({
     path: info.outputPath("settings-dark.png"),
     fullPage: true,
