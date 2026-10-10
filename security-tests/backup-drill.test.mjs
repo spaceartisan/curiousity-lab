@@ -48,22 +48,23 @@ test("synthetic encrypted Firestore backup decrypts, restores all nested collect
     // Both subject and intermediate branch deliberately lack parent documents.
     const path =
       "families/synthetic-family/subjects/synthetic-subject/sessions/synthetic-session";
-    await db
-      .doc(path)
-      .set({
-        schemaVersion: 1,
-        appVersion: "0.5.0",
-        contentVersion: "1",
-        hints: 2,
-        time: new Timestamp(100, 999999999),
-        location: new GeoPoint(32, -84),
-        bytes: Buffer.from([1, 2]),
-        reference: db.doc("families/synthetic-family"),
-        nested: { list: [true, null, "fictional"] },
-      });
+    await db.doc(path).set({
+      schemaVersion: 1,
+      appVersion: "0.5.0",
+      contentVersion: "1",
+      hints: 2,
+      time: new Timestamp(100, 999999999),
+      location: new GeoPoint(32, -84),
+      bytes: Buffer.from([1, 2]),
+      reference: db.doc("families/synthetic-family"),
+      nested: { list: [true, null, "fictional"] },
+    });
     await db
       .doc("missing-parent/synthetic/children/synthetic-child")
       .set({ schemaVersion: 1, value: "fictional" });
+    // Firestore truncates stored timestamps to microseconds. Compare against
+    // the actual stored source, while archive unit tests preserve raw nanos.
+    const source = (await db.doc(path).get()).data();
     const archive = await captureArchive(db, {
       projectId,
       appVersion: "0.5.0",
@@ -107,7 +108,8 @@ test("synthetic encrypted Firestore backup decrypts, restores all nested collect
     );
     const restored = (await db.doc(path).get()).data();
     assert.equal(restored.hints, 2);
-    assert.equal(restored.time.nanoseconds, 999999999);
+    assert.equal(restored.time.nanoseconds, source.time.nanoseconds);
+    assert.equal(restored.time.seconds, source.time.seconds);
     assert.equal(restored.reference.path, "families/synthetic-family");
     assert.deepEqual(restored.bytes, Buffer.from([1, 2]));
     assert.equal(
