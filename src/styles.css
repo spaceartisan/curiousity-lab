@@ -1357,3 +1357,55 @@ summary {
 .collection-pages {
   justify-content: center;
 }
+.sudoku-technique,
+.selected-square,
+.sudoku-replay {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.sudoku-workspace,
+.sudoku-workspace .sudoku-tools {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.sudoku-workspace .toolbar label {
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+}
+.sudoku-workspace select {
+  min-width: 0;
+  max-width: 100%;
+}
+.sudoku-workspace .numberpad {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 3.25rem), 1fr));
+  max-width: 100%;
+}
+.sudoku-workspace .numberpad button,
+.sudoku-workspace .actions button {
+  min-width: 0;
+  max-width: 100%;
+  padding-inline: min(1rem, 3vw);
+  overflow-wrap: anywhere;
+}
+.sudoku-workspace .sudoku-tools .actions button {
+  flex: 1 1 min(100%, 12ch);
+}
+.selected-square {
+  grid-column: 1 / -1;
+  border-left: 3px solid var(--accent);
+  padding-inline: min(0.75rem, 3vw);
+}
+.sudoku-workspace .sudoku[data-size="9"] .cell {
+  font-size: clamp(0.75rem, 4.8vw, 1.6rem);
+}
+.sudoku-workspace .square-picker label {
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+.sudoku-replay button {
+  max-width: 100%;
+  min-width: 0;
+  padding-inline: min(1rem, 3vw);
+  overflow-wrap: anywhere;
+}

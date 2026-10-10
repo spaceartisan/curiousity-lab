@@ -11,7 +11,7 @@ This is intentionally the start of the staged design. Demo dashboards are not co
 - Review screenshots and use the app on actual phone/tablet devices; verify 200% text/zoom, VoiceOver/keyboard paths, touch targets, separate home-screen installs, and Web Audio on iOS/Android.
 - Expand and independently review the image pack, with per-image license/provenance and optional hematology images. Optional specimen cards, direct exploration, comparison and per-slide note continuity arrived in v0.8.0; the dedicated notebook browser and explicit last-reopened continuity arrived in v0.10.0. Refine the workbench with player feedback.
 - Review and grow word/music content with player feedback. Word-search variety arrived in v0.6.0; music exercise variety, real rhythm attempts, score/pattern/ear views and in-game guidance arrived in v0.7.0. Word Connections expanded to eight packs with progressive assistance, in-progress undo and same-board replay in v0.9.0. Actual-device accessibility and independent word/music-content review remain.
-- Calibrate Sudoku solving-technique tiers beyond naked singles before offering advanced difficulty. Preserve deterministic content versions and migrations.
+- Sudoku hidden-single calibration, explanatory steps and same-board replay arrived in v0.11.0. Independently review its usability and expand verified advanced techniques/preferences later; preserve deterministic content versions and migrations.
 - Expand undo/skip/help consistency and make conflict/backup recovery explicit; test browser crash and storage-quota failure paths.
 
 ## v0.2.0 — Phase 2a: account connection foundation
@@ -49,6 +49,10 @@ Eight fixed, authored packs retain the first two boards and old `connections-0`/
 ## v0.10.0 — Saved collections and notebook continuity
 
 My Creations has dedicated notebook/melody views, local text search, saved-date ordering and twelve-entry pagination. Notebook cards preview known cached source images and preserve old notes when an image is unavailable. A laboratory shortcut opens the notebook directly. Successful explicit reopens add a validated optional last-viewed timestamp, retaining saved dates, entry IDs, original notes and legacy workflow identity. Last-reopened cues never infer examination from a mere save or future timestamp. Melody playback has deliberate sound/volume/Stop controls. Filters/search remain ephemeral UI state; no cloud data flow is added. Full image expansion, device/content review, family sync/reporting and production gates remain.
+
+## v0.11.0 — Sudoku techniques and explanatory assistance
+
+A voluntary 9×9 Hidden singles challenge has three original boards with deterministic variations. Unique solutions, hidden-single necessity and no-guessing completion are verified separately. Original Relaxed/Classic generators and save identities remain unchanged. Explanations select a square without filling; filling hints explain deductions or existing-entry correction. Peer pencil-note cleanup undoes with the move. Same-board replay preserves content while creating distinct attempts. Larger selected-square context and row/column selectors supplement the small grid; keyboard boundaries and enlarged text reflow improve control. Human difficulty calibration, advanced rules, actual-device accessibility and full-document sync/reporting/production work remain.
 
 ## Phase 2b — Optional approved family sync
 

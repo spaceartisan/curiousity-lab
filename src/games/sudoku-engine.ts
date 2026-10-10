@@ -1,7 +1,9 @@
+import { hiddenSinglesBoards, HIDDEN_SINGLES_VERSION } from "../content/sudoku";
 export type Size = 4 | 6 | 9;
+export type SudokuTier = "Relaxed" | "Classic" | "Hidden singles";
 export interface SudokuData {
   size: Size;
-  tier: "Relaxed" | "Classic";
+  tier: SudokuTier;
   seed: number;
   givens: number[];
   solution: number[];
@@ -42,6 +44,7 @@ export function candidates(
   );
 }
 export function solutionCount(input: number[], size: Size, limit = 2): number {
+  if (!consistentGrid(input, size)) return 0;
   const cells = [...input];
   let count = 0;
   function visit() {
@@ -71,7 +74,96 @@ export function solutionCount(input: number[], size: Size, limit = 2): number {
   visit();
   return count;
 }
+export function consistentGrid(cells: number[], size: Size): boolean {
+  if (
+    cells.length !== size * size ||
+    cells.some((n) => !Number.isInteger(n) || n < 0 || n > size)
+  )
+    return false;
+  return units(size).every((unit) => {
+    const filled = unit.indices.map((i) => cells[i]).filter(Boolean);
+    return new Set(filled).size === filled.length;
+  });
+}
+export interface SudokuStep {
+  index: number;
+  value: number;
+  technique: "single-candidate" | "hidden-single";
+  unit?: { kind: "row" | "column" | "box"; number: number };
+}
+function units(size: Size) {
+  const { rows, cols } = dimensions(size);
+  const result: {
+    kind: "row" | "column" | "box";
+    number: number;
+    indices: number[];
+  }[] = [];
+  for (let n = 0; n < size; n++) {
+    result.push({
+      kind: "row",
+      number: n + 1,
+      indices: Array.from({ length: size }, (_, k) => n * size + k),
+    });
+    result.push({
+      kind: "column",
+      number: n + 1,
+      indices: Array.from({ length: size }, (_, k) => k * size + n),
+    });
+    const br = Math.floor(n / (size / cols)) * rows,
+      bc = (n % (size / cols)) * cols;
+    result.push({
+      kind: "box",
+      number: n + 1,
+      indices: Array.from(
+        { length: size },
+        (_, k) => (br + Math.floor(k / cols)) * size + bc + (k % cols),
+      ),
+    });
+  }
+  return result;
+}
+export function findLogicalStep(
+  cells: number[],
+  size: Size,
+  hidden = true,
+): SudokuStep | undefined {
+  if (!consistentGrid(cells, size)) return;
+  const options = cells.map((_, i) => candidates(cells, i, size));
+  if (options.some((c, i) => !cells[i] && !c.length)) return;
+  const index = options.findIndex((c) => c.length === 1);
+  if (index >= 0)
+    return { index, value: options[index][0], technique: "single-candidate" };
+  if (!hidden) return;
+  for (const unit of units(size)) {
+    for (let value = 1; value <= size; value++) {
+      const places = unit.indices.filter((i) => options[i].includes(value));
+      if (places.length === 1)
+        return {
+          index: places[0],
+          value,
+          technique: "hidden-single",
+          unit: { kind: unit.kind, number: unit.number },
+        };
+    }
+  }
+}
+export function solveLogically(input: number[], size: Size, hidden = true) {
+  const cells = [...input],
+    steps: SudokuStep[] = [];
+  while (steps.length < size * size) {
+    const step = findLogicalStep(cells, size, hidden);
+    if (!step) break;
+    cells[step.index] = step.value;
+    steps.push(step);
+  }
+  return {
+    cells,
+    steps,
+    solved: consistentGrid(cells, size) && cells.every(Boolean),
+  };
+}
 export function solvedBySingles(input: number[], size: Size): boolean {
+  if (!consistentGrid(input, size)) return false;
   const cells = [...input];
   let changed = true;
   while (changed) {
@@ -90,8 +182,12 @@ export function solvedBySingles(input: number[], size: Size): boolean {
 export function generateSudoku(
   size: Size,
   seed: number,
-  tier: "Relaxed" | "Classic" = "Classic",
+  tier: SudokuTier = "Classic",
 ): SudokuData {
+  if (tier === "Hidden singles") {
+    if (size !== 9) throw Error("Hidden singles is a 9 by 9 challenge.");
+    return generateHiddenSingles(seed);
+  }
   let state = seed >>> 0;
   const random = () => {
     state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
@@ -140,6 +236,77 @@ export function generateSudoku(
     notes: givens.map(() => []),
     history: [],
   };
+}
+function generateHiddenSingles(seed: number): SudokuData {
+  let state = seed >>> 0;
+  const shuffle = (input: number[]) => {
+    const copy = [...input];
+    for (let i = copy.length - 1; i > 0; i--) {
+      state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+      const j = Math.floor((state / 4294967296) * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  };
+  const board = hiddenSinglesBoards[(seed >>> 0) % hiddenSinglesBoards.length];
+  const symbols = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const rows = shuffle([0, 1, 2]).flatMap((b) =>
+    shuffle([b * 3, b * 3 + 1, b * 3 + 2]),
+  );
+  const cols = shuffle([0, 1, 2]).flatMap((b) =>
+    shuffle([b * 3, b * 3 + 1, b * 3 + 2]),
+  );
+  const transform = (input: readonly number[]) =>
+    rows.flatMap((r) =>
+      cols.map((c) => {
+        const n = input[r * 9 + c];
+        return n ? symbols[n - 1] : 0;
+      }),
+    );
+  const givens = transform(board.givens);
+  return {
+    size: 9,
+    tier: "Hidden singles",
+    seed,
+    givens,
+    solution: transform(board.solution),
+    cells: [...givens],
+    notes: givens.map(() => []),
+    history: [],
+  };
+}
+export function sudokuPuzzle(data: SudokuData): string {
+  return data.tier === "Hidden singles"
+    ? `${HIDDEN_SINGLES_VERSION}-${data.seed}`
+    : `sudoku-${data.size}-${data.seed}`;
+}
+export function sudokuContentVersion(data: SudokuData): string {
+  return data.tier === "Hidden singles" ? HIDDEN_SINGLES_VERSION : "starter-1";
+}
+export function explainStep(step: SudokuStep, size: Size): string {
+  const square = `Row ${Math.floor(step.index / size) + 1}, column ${(step.index % size) + 1}`;
+  return step.technique === "hidden-single"
+    ? `${square}: ${step.value} has only one possible place in ${step.unit!.kind} ${step.unit!.number}. This is a hidden single.`
+    : `${square}: ${step.value} is the only number allowed by its row, column and box.`;
+}
+export function removePeerNote(
+  notes: number[][],
+  index: number,
+  value: number,
+  size: Size,
+) {
+  const peers = new Set(
+    units(size)
+      .filter((u) => u.indices.includes(index))
+      .flatMap((u) => u.indices),
+  );
+  return notes.map((entry, i) =>
+    i === index
+      ? []
+      : peers.has(i)
+        ? entry.filter((n) => n !== value)
+        : [...entry],
+  );
 }
 export function isComplete(data: SudokuData) {
   return data.cells.every((n, i) => n === data.solution[i]);

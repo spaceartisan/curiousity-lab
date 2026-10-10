@@ -1,3 +1,13 @@
+# v0.11.0 validation
+
+Locally: 112 unit/component tests passed, including twelve new Sudoku cases for six exact legacy generator serializations; three original boards and 38 varied seeds with uniqueness/determinism/hidden-single necessity; independent candidate/unit verification for explanations; rejection of contradictory grids and unsupported/corrupted restores; immutable peer-note cleanup; explanation without placement; truthful correction/undo; real pencil toggles and restoration; keyboard endpoints; seven same-board completed attempts; and legacy reload/canceled change/history-off exclusion. Thirteen archive/remote cases passed, with the age-only test skipped locally. TypeScript, build and PWA/provenance checks passed.
+
+CI gates deployment on 112 unit/component tests, fourteen archive/remote checks with age, twenty-two Firestore security cases plus encrypted emulator recovery, and forty desktop/phone browser scenarios (189 total). The new browser scenario restores a fictional deterministic board through actual preview, uses a genuine hidden-single explanation and fill/Undo, saves pencil notes through offline reload, exercises keyboard endpoints and larger row/column controls at 320 pixels/200% text, then checks replay identity/history and an explicit smaller-grid choice. Check this commit's workflow for actual completion; screenshots require visual review beyond no-overflow assertions.
+
+Solving-technique proofs are game-content verification, not human difficulty equivalence or medical measurements. Both explanation and fill are deliberate help requests; history-off keeps their metrics at zero. No production activity sharing, Firebase permissions, backup credentials or family records change. Actual device audio/accessibility, independent content review, advanced technique/preference tiers, private sync/reporting and production launch gates remain.
+
+---
+
 # v0.10.0 validation
 
 Locally: 100 unit/component tests passed, including nine new collection cases for immutable search/filter/order, explicit last-reopen/future-time handling, legacy and malformed timestamp validation, dedicated notebook navigation/reset, missing-source and search-empty preservation, original saved-date/ID retention on revisit, pagination and canceled/confirmed single-entry removal, no-autoplay/live volume/Stop behavior, and schema-v1 backup metadata round-trip. Thirteen archive/remote cases passed with the age-only test skipped locally. TypeScript, build and scoped PWA/provenance validation passed.

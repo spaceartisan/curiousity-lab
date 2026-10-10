@@ -4,11 +4,15 @@ import {
   generateSudoku,
   isComplete,
   validSudoku,
+  findLogicalStep,
+  explainStep,
+  removePeerNote,
   type Size,
+  type SudokuTier,
   type SudokuData,
 } from "./sudoku-engine";
 import type { GameProps } from "./types";
-export function Sudoku({ draft, update, finish, replay }: GameProps) {
+export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
   const [selected, setSelected] = useState(0),
     [noteMode, setNoteMode] = useState(false),
     [message, setMessage] = useState("");
@@ -25,7 +29,10 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
   function move(n: number, hint = false) {
     if (d.givens[selected] || complete) return;
     const cells = [...d.cells],
-      notes = d.notes.map((a) => [...a]);
+      notes =
+        n && !noteMode && !hint
+          ? removePeerNote(d.notes, selected, n, d.size)
+          : d.notes.map((a) => [...a]);
     if (noteMode && !hint && n) {
       notes[selected] = notes[selected].includes(n)
         ? notes[selected].filter((x) => x !== n)
@@ -44,13 +51,27 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
     setMessage("");
     if (isComplete(next)) finish("completed");
   }
-  function hint() {
-    const empty = d.cells.findIndex((n, i) => n !== d.solution[i]);
+  function hint(explainOnly = false) {
+    const wrong = d.cells.findIndex((n, i) => n && n !== d.solution[i]);
+    const step = wrong < 0 ? findLogicalStep(d.cells, d.size) : undefined;
+    if (explainOnly) {
+      update(d, { hint: true, view: true });
+      if (step) {
+        setSelected(step.index);
+        setMessage(explainStep(step, d.size));
+      } else
+        setMessage(
+          "Some entries need another look. Check entries, undo a move, or use Hint to fill a square.",
+        );
+      return;
+    }
+    const empty =
+      step?.index ??
+      (wrong >= 0 ? wrong : d.cells.findIndex((n, i) => n !== d.solution[i]));
     if (empty < 0) return;
     const cells = [...d.cells];
     cells[empty] = d.solution[empty];
-    const notes = d.notes.map((a) => [...a]);
-    notes[empty] = [];
+    const notes = removePeerNote(d.notes, empty, d.solution[empty], d.size);
     setSelected(empty);
     const next = {
       ...d,
@@ -59,30 +80,45 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
       history: [...d.history, { cells: d.cells, notes: d.notes }].slice(-200),
     };
     update(next, { hint: true });
-    setMessage("One square is filled for you.");
+    setMessage(
+      step
+        ? `${explainStep(step, d.size)} The square is filled for you.`
+        : `Row ${Math.floor(empty / d.size) + 1}, column ${(empty % d.size) + 1}: this entry differed from the solution. The square is filled for you.`,
+    );
     if (isComplete(next)) finish("completed");
   }
-  function change(size: Size, tier: "Relaxed" | "Classic") {
+  function change(size: Size, tier: SudokuTier) {
     if (
       !window.confirm(
         "Start a fresh puzzle? Your current puzzle will be replaced.",
       )
     )
       return;
-    update(generateSudoku(size, Date.now() >>> 0, tier), {
-      mode: `${size}x${size}:${tier}`,
-    });
+    update(
+      generateSudoku(size, crypto.getRandomValues(new Uint32Array(1))[0], tier),
+      {
+        mode: `${size}x${size}:${tier}`,
+      },
+    );
     setSelected(0);
     setMessage("");
   }
   return (
-    <>
+    <div className="sudoku-workspace">
       <div className="toolbar">
         <label>
           Grid{" "}
           <select
+            aria-label="Grid"
             value={d.size}
-            onChange={(e) => change(Number(e.target.value) as Size, d.tier)}
+            onChange={(e) =>
+              change(
+                Number(e.target.value) as Size,
+                d.tier === "Hidden singles" && Number(e.target.value) !== 9
+                  ? "Classic"
+                  : d.tier,
+              )
+            }
           >
             <option value={9}>9 × 9</option>
             <option value={6}>6 × 6</option>
@@ -92,20 +128,31 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
         <label>
           Challenge{" "}
           <select
+            aria-label="Challenge"
             value={d.tier}
-            onChange={(e) =>
-              change(d.size, e.target.value as "Relaxed" | "Classic")
-            }
+            onChange={(e) => change(d.size, e.target.value as SudokuTier)}
           >
             <option>Relaxed</option>
             <option>Classic</option>
+            <option disabled={d.size !== 9}>Hidden singles</option>
           </select>
         </label>
         <span className="muted">Choose a square, then a number.</span>
       </div>
+      <p className="muted sudoku-technique">
+        {d.tier === "Hidden singles"
+          ? "Hidden singles: look for a number’s only possible place in a row, column or box. These puzzles also use single-candidate squares; no guessing is needed."
+          : d.tier === "Relaxed"
+            ? "Relaxed: more starting numbers, with single-candidate squares to find."
+            : "Classic: single-candidate squares, with fewer starting numbers than Relaxed."}{" "}
+        {d.tier === "Hidden singles"
+          ? "Choosing a smaller grid starts Classic."
+          : "Hidden singles is available on the 9 × 9 grid."}
+      </p>
       <div className="sudoku-layout">
         <div
           className="sudoku"
+          data-size={d.size}
           style={{ gridTemplateColumns: `repeat(${d.size},1fr)` }}
           role="group"
           aria-label={`${d.size} by ${d.size} Sudoku`}
@@ -118,15 +165,35 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
             };
             if (e.key in moves) {
               e.preventDefault();
-              const index = Math.max(
-                0,
-                Math.min(d.cells.length - 1, selected + moves[e.key]),
-              );
+              const row = Math.floor(selected / d.size),
+                col = selected % d.size;
+              const index =
+                e.key === "ArrowLeft"
+                  ? row * d.size + Math.max(0, col - 1)
+                  : e.key === "ArrowRight"
+                    ? row * d.size + Math.min(d.size - 1, col + 1)
+                    : Math.max(
+                        0,
+                        Math.min(d.cells.length - 1, selected + moves[e.key]),
+                      );
+              setSelected(index);
+              document.getElementById(`cell-${index}`)?.focus();
+            } else if (e.key === "Home" || e.key === "End") {
+              e.preventDefault();
+              const index = e.ctrlKey
+                ? e.key === "Home"
+                  ? 0
+                  : d.cells.length - 1
+                : Math.floor(selected / d.size) * d.size +
+                  (e.key === "Home" ? 0 : d.size - 1);
               setSelected(index);
               document.getElementById(`cell-${index}`)?.focus();
             } else if (/^[1-9]$/.test(e.key) && Number(e.key) <= d.size)
               move(Number(e.key));
-            else if (e.key === "Backspace" || e.key === "Delete") move(0);
+            else if (e.key === "Backspace" || e.key === "Delete") {
+              e.preventDefault();
+              move(0);
+            }
           }}
         >
           {d.cells.map((n, i) => (
@@ -143,6 +210,7 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
               aria-label={`Row ${Math.floor(i / d.size) + 1}, column ${(i % d.size) + 1}, ${n || "empty"}${d.givens[i] ? ", given" : ""}${d.notes[i].length ? `, notes ${d.notes[i].join(", ")}` : ""}`}
               aria-pressed={selected === i}
               onClick={() => setSelected(i)}
+              onFocus={() => setSelected(i)}
             >
               {n || <span className="pencil">{d.notes[i].join(" ")}</span>}
             </button>
@@ -154,6 +222,7 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
             <label>
               Row{" "}
               <select
+                aria-label="Row"
                 value={Math.floor(selected / d.size)}
                 onChange={(e) =>
                   setSelected(
@@ -171,6 +240,7 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
             <label>
               Column{" "}
               <select
+                aria-label="Column"
                 value={selected % d.size}
                 onChange={(e) =>
                   setSelected(
@@ -187,6 +257,14 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
               </select>
             </label>
           </div>
+          <p className="selected-square" aria-live="polite">
+            Row {Math.floor(selected / d.size) + 1}, column{" "}
+            {(selected % d.size) + 1}: {d.cells[selected] || "empty"}
+            {d.givens[selected] ? " (given)" : ""}
+            {d.notes[selected].length
+              ? ` · Notes: ${d.notes[selected].join(", ")}`
+              : ""}
+          </p>
           <p className="eyebrow">Your number tray</p>
           <div className="numberpad">
             {Array.from({ length: d.size }, (_, i) => (
@@ -220,11 +298,15 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
                   { ...d, ...prev, history: d.history.slice(0, -1) },
                   { undo: true },
                 );
+                setMessage("");
               }}
             >
               Undo
             </button>
-            <button disabled={complete} onClick={hint}>
+            <button disabled={complete} onClick={() => hint(true)}>
+              Show a step
+            </button>
+            <button disabled={complete} onClick={() => hint()}>
               Hint
             </button>
             <button
@@ -247,11 +329,12 @@ export function Sudoku({ draft, update, finish, replay }: GameProps) {
           ? "You completed this puzzle. It is yours to revisit anytime."
           : message}
       </p>
-      {complete && (
-        <button className="primary" onClick={replay}>
-          Play another
+      <div className="actions sudoku-replay">
+        <button onClick={repeat ?? replay}>Replay this puzzle</button>
+        <button onClick={replay}>
+          {complete ? "Play another" : "Another puzzle"}
         </button>
-      )}
-    </>
+      </div>
+    </div>
   );
 }

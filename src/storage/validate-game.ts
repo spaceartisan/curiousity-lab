@@ -20,7 +20,8 @@ export function validateGame(kind: string, value: unknown): boolean {
       !Number.isInteger(value.seed) ||
       value.seed < 0 ||
       value.seed > 0xffffffff ||
-      !["Relaxed", "Classic"].includes(value.tier)
+      !["Relaxed", "Classic", "Hidden singles"].includes(value.tier) ||
+      (value.tier === "Hidden singles" && value.size !== 9)
     )
       return false;
     const count = value.size * value.size;

@@ -22,7 +22,12 @@ import {
 } from "./creations/collection";
 import { Icon } from "./ui/Icon";
 import { Sudoku } from "./games/Sudoku";
-import { generateSudoku } from "./games/sudoku-engine";
+import {
+  generateSudoku,
+  sudokuPuzzle,
+  sudokuContentVersion,
+  type SudokuData,
+} from "./games/sudoku-engine";
 import { connections, searchBoard, searchPacks } from "./content/words";
 import { connectionsPuzzle } from "./games/connections-engine";
 import { Connections, WordSearch } from "./games/Words";
@@ -72,16 +77,18 @@ export function relativeTime(utc: string, now = Date.now()) {
 function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
   const seed = crypto.getRandomValues(new Uint32Array(1))[0];
   const oldSudoku =
-    previous?.game === "sudoku"
-      ? (previous.data as { size: 4 | 6 | 9; tier: "Relaxed" | "Classic" })
-      : undefined;
+    previous?.game === "sudoku" ? (previous.data as SudokuData) : undefined;
   const oldMusic =
     previous?.game === "music" ? (previous.data as MusicData) : undefined;
   const oldLab =
     previous?.game === "lab" ? (previous.data as LabData) : undefined;
   const data =
     game === "sudoku"
-      ? generateSudoku(oldSudoku?.size || 9, seed, oldSudoku?.tier || "Classic")
+      ? generateSudoku(
+          oldSudoku?.size || 9,
+          samePuzzle && oldSudoku ? oldSudoku.seed : seed,
+          oldSudoku?.tier || "Classic",
+        )
       : game === "connections"
         ? {
             pack: previous
@@ -129,7 +136,7 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
     game,
     puzzleId:
       game === "sudoku"
-        ? `sudoku-${oldSudoku?.size || 9}-${seed}`
+        ? sudokuPuzzle(data as SudokuData)
         : game === "connections"
           ? connectionsPuzzle((data as { pack: number }).pack)
           : game === "search"
@@ -166,17 +173,21 @@ function archive(
           schemaVersion: 1 as const,
           appVersion: APP_VERSION,
           contentVersion:
-            draft.game === "connections" &&
-            (draft.data as { pack: number }).pack >= 2
-              ? "connections-2"
-              : draft.game === "search" && draft.puzzleId !== "quiet-garden-v1"
-                ? "word-search-2"
-                : draft.game === "music" && draft.puzzleId !== "music-studio-v1"
-                  ? "music-exercises-1"
-                  : draft.game === "lab" &&
-                      (draft.data as LabData).workflowRevision === 1
-                    ? "lab-workflow-1"
-                    : "starter-1",
+            draft.game === "sudoku"
+              ? sudokuContentVersion(draft.data as SudokuData)
+              : draft.game === "connections" &&
+                  (draft.data as { pack: number }).pack >= 2
+                ? "connections-2"
+                : draft.game === "search" &&
+                    draft.puzzleId !== "quiet-garden-v1"
+                  ? "word-search-2"
+                  : draft.game === "music" &&
+                      draft.puzzleId !== "music-studio-v1"
+                    ? "music-exercises-1"
+                    : draft.game === "lab" &&
+                        (draft.data as LabData).workflowRevision === 1
+                      ? "lab-workflow-1"
+                      : "starter-1",
           game: draft.game,
           puzzleId: draft.puzzleId,
           startedAt: draft.startedAt,
@@ -464,7 +475,7 @@ export function App({ appRole }: { appRole: Role }) {
           data,
           puzzleId:
             game === "sudoku"
-              ? `sudoku-${(data as { size: number; seed: number }).size}-${(data as { seed: number }).seed}`
+              ? sudokuPuzzle(data as SudokuData)
               : game === "lab"
                 ? labPuzzle(data as LabData)
                 : game === "music"

@@ -1,3 +1,11 @@
+# v0.11.0
+
+- Added an optional 9×9 Hidden singles collection: three original frozen boards, deterministic variations, unique solutions and a documented solving-technique ceiling. Every board requires hidden singles and can finish without guessing.
+- Preserved the original 4×4/6×6/9×9 Relaxed and Classic generator outputs, save identities and historical content versions. New challenges use `sudoku-hidden-singles-1` with canonical restore validation.
+- Added Show a step without filling; Hint explains a real deduction or truthfully corrects an existing mismatched entry. Assistance stays local and records no activity with history off.
+- Number placements prune peer pencil notes; Undo restores cells and notes together. Explanations add no undo move. Added unlimited same-board replay with separate immutable attempt records.
+- Added larger selected-square context, explicit selector names, row-edge keyboard focus and Home/End navigation. Number trays and action buttons reflow with enlarged text; 9×9 digits stay within small cells.
+
 # v0.10.0
 
 - Added dedicated Lab Notebook/Melodies collection views with local search across titles, notes, observations and known source titles, saved-date ordering and bounded twelve-entry pages.
