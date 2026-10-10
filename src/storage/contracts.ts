@@ -1,5 +1,5 @@
 import { validateGame } from "./validate-game";
-export const APP_VERSION = "0.9.0";
+export const APP_VERSION = "0.10.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {
@@ -36,6 +36,7 @@ export interface Creation {
   kind: "melody" | "notebook";
   title: string;
   savedAt: string;
+  lastViewedAt?: string;
   notes?: number[];
   specimenId?: string;
   observations?: string[];
@@ -144,6 +145,9 @@ export function validateState(
       typeof c.title !== "string" ||
       c.title.length > 100 ||
       !Number.isFinite(Date.parse(c.savedAt)) ||
+      (c.lastViewedAt !== undefined &&
+        (typeof c.lastViewedAt !== "string" ||
+          !Number.isFinite(Date.parse(c.lastViewedAt)))) ||
       (c.text !== undefined &&
         (typeof c.text !== "string" || c.text.length > 1000)) ||
       (c.observations !== undefined &&

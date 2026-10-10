@@ -1298,3 +1298,56 @@ summary {
     minmax(min(100%, max(12ch, calc((100% - 1.95rem) / 4))), 1fr)
   );
 }
+.collections,
+.collection-heading {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.collections button {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.collection-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+}
+.collection-tools label {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.collection-tools input,
+.collection-tools select {
+  width: 100%;
+  min-width: 0;
+}
+.notebook-preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.5;
+  object-fit: contain;
+  background: #111e1d;
+  border-radius: 10px;
+}
+.notebook-text {
+  white-space: pre-wrap;
+}
+.collection-sound {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  min-inline-size: 0;
+  margin-block: 1rem;
+}
+.collection-sound label {
+  min-width: 0;
+}
+.collection-sound input[type="range"] {
+  max-width: 100%;
+}
+.collection-pages {
+  justify-content: center;
+}

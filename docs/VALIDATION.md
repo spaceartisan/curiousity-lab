@@ -1,3 +1,13 @@
+# v0.10.0 validation
+
+Locally: 100 unit/component tests passed, including nine new collection cases for immutable search/filter/order, explicit last-reopen/future-time handling, legacy and malformed timestamp validation, dedicated notebook navigation/reset, missing-source and search-empty preservation, original saved-date/ID retention on revisit, pagination and canceled/confirmed single-entry removal, no-autoplay/live volume/Stop behavior, and schema-v1 backup metadata round-trip. Thirteen archive/remote cases passed with the age-only test skipped locally. TypeScript, build and scoped PWA/provenance validation passed.
+
+CI gates deployment on 100 unit/component tests, fourteen archive/remote tests with age, twenty-two Firestore security cases plus the encrypted emulator recovery drill, and thirty-eight desktop/phone browser scenarios. The new scenario imports a clearly fictional legacy notebook backup through actual restore preview, then tests direct notebook navigation, offline cached previews, pagination, unavailable-source removal, search/order, original note/view restoration, last-reopened persistence, history-off exclusion and 320-pixel/200% text layouts for notebook and melody views. Check this commit's workflow result for actual completion.
+
+Last-viewed metadata records an explicit local notebook reopen, never cognitive ability, emotional response or inferred microscope examination. Search/filter choices are not saved or uploaded. No private fixture or production backup/permission change is used. Chromium checks do not verify real-device audio quality, VoiceOver, independent scientific/content review or the remaining full-document launch gates.
+
+---
+
 # v0.9.0 validation
 
 Locally: 91 unit/component tests passed, including eight new Connections cases covering all eight packs' disjoint four-word groups and exact matching, original board/ID preservation, malformed restore rejection, deterministic shuffle/selection preservation, three progressive hint levels and undo metrics, mixed/fifth-word/Escape behavior, completion/replay IDs and content versions, eight-board cycling, legacy remount and history-off exclusion. Thirteen archive/remote cases passed with the age-only test skipped locally. TypeScript, production build and scoped PWA/provenance validation passed.

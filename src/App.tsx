@@ -15,6 +15,11 @@ import {
   download,
   sessionsCsv,
 } from "./storage/local";
+import { Creations } from "./creations/Creations";
+import {
+  latestNotebookVisit,
+  type CollectionFilter,
+} from "./creations/collection";
 import { Icon } from "./ui/Icon";
 import { Sudoku } from "./games/Sudoku";
 import { generateSudoku } from "./games/sudoku-engine";
@@ -273,6 +278,7 @@ export function App({ appRole }: { appRole: Role }) {
     [demo, setDemo] = useState(false),
     [review, setReview] = useState<LocalState | null>(null),
     [updateReady, setUpdateReady] = useState<ServiceWorker | null>(null);
+  const [creationFilter, setCreationFilter] = useState<CollectionFilter>("all");
   const [restoreEpoch, setRestoreEpoch] = useState(0);
   const [restoreBusy, setRestoreBusy] = useState(false);
   const preparationError = usePreparation(family, state, restoreEpoch);
@@ -507,6 +513,60 @@ export function App({ appRole }: { appRole: Role }) {
           }
         : s,
     );
+  }
+  function openCreations(filter: CollectionFilter = "all") {
+    setCreationFilter(filter);
+    setScreen("creations");
+  }
+  function revisitCreation(c: Creation) {
+    const index = specimens.findIndex((asset) => asset.id === c.specimenId);
+    if (index < 0) {
+      setError(
+        "This specimen is not available in the current content pack. Your note is preserved.",
+      );
+      return;
+    }
+    setState((s) => {
+      if (!s) return s;
+      const data: LabData = {
+        specimen: index,
+        stage: "microscope",
+        zoom: c.zoom || 1,
+        pan: c.pan || [0, 0],
+        observations: c.observations || [],
+        text: c.text || "",
+        pages: s.drafts.lab
+          ? selectLabSlide(
+              s.drafts.lab.data as LabData,
+              index,
+              c.labExperience ?? "workbench",
+              "microscope",
+            ).pages
+          : [],
+        ...(c.labWorkflowVersion === 1
+          ? { workflowRevision: 1, experience: c.labExperience ?? "workbench" }
+          : {}),
+      };
+      const next = s.drafts.lab ? archive(s, s.drafts.lab, "unfinished") : s;
+      return {
+        ...next,
+        creations: next.creations.map((entry) =>
+          entry.id === c.id
+            ? { ...entry, lastViewedAt: new Date().toISOString() }
+            : entry,
+        ),
+        drafts: {
+          ...next.drafts,
+          lab: {
+            ...newDraft("lab"),
+            data,
+            puzzleId: labPuzzle(data),
+            mode: labMode(data),
+          },
+        },
+      };
+    });
+    setScreen("lab");
   }
   async function importFile(file: File, inspect = false) {
     try {
@@ -750,7 +810,7 @@ export function App({ appRole }: { appRole: Role }) {
                     className={`library-card card-${i}`}
                     onClick={() =>
                       card.game === "creations"
-                        ? setScreen("creations")
+                        ? openCreations()
                         : open(card.game as GameKind)
                     }
                   >
@@ -1174,133 +1234,46 @@ export function App({ appRole }: { appRole: Role }) {
         {screen === "creations" && (
           <>
             <p className="eyebrow">Made and discovered by you</p>
-            <h1 ref={heading} tabIndex={-1}>
-              My Creations
+            <h1 className="collection-heading" ref={heading} tabIndex={-1}>
+              {creationFilter === "notebook"
+                ? "My Lab Notebook"
+                : creationFilter === "melody"
+                  ? "My Melodies"
+                  : "My Creations"}
             </h1>
-            {!state.creations.length ? (
-              <div className="empty-family">
-                <Icon name="creations" />
-                <h2>A place for your discoveries</h2>
-                <p>
-                  Save a melody or a lab notebook entry, and find it here
-                  whenever you like.
-                </p>
-                <button onClick={() => open("music")}>Open Music Studio</button>
-                <button onClick={() => open("lab")}>Open My Laboratory</button>
-              </div>
-            ) : (
-              <div className="creation-grid">
-                {[...state.creations].reverse().map((c) => (
-                  <article className="creation" key={c.id}>
-                    <Icon name={c.kind === "melody" ? "music" : "lab"} />
-                    <p className="eyebrow">
-                      {c.kind === "melody" ? "Melody" : "Lab Notebook"}
-                    </p>
-                    <h2>{c.title}</h2>
-                    <p className="muted">Saved {relativeTime(c.savedAt)}</p>
-                    {c.kind === "melody" ? (
-                      <button
-                        onClick={() => {
-                          if (prefs.sound)
-                            void playNotes(c.notes || [], prefs.volume).catch(
-                              () =>
-                                setError(
-                                  "Sound could not start. Check your volume and try again.",
-                                ),
-                            );
-                          else
-                            setError(
-                              "Turn sound on in Settings to hear your melody.",
-                            );
-                        }}
-                      >
-                        Hear it again
-                      </button>
-                    ) : (
-                      <>
-                        <p>{c.observations?.join(" · ")}</p>
-                        <p>{c.text}</p>
-                        <button
-                          onClick={() => {
-                            const index = specimens.findIndex(
-                              (s) => s.id === c.specimenId,
-                            );
-                            if (index < 0) {
-                              setError(
-                                "This specimen is not available in the current content pack. Your note is preserved.",
-                              );
-                              return;
-                            }
-                            setState((s) => {
-                              if (!s) return s;
-                              const data: LabData = {
-                                specimen: index,
-                                stage: "microscope",
-                                zoom: c.zoom || 1,
-                                pan: c.pan || [0, 0],
-                                observations: c.observations || [],
-                                text: c.text || "",
-                                pages: s.drafts.lab
-                                  ? selectLabSlide(
-                                      s.drafts.lab.data as LabData,
-                                      index,
-                                      c.labExperience ?? "workbench",
-                                      "microscope",
-                                    ).pages
-                                  : [],
-                                ...(c.labWorkflowVersion === 1
-                                  ? {
-                                      workflowRevision: 1,
-                                      experience:
-                                        c.labExperience ?? "workbench",
-                                    }
-                                  : {}),
-                              };
-                              const next = s.drafts.lab
-                                ? archive(s, s.drafts.lab, "unfinished")
-                                : s;
-                              return {
-                                ...next,
-                                drafts: {
-                                  ...next.drafts,
-                                  lab: {
-                                    ...newDraft("lab"),
-                                    data,
-                                    puzzleId: labPuzzle(data),
-                                    mode: labMode(data),
-                                  },
-                                },
-                              };
-                            });
-                            setScreen("lab");
-                          }}
-                        >
-                          Revisit specimen
-                        </button>
-                      </>
-                    )}
-                    <button
-                      className="text-button"
-                      onClick={() => {
-                        if (window.confirm("Remove this saved creation?"))
-                          setState((s) =>
-                            s
-                              ? {
-                                  ...s,
-                                  creations: s.creations.filter(
-                                    (x) => x.id !== c.id,
-                                  ),
-                                }
-                              : s,
-                          );
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </article>
-                ))}
-              </div>
-            )}
+            <Creations
+              creations={state.creations}
+              filter={creationFilter}
+              onFilter={setCreationFilter}
+              relativeTime={relativeTime}
+              sound={prefs.sound}
+              volume={prefs.volume}
+              onSound={(sound) => changePrefs({ sound })}
+              onVolume={(volume) => changePrefs({ volume })}
+              onMusic={() => open("music")}
+              onLab={() => open("lab")}
+              onRevisit={revisitCreation}
+              onHear={(c) => {
+                if (prefs.sound)
+                  void playNotes(c.notes || [], prefs.volume).catch(() =>
+                    setError(
+                      "Sound could not start. Check your volume and try again.",
+                    ),
+                  );
+                else setError("Turn sound on here to hear your melody.");
+              }}
+              onRemove={(c) => {
+                if (window.confirm("Remove this saved creation?"))
+                  setState((s) =>
+                    s
+                      ? {
+                          ...s,
+                          creations: s.creations.filter((x) => x.id !== c.id),
+                        }
+                      : s,
+                  );
+              }}
+            />
           </>
         )}
         {game && props && (
@@ -1368,7 +1341,18 @@ export function App({ appRole }: { appRole: Role }) {
                     onVolumeChange={(volume) => changePrefs({ volume })}
                   />
                 ) : (
-                  <Laboratory key={props.draft.id} {...props} />
+                  <Laboratory
+                    key={props.draft.id}
+                    {...props}
+                    onNotebook={() => openCreations("notebook")}
+                    lastNotebookVisit={(() => {
+                      const value = latestNotebookVisit(
+                        state.creations,
+                        specimens[(props.draft.data as LabData).specimen].id,
+                      );
+                      return value ? relativeTime(value) : undefined;
+                    })()}
+                  />
                 )}
               </section>
             )}

@@ -1,3 +1,11 @@
+# v0.10.0
+
+- Added dedicated Lab Notebook/Melodies collection views with local search across titles, notes, observations and known source titles, saved-date ordering and bounded twelve-entry pages.
+- Added notebook image previews with attribution links, preserved multiline notes and unavailable-source entries. Removal targets one entry after the existing in-app confirmation; pagination clamps after deletion.
+- Added a direct laboratory notebook shortcut and truthful continuity based only on explicit notebook reopens. Original saved dates, IDs and notes remain unchanged; old schema-v1 entries need no migration.
+- Added optional, validated last-viewed metadata to local notebook entries and JSON backups. Reopening does not enable activity collection or upload anything.
+- Added inline melody sound/volume/Stop controls; toggles and browsing never autoplay, and leaving the collection stops audio.
+
 # v0.9.0
 
 - Expanded Word Connections from two to eight original themed packs; retained the original boards, legacy puzzle IDs and historical content versions.

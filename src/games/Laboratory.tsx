@@ -33,7 +33,9 @@ export function Laboratory({
   create,
   finish,
   repeat,
-}: GameProps) {
+  onNotebook,
+  lastNotebookVisit,
+}: GameProps & { onNotebook?: () => void; lastNotebookVisit?: string }) {
   const d = draft.data as LabData;
   const [message, setMessage] = useState("");
   const s = specimens[d.specimen];
@@ -91,6 +93,12 @@ export function Laboratory({
   }
   return (
     <div className="lab-workspace">
+      {onNotebook && <button onClick={onNotebook}>Open Lab Notebook</button>}
+      {lastNotebookVisit && (
+        <p className="muted">
+          You reopened a notebook page for this slide {lastNotebookVisit}.
+        </p>
+      )}
       <p>
         Choose a teaching specimen, look around, and record whatever interests
         you. Every step is optional.
