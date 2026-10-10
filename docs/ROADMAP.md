@@ -10,7 +10,7 @@ This is intentionally the start of the staged design. Demo dashboards are not co
 
 - Review screenshots and use the app on actual phone/tablet devices; verify 200% text/zoom, VoiceOver/keyboard paths, touch targets, separate home-screen installs, and Web Audio on iOS/Android.
 - Expand and independently review the image pack, with per-image license/provenance and optional hematology images. Refine workbench interactions with player feedback.
-- Add curated word-search variations and stronger reviewed music content, real rhythm replay/new-attempt semantics, improved score/ear presentation and per-game help.
+- Add stronger reviewed music content, real rhythm replay/new-attempt semantics, improved score/ear presentation and per-game help. Word-search variations and keyboard/replay paths were added in v0.6.0; actual-device usability review remains.
 - Calibrate Sudoku solving-technique tiers beyond naked singles before offering advanced difficulty. Preserve deterministic content versions and migrations.
 - Expand undo/skip/help consistency and make conflict/backup recovery explicit; test browser crash and storage-quota failure paths.
 
@@ -29,6 +29,10 @@ Always-on role connection status reaches the home screens. Play has separate loc
 ## v0.5.0 — Safe local restore and encrypted recovery drills
 
 JSON restore previews changes and requires confirmation in the app. The previous save is kept before replacement, with the three newest undo copies retained locally. Restored history cannot enter automatic sharing preparation; local deletion includes undo copies. Privileged archive tooling recursively exports the default Firestore database, validates typed records/checksums/counts/selected grant cross-references, compresses and encrypts before writing ciphertext. Production restore is absent; recovery tooling only stages an empty local demo emulator. CI and a monthly synthetic workflow verify authenticated decryption and actual emulator recovery. Weekly encrypted private-release uploads, retention and daily staleness checks are implemented but opt-in. Owner configuration of private storage/credentials, verified notification delivery, source consistency and controlled real-source recovery remain required before uploads.
+
+## v0.6.0 — Word-search variety and accessible replay
+
+Four fixed, versioned boards preserve the original garden save while adding row/column and diagonal themes. Found letters remain visible after reload; hints derive from actual board paths. Roving keyboard focus supports arrows, Home/End, Enter/Space and Escape. Replay this puzzle starts a separate attempt on the same board; Another puzzle cycles themes. Letter targets remain at least 48 pixels with contained horizontal scrolling on small screens, and text wrapping is checked at 200% in CI. Family sync and real backup setup remain separate launch gates.
 
 ## Phase 2b — Optional approved family sync
 

@@ -18,6 +18,7 @@ import {
 import { Icon } from "./ui/Icon";
 import { Sudoku } from "./games/Sudoku";
 import { generateSudoku } from "./games/sudoku-engine";
+import { searchBoard, searchPacks } from "./content/words";
 import { Connections, WordSearch } from "./games/Words";
 import { Music } from "./games/Music";
 import { Laboratory } from "./games/Laboratory";
@@ -54,7 +55,7 @@ export function relativeTime(utc: string, now = Date.now()) {
   if (delta < 86400000) return `${Math.floor(delta / 3600000)} hours ago`;
   return "on " + new Date(utc).toLocaleDateString();
 }
-function newDraft(game: GameKind, previous?: Draft): Draft {
+function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
   const seed = crypto.getRandomValues(new Uint32Array(1))[0];
   const oldSudoku =
     previous?.game === "sudoku"
@@ -72,7 +73,14 @@ function newDraft(game: GameKind, previous?: Draft): Draft {
             selected: [],
           }
         : game === "search"
-          ? { found: [] }
+          ? {
+              pack: previous
+                ? (Number((previous.data as { pack?: number }).pack ?? 0) +
+                    (samePuzzle ? 0 : 1)) %
+                  searchPacks.length
+                : 0,
+              found: [],
+            }
           : game === "music"
             ? { mode: "piano", notes: [], title: "My melody", solved: false }
             : {
@@ -92,7 +100,7 @@ function newDraft(game: GameKind, previous?: Draft): Draft {
         : game === "connections"
           ? `connections-${(data as { pack: number }).pack}`
           : game === "search"
-            ? "quiet-garden-v1"
+            ? searchBoard((data as { pack: number }).pack).id
             : game === "music"
               ? "music-studio-v1"
               : specimens[0].id,
@@ -122,7 +130,10 @@ function archive(
           id: draft.id,
           schemaVersion: 1 as const,
           appVersion: APP_VERSION,
-          contentVersion: "starter-1",
+          contentVersion:
+            draft.game === "search" && draft.puzzleId !== "quiet-garden-v1"
+              ? "word-search-2"
+              : "starter-1",
           game: draft.game,
           puzzleId: draft.puzzleId,
           startedAt: draft.startedAt,
@@ -366,7 +377,7 @@ export function App({ appRole }: { appRole: Role }) {
     );
     setScreen(game);
   }
-  function replay() {
+  function replay(samePuzzle = false) {
     if (!state || !(screen in titles)) return;
     const game = screen as GameKind;
     setState((s) => {
@@ -375,7 +386,7 @@ export function App({ appRole }: { appRole: Role }) {
       const archived = old ? archive(s, old, "unfinished") : s;
       return {
         ...archived,
-        drafts: { ...archived.drafts, [game]: newDraft(game, old) },
+        drafts: { ...archived.drafts, [game]: newDraft(game, old, samePuzzle) },
       };
     });
   }
@@ -522,7 +533,16 @@ export function App({ appRole }: { appRole: Role }) {
     });
   const game = screen in titles ? (screen as GameKind) : null;
   const draft = game ? state.drafts[game] : null;
-  const props = draft ? { draft, update, finish, create, replay } : null;
+  const props = draft
+    ? {
+        draft,
+        update,
+        finish,
+        create,
+        replay: () => replay(),
+        repeat: () => replay(true),
+      }
+    : null;
   return (
     <div className={`app theme-${prefs.theme} text-${prefs.textSize}`}>
       <a className="skip-link" href="#content">

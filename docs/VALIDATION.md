@@ -1,3 +1,13 @@
+# v0.6.0 validation
+
+Locally: 64 unit/component tests passed, including all four boards' dimensions and unique word paths, malformed save rejection, legacy garden resume, reverse/vertical selection, keyboard cancellation, real hints, offline-history exclusion and separate replay IDs/attempt metadata. Thirteen archive/remote tests passed with the age-only case explicitly skipped locally. TypeScript, build and PWA checks passed.
+
+CI gates deployment on all 64 unit/component tests, 14 archive/remote tests with age installed, 22 Firestore security scenarios plus the encrypted emulator recovery drill, and 28 browser scenarios. The new desktop/phone scenario covers keyboard word selection, found-letter persistence after an offline reload, same-board replay, new-board content, 320-pixel layout with 200% text, and at-least-48-pixel letter targets. Screenshots show synthetic local gameplay; check this commit's workflow result for completion.
+
+Real phone/tablet touch/VoiceOver behavior has not been verified by the agent. The board scrolls horizontally when enlarged; the page should not. No production backup, credential/IAM operation or activity upload was performed in this pass.
+
+---
+
 # v0.5.0 validation
 
 Backup automation follow-up: six additional Node tests cover private destination restrictions, API host/redirect boundaries, twelve weekly/twelve monthly retention, missing/stale/future or altered audits, checksum-gated publication, and deletion ordering. Local archive suite: thirteen passed and the age-only test skipped; existing 56 unit/component tests and build/PWA checks passed. Google setup script passed Bash syntax checking but has not been executed against production. The opt-in weekly workflow is not evidence of an actual backup. Review this commit's CI result for encryption/emulator/browser completion.

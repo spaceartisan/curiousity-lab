@@ -1,4 +1,106 @@
 import { test, expect } from "@playwright/test";
+import { searchPacks, findWordPaths } from "../src/content/words";
+test("word search boards preserve highlights offline and support keyboard, replay and large text", async ({
+  page,
+  context,
+}, info) => {
+  await page.goto("/curiousity-lab/play/");
+  await page
+    .getByRole("button", { name: "Play without activity history" })
+    .click();
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await page.getByRole("button", { name: "Open Word Search →" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Quiet garden" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Another puzzle" }).click();
+  const bread = findWordPaths(searchPacks[1], "BREAD")[0];
+  for (const index of [bread[0], bread.at(-1)!])
+    await page
+      .getByRole("button", {
+        name: new RegExp(
+          `^Row ${Math.floor(index / 8) + 1}, column ${(index % 8) + 1}:`,
+        ),
+      })
+      .click();
+  await expect(page.getByText(/1 of 8 words found/)).toBeVisible();
+  await page.getByRole("button", { name: "Hint", exact: true }).click();
+  const spoon = findWordPaths(searchPacks[1], "SPOON")[0];
+  const start = page.getByRole("button", {
+    name: new RegExp(
+      `^Row ${Math.floor(spoon[0] / 8) + 1}, column ${(spoon[0] % 8) + 1}:`,
+    ),
+  });
+  await expect(start).toHaveClass(/hint-letter/);
+  await start.focus();
+  await page.keyboard.press("Enter");
+  for (let i = 1; i < spoon.length; i++) await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+  await expect(page.getByText(/2 of 8 words found/)).toBeVisible();
+  await page.getByRole("button", { name: "Back to games" }).click();
+  await expect(
+    page.getByText("Saved on this device", { exact: true }),
+  ).toBeVisible();
+  await context.setOffline(true);
+  await page.reload();
+  await page.getByRole("button", { name: "Open Word Search →" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Kitchen table" }),
+  ).toBeVisible();
+  await expect(page.getByText(/2 of 8 words found/)).toBeVisible();
+  await expect(
+    page.getByRole("button", {
+      name: new RegExp(
+        `^Row ${Math.floor(spoon[0] / 8) + 1}, column ${(spoon[0] % 8) + 1}:`,
+      ),
+    }),
+  ).toHaveClass(/found-letter/);
+  await page.getByRole("button", { name: "Replay this puzzle" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Kitchen table" }),
+  ).toBeVisible();
+  await expect(page.getByText(/0 of 8 words found/)).toBeVisible();
+  await page.getByRole("button", { name: "Another puzzle" }).click();
+  await expect(
+    page.getByRole("heading", { name: "At the workbench" }),
+  ).toBeVisible();
+  const light = findWordPaths(searchPacks[2], "LIGHT")[0];
+  for (const index of [light.at(-1)!, light[0]])
+    await page
+      .getByRole("button", {
+        name: new RegExp(
+          `^Row ${Math.floor(index / 8) + 1}, column ${(index % 8) + 1}:`,
+        ),
+      })
+      .click();
+  await page.getByRole("button", { name: "Hint", exact: true }).click();
+  await page.screenshot({
+    path: info.outputPath("word-search-workbench.png"),
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 320, height: 900 });
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "200%";
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    ),
+  ).toBe(false);
+  const size = await page
+    .getByRole("group", { name: "Word search", exact: true })
+    .getByRole("button")
+    .first()
+    .boundingBox();
+  expect(size!.width).toBeGreaterThanOrEqual(48);
+  expect(size!.height).toBeGreaterThanOrEqual(48);
+  await page.screenshot({
+    path: info.outputPath("word-search-large-text.png"),
+    fullPage: true,
+  });
+});
 test("player save/resume, scoped offline shell, and screenshots", async ({
   page,
   context,
@@ -439,13 +541,11 @@ test("corrupt and wrong-role backups cannot replace local data", async ({
     "broken json",
     JSON.stringify({ schemaVersion: 1, installationRole: "insights" }),
   ]) {
-    await page
-      .getByLabel("Restore this app’s JSON backup")
-      .setInputFiles({
-        name: "unsupported.json",
-        mimeType: "application/json",
-        buffer: Buffer.from(bytes),
-      });
+    await page.getByLabel("Restore this app’s JSON backup").setInputFiles({
+      name: "unsupported.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(bytes),
+    });
     await expect(
       page.getByText(
         "This file is not a supported backup for this app. Your existing data is unchanged.",

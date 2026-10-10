@@ -1,3 +1,10 @@
+# v0.6.0
+
+- Added three curated offline Word Search boards alongside the unchanged original garden board, with distinct puzzle IDs and content versions.
+- Added durable found-letter markings, actual-position hints, arrow/Home/End keyboard navigation, selection cancellation, separate same-puzzle replay and new-puzzle cycling.
+- Kept original garden save data and schema-v1 exports compatible; validated board-bound unique found words. Replay preserves separate attempt IDs and history-off behavior.
+- Kept 48-pixel letter targets in a contained scrollable board and made headers/word lists wrap with larger text.
+
 # v0.5.0
 
 - Backup follow-up: prepared opt-in weekly encrypted private-release archives, twelve weekly/twelve monthly retention, checksum-gated publication, deletion audit and daily eight-day freshness failures. Added owner-only setup and narrowly restricted Google federation script. No production setup or real backup was performed.

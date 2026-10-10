@@ -1,5 +1,10 @@
-import { useState } from "react";
-import { connections, searchPack, wordPath } from "../content/words";
+import { useRef, useState } from "react";
+import {
+  connections,
+  searchBoard,
+  findWordPaths,
+  wordPath,
+} from "../content/words";
 import type { GameProps } from "./types";
 export interface ConnectionsData {
   pack: number;
@@ -7,6 +12,7 @@ export interface ConnectionsData {
   selected: string[];
 }
 export interface SearchData {
+  pack?: number;
   found: string[];
 }
 export function Connections({ draft, update, finish, replay }: GameProps) {
@@ -92,27 +98,51 @@ export function Connections({ draft, update, finish, replay }: GameProps) {
     </>
   );
 }
-export function WordSearch({ draft, update, finish, replay }: GameProps) {
+export function WordSearch({
+  draft,
+  update,
+  finish,
+  replay,
+  repeat,
+}: GameProps) {
   const d = draft.data as SearchData;
+  const pack = searchBoard(d.pack);
   const [start, setStart] = useState<number | null>(null),
-    [message, setMessage] = useState("");
-  const cells = searchPack.rows.join("").split("");
+    [message, setMessage] = useState(""),
+    [focus, setFocus] = useState(0),
+    [hint, setHint] = useState<number | null>(null);
+  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
+  const cells = pack.rows.join("").split("");
+  const foundCells = new Set(
+    d.found.flatMap((w) => findWordPaths(pack, w).flat()),
+  );
   function select(index: number) {
     if (start === null) {
       setStart(index);
+      setMessage(
+        `Start selected: row ${Math.floor(index / pack.size) + 1}, column ${(index % pack.size) + 1}. Now choose the last letter.`,
+      );
       return;
     }
-    const path = wordPath(start, index, 8),
+    if (start === index) {
+      setStart(null);
+      setMessage("Selection cleared.");
+      return;
+    }
+    const path = wordPath(start, index, pack.size),
       word = path.map((i) => cells[i]).join("");
-    const match = searchPack.words.find(
+    const match = pack.words.find(
       (w) => w === word || w === word.split("").reverse().join(""),
     );
     if (match && !d.found.includes(match)) {
       const found = [...d.found, match];
-      update({ found });
+      update({ ...d, found });
+      setHint(null);
       setMessage(`Found ${match.toLowerCase()}.`);
-      if (found.length === searchPack.words.length) finish("completed");
-    } else
+      if (found.length === pack.words.length) finish("completed");
+    } else if (match)
+      setMessage(`${match.toLowerCase()} is already found. Try another word.`);
+    else
       setMessage(
         "Choose the first and last letter of a word in a straight line.",
       );
@@ -120,26 +150,80 @@ export function WordSearch({ draft, update, finish, replay }: GameProps) {
   }
   return (
     <>
-      <p>
+      <div className="search-summary">
+        <h2>{pack.title}</h2>
+        <p>
+          {pack.directions} · {d.found.length} of {pack.words.length} words
+          found
+        </p>
+      </div>
+      <p id="word-search-instructions">
         Tap the first letter, then the last letter of a word. You can select in
-        either direction.
+        either direction. With a keyboard, use arrow keys to move and Enter or
+        Space to select. Escape clears the selection.
+      </p>
+      <p className="muted search-scroll-help">
+        On a small screen, slide the board sideways to see all columns.
       </p>
       <div className="search-layout">
-        <div className="letter-grid" role="group" aria-label="Word search">
-          {cells.map((letter, i) => (
-            <button
-              key={i}
-              className={start === i ? "selected" : ""}
-              onClick={() => select(i)}
-              aria-pressed={start === i}
-              aria-label={`Row ${Math.floor(i / 8) + 1}, column ${(i % 8) + 1}: ${letter}`}
-            >
-              {letter}
-            </button>
-          ))}
+        <div className="search-board-scroll">
+          <div
+            className="letter-grid"
+            role="group"
+            aria-label="Word search"
+            aria-describedby="word-search-instructions"
+          >
+            {cells.map((letter, i) => (
+              <button
+                key={i}
+                ref={(el) => {
+                  buttons.current[i] = el;
+                }}
+                tabIndex={focus === i ? 0 : -1}
+                onFocus={() => setFocus(i)}
+                className={[
+                  start === i ? "selected" : "",
+                  foundCells.has(i) ? "found-letter" : "",
+                  hint === i ? "hint-letter" : "",
+                ].join(" ")}
+                onClick={() => select(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    setStart(null);
+                    setMessage("Selection cleared.");
+                    return;
+                  }
+                  const row = Math.floor(i / pack.size),
+                    col = i % pack.size;
+                  const next =
+                    e.key === "ArrowRight"
+                      ? row * pack.size + Math.min(pack.size - 1, col + 1)
+                      : e.key === "ArrowLeft"
+                        ? row * pack.size + Math.max(0, col - 1)
+                        : e.key === "ArrowDown"
+                          ? Math.min(pack.size - 1, row + 1) * pack.size + col
+                          : e.key === "ArrowUp"
+                            ? Math.max(0, row - 1) * pack.size + col
+                            : e.key === "Home"
+                              ? row * pack.size
+                              : e.key === "End"
+                                ? row * pack.size + pack.size - 1
+                                : null;
+                  if (next !== null) {
+                    e.preventDefault();
+                    buttons.current[next]?.focus();
+                  }
+                }}
+                aria-pressed={start === i}
+                aria-label={`Row ${Math.floor(i / pack.size) + 1}, column ${(i % pack.size) + 1}: ${letter}${foundCells.has(i) ? ", found" : ""}${hint === i ? ", hint starts here" : ""}`}
+              >
+                {letter}
+              </button>
+            ))}
+          </div>
         </div>
-        <ul className="word-list">
-          {searchPack.words.map((w) => (
+        <ul className="word-list" aria-label="Words to find">
+          {pack.words.map((w) => (
             <li key={w} className={d.found.includes(w) ? "found" : ""}>
               {d.found.includes(w) ? "✓ " : ""}
               {w}
@@ -148,25 +232,38 @@ export function WordSearch({ draft, update, finish, replay }: GameProps) {
         </ul>
       </div>
       <div className="actions">
-        <button onClick={() => setStart(null)}>Clear selection</button>
         <button
           onClick={() => {
-            const row = searchPack.words.findIndex((w) => !d.found.includes(w));
-            if (row >= 0) {
+            setStart(null);
+            setMessage("Selection cleared.");
+          }}
+        >
+          Clear selection
+        </button>
+        <button
+          onClick={() => {
+            const word = pack.words.find((w) => !d.found.includes(w));
+            const path = word ? findWordPaths(pack, word)[0] : undefined;
+            if (word && path) {
+              setStart(null);
+              setHint(path[0]);
               setMessage(
-                `Look along row ${row + 1} for ${searchPack.words[row].toLowerCase()}.`,
+                `${word.toLowerCase()} starts at row ${Math.floor(path[0] / pack.size) + 1}, column ${(path[0] % pack.size) + 1}. Its first letter is outlined.`,
               );
               update(d, { hint: true });
             }
           }}
-          disabled={d.found.length === 8}
+          disabled={d.found.length === pack.words.length}
         >
           Hint
         </button>
-        <button onClick={replay}>Replay this puzzle</button>
+        <button onClick={replay}>Another puzzle</button>
+        {repeat && <button onClick={repeat}>Replay this puzzle</button>}
       </div>
       <p role="status">
-        {d.found.length === 8 ? "You found every word in the garden." : message}
+        {d.found.length === pack.words.length
+          ? "You found all eight words. You can replay or try another puzzle."
+          : message}
       </p>
     </>
   );

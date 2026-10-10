@@ -8,4 +8,5 @@ export interface GameProps {
   finish: (outcome: "completed" | "explored") => void;
   create: (item: Omit<Creation, "id" | "savedAt">) => void;
   replay: () => void;
+  repeat?: () => void;
 }

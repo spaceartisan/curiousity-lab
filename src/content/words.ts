@@ -29,6 +29,8 @@ export const connections = [
 ];
 export const searchPack = {
   id: "quiet-garden-v1",
+  title: "Quiet garden",
+  directions: "Rows",
   size: 8,
   rows: [
     "GARDENAB",
@@ -51,7 +53,109 @@ export const searchPack = {
     "TEA",
   ],
 };
+// Fixed, versioned boards. Keep the original first board unchanged for old saves.
+export const searchPacks = [
+  searchPack,
+  {
+    id: "kitchen-table-v1",
+    title: "Kitchen table",
+    directions: "Rows and columns",
+    size: 8,
+    rows: [
+      "BREADVOS",
+      "KPLATETQ",
+      "TSTVDCAO",
+      "IPUQMUWH",
+      "BOPOPPQE",
+      "BOWLERWR",
+      "LNCPAMUB",
+      "YIERRTEA",
+    ],
+    words: ["BREAD", "SPOON", "PLATE", "CUP", "TEA", "PEAR", "BOWL", "HERB"],
+  },
+  {
+    id: "workbench-words-v1",
+    title: "At the workbench",
+    directions: "Rows, columns and diagonals",
+    size: 8,
+    rows: [
+      "SEMNOTES",
+      "YLDEQGPG",
+      "MAIEJAVL",
+      "QTRDSHLA",
+      "GCHTEKES",
+      "MIOGIRNS",
+      "URJOIBSF",
+      "FOCUSLWB",
+    ],
+    words: [
+      "SLIDE",
+      "LENS",
+      "NOTES",
+      "LIGHT",
+      "DESK",
+      "GLASS",
+      "FOCUS",
+      "TRAY",
+    ],
+  },
+  {
+    id: "waterside-v1",
+    title: "By the water",
+    directions: "Rows, columns and diagonals",
+    size: 8,
+    rows: [
+      "LZWMIEJU",
+      "YGIINBDK",
+      "MSMOLLJC",
+      "HTTLCLAU",
+      "ESUCZROD",
+      "RIVEREWW",
+      "ODNOPEWF",
+      "NBANKDSI",
+    ],
+    words: [
+      "RIVER",
+      "REED",
+      "DUCK",
+      "POND",
+      "WILLOW",
+      "STONE",
+      "BANK",
+      "HERON",
+    ],
+  },
+];
+export type SearchPack = typeof searchPack;
+export function searchBoard(pack = 0): SearchPack {
+  return searchPacks[pack] ?? searchPack;
+}
+export function findWordPaths(pack: SearchPack, word: string): number[][] {
+  const cells = pack.rows.join("");
+  const result: number[][] = [];
+  for (let start = 0; start < cells.length; start++) {
+    for (const dr of [-1, 0, 1])
+      for (const dc of [-1, 0, 1]) {
+        if (!dr && !dc) continue;
+        const r = Math.floor(start / pack.size) + dr * (word.length - 1);
+        const c = (start % pack.size) + dc * (word.length - 1);
+        if (r < 0 || r >= pack.size || c < 0 || c >= pack.size) continue;
+        const path = wordPath(start, r * pack.size + c, pack.size);
+        if (path.map((i) => cells[i]).join("") === word) result.push(path);
+      }
+  }
+  return result;
+}
 export function wordPath(start: number, end: number, size: number): number[] {
+  if (
+    ![start, end, size].every(Number.isInteger) ||
+    size < 1 ||
+    start < 0 ||
+    end < 0 ||
+    start >= size * size ||
+    end >= size * size
+  )
+    return [];
   const r0 = Math.floor(start / size),
     c0 = start % size,
     r1 = Math.floor(end / size),

@@ -1,4 +1,5 @@
 import { generateSudoku, validSudoku, type Size } from "../games/sudoku-engine";
+import { searchBoard, searchPacks } from "../content/words";
 const record = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
 const strings = (v: unknown, max = 32) =>
@@ -56,7 +57,20 @@ export function validateGame(kind: string, value: unknown): boolean {
       strings(value.solved, 4) &&
       strings(value.selected, 4)
     );
-  if (kind === "search") return strings(value.found, 8);
+  if (kind === "search") {
+    const pack = value.pack === undefined ? 0 : value.pack;
+    return (
+      Number.isInteger(pack) &&
+      Number(pack) >= 0 &&
+      Number(pack) < searchPacks.length &&
+      strings(value.found, 8) &&
+      new Set(value.found as string[]).size ===
+        (value.found as string[]).length &&
+      (value.found as string[]).every((w) =>
+        searchBoard(Number(pack)).words.includes(w),
+      )
+    );
+  }
   if (kind === "music")
     return (
       ["piano", "phrase", "match", "rhythm"].includes(String(value.mode)) &&
