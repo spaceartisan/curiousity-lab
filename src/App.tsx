@@ -25,6 +25,7 @@ import { Laboratory } from "./games/Laboratory";
 import { ActivityClock } from "./games/activity-clock";
 import { stopAudio, playNotes } from "./games/audio";
 import { specimens } from "./content/specimens";
+import { incomingInvitation } from "./family/invitations";
 import { FamilySetup } from "./family/FamilySetup";
 import "./styles.css";
 const base = import.meta.env.BASE_URL;
@@ -206,8 +207,8 @@ export function App({ appRole }: { appRole: Role }) {
     [error, setError] = useState(""),
     [saved, setSaved] = useState(false),
     [screen, setScreen] = useState<
-      GameKind | "home" | "settings" | "creations"
-    >("home"),
+      GameKind | "home" | "settings" | "connect" | "creations"
+    >(incomingInvitation ? "connect" : "home"),
     [paused, setPaused] = useState(false),
     [demo, setDemo] = useState(false),
     [review, setReview] = useState<LocalState | null>(null),
@@ -265,6 +266,7 @@ export function App({ appRole }: { appRole: Role }) {
         delta > 0 &&
         activeScreen !== "home" &&
         activeScreen !== "settings" &&
+        activeScreen !== "connect" &&
         activeScreen !== "creations"
       )
         setState((s) => {
@@ -311,6 +313,7 @@ export function App({ appRole }: { appRole: Role }) {
       paused ||
         screen === "home" ||
         screen === "settings" ||
+        screen === "connect" ||
         screen === "creations",
     );
     clock.current.interact(performance.now());
@@ -722,6 +725,11 @@ export function App({ appRole }: { appRole: Role }) {
             <div className="empty-family">
               <Icon name={appRole} />
               <h2>Family sharing is not connected</h2>
+              <button className="primary" onClick={() => setScreen("connect")}>
+                {appRole === "insights"
+                  ? "Connect your family"
+                  : "Enter a connection code"}
+              </button>
               <p>
                 This first release keeps Play data on its own device. No family
                 records are fetched here. Secure sign-in, approved membership,
@@ -883,6 +891,16 @@ export function App({ appRole }: { appRole: Role }) {
             )}
           </>
         ) : null}
+        {screen === "connect" && (
+          <div className="connection-page">
+            <h1 ref={heading} tabIndex={-1}>
+              {appRole === "insights"
+                ? "Connect your family"
+                : "Connect your app"}
+            </h1>
+            <FamilySetup role={appRole} />
+          </div>
+        )}
         {screen === "settings" && (
           <>
             <p className="eyebrow">A comfortable place to play</p>

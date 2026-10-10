@@ -1,23 +1,107 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function verified() {
-      return request.auth != null && request.auth.token.email_verified == true;
+    function signedIn() { return request.auth != null; }
+    function verified() { return signedIn() && request.auth.token.email_verified == true; }
+    function anonymous() { return signedIn() && request.auth.token.firebase.sign_in_provider == 'anonymous'; }
+    function owner(familyId) {
+      return verified()
+        && get(/databases/$(database)/documents/families/$(familyId)).data.ownerUid == request.auth.uid
+        && get(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data.status == 'active'
+        && get(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data.role == 'insights';
     }
-    // Trusted owner provisioning only. No browser, including Insights, can
-    // enroll itself, edit roles, create a tenant, or redeem a short code.
+    function activeOwner(familyId) {
+      let uid = get(/databases/$(database)/documents/families/$(familyId)).data.ownerUid;
+      let grant = get(/databases/$(database)/documents/accountDirectory/$(uid)).data;
+      return grant.status == 'active' && grant.role == 'insights' && grant.familyId == familyId;
+    }
+    function validGrant(m) {
+      return m.keys().hasAll(['schemaVersion', 'familyId', 'subjectId', 'role', 'status'])
+        && m.keys().hasOnly(['schemaVersion', 'familyId', 'subjectId', 'role', 'status', 'invitationHash'])
+        && m.schemaVersion == 1 && m.familyId is string && m.subjectId is string
+        && m.familyId.matches('^[A-Za-z0-9_-]{16,100}$')
+        && m.subjectId.matches('^[A-Za-z0-9_-]{16,100}$')
+        && m.role in ['play', 'companion', 'insights'] && m.status == 'active';
+    }
+    function enroll(uid, m) {
+      return signedIn() && uid == request.auth.uid && validGrant(m)
+        && ((verified() && m.role == 'insights' && m.familyId == uid
+          && getAfter(/databases/$(database)/documents/families/$(m.familyId)).data.ownerUid == uid
+          && getAfter(/databases/$(database)/documents/families/$(m.familyId)).data.subjectId == m.subjectId)
+        || (anonymous() && m.role in ['play', 'companion']
+          && m.invitationHash.matches('^[a-f0-9]{64}$')
+          && get(/databases/$(database)/documents/invitations/$(m.invitationHash)).data.status == 'pending'
+          && get(/databases/$(database)/documents/invitations/$(m.invitationHash)).data.expiresAt > request.time
+          && getAfter(/databases/$(database)/documents/invitations/$(m.invitationHash)).data.status == 'claimed'
+          && getAfter(/databases/$(database)/documents/invitations/$(m.invitationHash)).data.claimedBy == uid
+          && getAfter(/databases/$(database)/documents/invitations/$(m.invitationHash)).data.familyId == m.familyId
+          && getAfter(/databases/$(database)/documents/invitations/$(m.invitationHash)).data.subjectId == m.subjectId
+          && getAfter(/databases/$(database)/documents/invitations/$(m.invitationHash)).data.role == m.role));
+    }
+    function revoke(m) {
+      return owner(m.familyId) && resource.data.role != 'insights'
+        && resource.data.status == 'active' && m.status == 'revoked'
+        && m.diff(resource.data).affectedKeys().hasOnly(['status']);
+    }
+    match /families/{familyId} {
+      allow get: if owner(familyId);
+      allow create: if verified() && familyId == request.auth.uid
+        && request.resource.data.keys().hasOnly(['schemaVersion', 'ownerUid', 'subjectId'])
+        && request.resource.data.schemaVersion == 1
+        && request.resource.data.ownerUid == request.auth.uid
+        && getAfter(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data.familyId == familyId
+        && getAfter(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data.role == 'insights'
+        && getAfter(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data.subjectId == request.resource.data.subjectId;
+      allow list, update, delete: if false;
+    }
     match /accountDirectory/{uid} {
-      allow get: if verified() && request.auth.uid == uid;
-      allow list, write: if false;
+      allow get: if (verified() || anonymous()) && request.auth.uid == uid;
+      allow create: if enroll(uid, request.resource.data)
+        && getAfter(/databases/$(database)/documents/families/$(request.resource.data.familyId)/members/$(uid)).data == request.resource.data;
+      allow update: if revoke(request.resource.data)
+        && getAfter(/databases/$(database)/documents/families/$(request.resource.data.familyId)/members/$(uid)).data == request.resource.data;
+      allow list, delete: if false;
     }
     match /families/{familyId}/members/{uid} {
-      allow get: if verified() && request.auth.uid == uid
+      allow get: if owner(familyId) || ((verified() || anonymous()) && request.auth.uid == uid
         && get(/databases/$(database)/documents/accountDirectory/$(uid)).data.familyId == familyId
-        && get(/databases/$(database)/documents/accountDirectory/$(uid)).data.status == 'active';
-      allow list, write: if false;
+        && get(/databases/$(database)/documents/accountDirectory/$(uid)).data.status == 'active');
+      allow list: if owner(familyId);
+      allow create: if familyId == request.resource.data.familyId && enroll(uid, request.resource.data)
+        && getAfter(/databases/$(database)/documents/accountDirectory/$(uid)).data == request.resource.data;
+      allow update: if familyId == request.resource.data.familyId && revoke(request.resource.data)
+        && getAfter(/databases/$(database)/documents/accountDirectory/$(uid)).data == request.resource.data;
+      allow delete: if false;
     }
-    // Stage 2a is connection/approval only. All activity, subjects, summaries,
-    // consent, events and creations remain closed until the sync release.
+    match /invitations/{hash} {
+      allow get: if owner(resource.data.familyId) || (anonymous() && hash.matches('^[a-f0-9]{64}$')
+        && resource.data.status == 'pending' && resource.data.expiresAt > request.time
+        && activeOwner(resource.data.familyId));
+      allow list: if owner(resource.data.familyId);
+      allow create: if hash.matches('^[a-f0-9]{64}$') && owner(request.resource.data.familyId)
+        && request.resource.data.keys().hasOnly(['schemaVersion', 'familyId', 'subjectId', 'role', 'status', 'claimedBy', 'expiresAt'])
+        && request.resource.data.schemaVersion == 1
+        && request.resource.data.subjectId == get(/databases/$(database)/documents/families/$(request.resource.data.familyId)).data.subjectId
+        && request.resource.data.role in ['play', 'companion']
+        && request.resource.data.status == 'pending' && request.resource.data.claimedBy == ''
+        && request.resource.data.expiresAt is timestamp
+        && request.resource.data.expiresAt > request.time
+        && request.resource.data.expiresAt <= request.time + duration.value(24, 'h');
+      allow update: if resource.data.status == 'pending'
+        && ((owner(resource.data.familyId) && request.resource.data.status == 'revoked'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']))
+        || (anonymous() && resource.data.expiresAt > request.time && activeOwner(resource.data.familyId)
+          && request.resource.data.status == 'claimed' && request.resource.data.claimedBy == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'claimedBy'])
+          && getAfter(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data.invitationHash == hash
+          && getAfter(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data.familyId == resource.data.familyId
+          && getAfter(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data.subjectId == resource.data.subjectId
+          && getAfter(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data.role == resource.data.role
+          && getAfter(/databases/$(database)/documents/families/$(resource.data.familyId)/members/$(request.auth.uid)).data
+            == getAfter(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data));
+      allow delete: if owner(resource.data.familyId);
+    }
+    // Pairing authorizes the connection only. Activity remains local until consent/sync ships.
     match /{document=**} { allow read, write: if false; }
   }
 }

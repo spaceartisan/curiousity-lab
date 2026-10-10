@@ -93,13 +93,19 @@ test("settings stays local-only and selected controls remain readable", async ({
     page.getByRole("heading", { name: "Family connection" }),
   ).toBeVisible();
   // CI may have the optional public web config, but never real auth/family fixtures.
-  const prompt = page.getByRole("button", { name: "Sign in with Google" });
+  const prompt = page.getByRole("button", { name: "Connect", exact: true });
   const policy = await page
     .locator('meta[http-equiv="Content-Security-Policy"]')
     .getAttribute("content");
   if (policy?.includes("firestore.googleapis.com")) {
     await expect(prompt).toBeVisible();
-    await expect(prompt).toBeEnabled();
+    await expect(prompt).toBeDisabled();
+    await page.getByLabel("Connection code").fill("123456");
+    await prompt.click();
+    await expect(page.getByRole("alert")).toContainText("Paste the complete");
+    await expect(
+      page.getByRole("button", { name: "Sign in with Google" }),
+    ).not.toBeVisible();
   } else await expect(prompt).not.toBeVisible();
   await page
     .getByRole("combobox", { name: "Theme", exact: true })
@@ -128,6 +134,61 @@ test("settings stays local-only and selected controls remain readable", async ({
   expect(colors.background).toBe("rgb(178, 220, 200)");
   await page.screenshot({
     path: info.outputPath("music-dark.png"),
+    fullPage: true,
+  });
+});
+
+for (const role of ["play", "companion"]) {
+  test(`${role} invitation opens a simple code screen and removes the bearer from the URL`, async ({
+    page,
+  }, info) => {
+    await page.goto(`/curiousity-lab/${role}/#connect=${"0".repeat(32)}`);
+    await expect(
+      page.getByRole("heading", { name: "Connect your app" }),
+    ).toBeVisible();
+    await expect(page).toHaveURL(new RegExp(`/curiousity-lab/${role}/$`));
+    const policy = await page
+      .locator('meta[http-equiv="Content-Security-Policy"]')
+      .getAttribute("content");
+    if (policy?.includes("firestore.googleapis.com")) {
+      await expect(page.getByLabel("Connection code")).toHaveValue(
+        "0".repeat(32),
+      );
+      await expect(
+        page.getByRole("button", { name: "Connect", exact: true }),
+      ).toBeEnabled();
+      await expect(
+        page.getByRole("button", { name: "Sign in with Google" }),
+      ).not.toBeVisible();
+      await expect(page.getByLabel("Connection code")).toBeInViewport();
+    }
+    await page.screenshot({
+      path: info.outputPath(`${role}-connection.png`),
+      fullPage: true,
+    });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth > innerWidth,
+      ),
+    ).toBe(false);
+  });
+}
+test("Insights owner has Google setup without a parent code prompt", async ({
+  page,
+}, info) => {
+  await page.goto("/curiousity-lab/insights/");
+  await page.getByRole("button", { name: "Connect your family" }).click();
+  const policy = await page
+    .locator('meta[http-equiv="Content-Security-Policy"]')
+    .getAttribute("content");
+  if (policy?.includes("firestore.googleapis.com")) {
+    await expect(
+      page.getByRole("button", { name: "Sign in with Google" }),
+    ).toBeEnabled();
+    await expect(page.getByLabel("Connection code")).not.toBeVisible();
+  }
+  await page.screenshot({
+    path: info.outputPath("owner-connection.png"),
     fullPage: true,
   });
 });

@@ -27,7 +27,7 @@ describe("family setup boundaries", () => {
   });
   it("unconfigured builds stay local-only with no sign-in button", () => {
     render(<FamilySetup role="play" />);
-    expect(screen.getByText(/nothing is uploaded/)).toBeInTheDocument();
+    expect(screen.getByText(/nothing is uploaded/i)).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /Sign in/ }),
     ).not.toBeInTheDocument();

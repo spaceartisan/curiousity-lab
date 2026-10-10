@@ -1,111 +1,64 @@
-# Firebase setup — v0.2.1 connection pilot
+# Firebase setup — v0.3.0 code-only invitations
 
-You can create the database now. This release supports account sign-in and trusted approval checks; **activity upload and family dashboards are not enabled yet**. Keep the initial test to your own account and synthetic data. Continue playing locally while connected features are built.
+The owner signs in with Google in Insights. Mom and Dad do not need email, Google accounts, passwords, account IDs, or console access. The owner texts an invitation; each parent opens the link and taps **Connect**, or pastes its code into their app. Authentication and membership happen behind the scenes. Activity sharing is still being built; pairing does not upload local games/history.
 
-## 1. Create a dedicated project
+## One-time Firebase project setup
 
-1. Open [Firebase Console](https://console.firebase.google.com/) and create a new project for Curiosity Lab, for example `curiosity-lab-family` (choose an available ID).
-2. Keep the **Spark** plan. Google Analytics can stay disabled. No credit card, Cloud Functions, Storage, or paid backup feature is required for this setup.
-3. Under **Build → Firestore Database**, create the **Standard edition**, default `(default)` database, in **Production mode**. Choose a suitable US location; location cannot be casually changed later. Do not choose test mode or Realtime Database.
-4. Under **Build → Authentication**, click Get started. Enable **Google** under Sign-in method and select a project support email. Under **Settings → Authorized domains**, add `spaceartisan.github.io`. Domain only: no `https://` and no repository path. Add `localhost` only if testing locally.
-5. Under **Project settings → General**, register a **Web app** (`</>` icon), with a label such as “Curiosity Lab”. Firebase Hosting is unnecessary; GitHub Pages hosts the site.
+The registered `curiousity-lab` public web configuration is already included in `firebase/web-config.json`. Keep the Spark plan. Analytics remains disabled. GitHub Pages hosts the apps; Firebase Hosting, Cloud Functions, Storage and a billing upgrade are not required for pairing.
 
-## 2. Public web configuration (already connected in code)
+In [Firebase Console](https://console.firebase.google.com/project/curiousity-lab/overview):
 
-The supplied `curiousity-lab` web configuration is included in `firebase/web-config.json` as the default for all three apps. Analytics is disabled, and no Storage or messaging service is initialized. **You do not need to create a repository variable for this project.** Complete the Firestore rules and Google provider/domain settings below.
+1. **Build → Firestore Database:** create the Standard edition, default `(default)` database in Production mode if it does not exist. Do not use Realtime Database or test mode.
+2. **Build → Authentication → Sign-in method:** enable **Google** (already completed) and **Anonymous**. Anonymous sign-in supplies a hidden identity for each parent's device; it does not open access to family activity.
+3. **Authentication → Settings → Authorized domains:** ensure `spaceartisan.github.io` is present (already completed). Add `localhost` only for local testing.
+4. **Firestore Database → Rules:** replace the rules with the complete contents of [firebase/firestore.rules](../firebase/firestore.rules), then click **Publish**. The previous v0.2.x rules deliberately reject all invitation writes and must be replaced for pairing to work.
 
-### Optional override for another deployment
-
-Copy the web app's `firebaseConfig` object from Project settings. Send me its **apiKey, authDomain, projectId, and appId** so I can check the configuration. These identify the public web app; the Firestore rules, authenticated identity, and trusted approval enforce privacy.
-
-**Do not send a service-account JSON, private key, password, access token, or your parents' personal details.** Those are not needed to build the website.
-
-For GitHub Actions, store this single JSON object as a **repository variable** named `FIREBASE_WEB_CONFIG`, under **Settings → Secrets and variables → Actions → Variables**:
-
-```json
-{
-  "apiKey": "YOUR_WEB_API_KEY",
-  "authDomain": "YOUR_PROJECT.firebaseapp.com",
-  "projectId": "YOUR_PROJECT",
-  "appId": "YOUR_WEB_APP_ID"
-}
-```
-
-Use the exact four values from Firebase. The workflow exposes only this public configuration through `VITE_FIREBASE_CONFIG`. An empty variable uses the committed public web configuration. Set the variable to `local-only` for a local-only build. After changing it, run the workflow using **Actions → Validate and publish Curiosity Lab → Run workflow**; another source push is unnecessary. For local development, copy `.env.example` to `.env.local` and fill the same JSON value.
-
-## 3. Publish the tested rules
-
-In Firestore's **Rules** tab, replace the existing rules with [firebase/firestore.rules](../firebase/firestore.rules) and Publish. Alternatively, in a trusted local checkout:
+Alternatively, from a trusted local checkout:
 
 ```sh
 npx firebase login
-npx firebase deploy --only firestore:rules --project YOUR_PROJECT_ID
+npx firebase deploy --only firestore:rules --project curiousity-lab
 ```
 
-There is no automatic production Firebase deployment in CI. This setup permits only a verified account to read its **own** approval directory and scoped membership. Browser writes, private activity reads, family listing, and public tenant creation remain denied. Insights is not allowed to create its own administrator grant. No pairing-code collection exists.
+CI publishes the web apps, but does **not** publish production Firebase rules. This repository does not contain an administrator credential. Do not enable Identity Platform automatic anonymous-account cleanup for paired parent devices: deleting their hidden identities would require new invitations.
 
-## 4. Test your account and approve it
+## Your normal setup
 
-After the configured site deploys, open **Insights → Settings → Family connection → Sign in with Google**. It will say the account has not been approved. Expand **Account ID for administrator setup**. Your UID is also visible in Authentication's Users tab.
+1. Open [Insights](https://spaceartisan.github.io/curiousity-lab/insights/), choose **Connect your family**, and sign in with Google. Your own private family and Insights membership are created together. No console UID provisioning is needed for a new family.
+2. Select **Create Mom’s code** or **Create Dad’s code**.
+3. Select **Copy invitation** and paste it into your text message. The link opens the correct app with the code filled in. The parent taps **Connect**. If they already have the app open, they can paste the code under Settings → Family connection.
+4. The connection appears under **Connected devices**. Their app remembers its hidden identity on that device. Local play stays available offline.
 
-For this pilot, approve only your own verified account. In Firestore's Data tab, create two documents with the following identical fields. Generate independent opaque IDs for family and subject; UUIDs are suitable. Keep the IDs private and retain them for the later sync setup.
+Invitations expire after 23 hours and can be used once. They contain a random 128-bit code, not a six-digit login. The complete text includes a link to minimize typing. Only its SHA-256 hash is stored in Firestore; the raw code is held in memory while displaying/copying it. The link carries the code in a fragment, and the app removes it immediately. The code is not placed in query strings, service-worker caches, analytics, logs or local storage.
 
-| Field           | Firestore type | Value                       |
-| --------------- | -------------- | --------------------------- |
-| `schemaVersion` | number         | `1`                         |
-| `familyId`      | string         | your generated family UUID  |
-| `subjectId`     | string         | your generated subject UUID |
-| `role`          | string         | `insights`                  |
-| `status`        | string         | `active`                    |
+**Cancel invitation** invalidates an unused invitation. Reloading the owner screen discards the displayed raw code; create a fresh invitation if needed. Previously issued invitations remain valid until claimed, cancelled or expired.
 
-Document paths:
+## Replacement devices and removal
 
-1. `accountDirectory/YOUR_AUTH_UID`
-2. `families/YOUR_FAMILY_UUID/members/YOUR_AUTH_UID`
+Use **Remove connection** in Insights to revoke a parent device. Revocation updates both grants atomically. A revoked identity cannot reactivate itself, change its role or move families. For a replacement phone/tablet, send a new invitation. To reconnect the same browser after removal, choose **Disconnect this device**, then use the new invitation; this creates a fresh hidden identity.
 
-Do not put emails or names in those documents. Both paths use your exact Auth UID. The two grants must agree. An approved Insights account remains wrong-role in Play/Companion; there is no role picker or automatic role escalation.
+Clearing browser/site storage, changing browsers, losing a device or deleting its Auth identity requires a new invitation. Browser tabs and installed PWAs can share or separate storage depending on the operating system; verify actual devices. No parent email/password recovery screen is required. Auth persistence is separated by the three named role apps. Firestore data uses memory-only caching; cached grants never certify approval.
 
-For repeatable trusted provisioning, the repository includes an owner-operated CLI. Use Google Application Default Credentials on a trusted machine; never commit/download credentials into this repository. Put a plan **outside** the repository, then first run:
+## Permissions
 
-```sh
-npm run family:provision -- /absolute/private-plan.json
-```
+- Verified owners can create **only their own** family, create role-specific invitations for it, inspect its connected memberships and revoke parent devices.
+- Parents can atomically claim a valid, unexpired invitation and create only their own matching directory and membership. The invitation, directory and membership must commit together. Simultaneous claims yield one winner. No self-selected role or subject is trusted.
+- An unpaired anonymous identity can inspect its own empty directory and a valid invitation whose unpredictable hash it possesses. It cannot list invitations, families, memberships, other accounts or private activity.
+- Signed-out visitors cannot read/write these records. All activity, subjects, summaries, consent and creations remain closed in this release. Existing guest saves are never automatically merged or uploaded.
 
-The plan has this structure (replace all placeholders privately):
+The code-only flow supersedes v0.2.x's email/Google requirement for parent identities and manually approved parent UIDs, following the owner's requested provider-managed setup. The older `family:provision` CLI is a legacy trusted-admin tool, not the normal setup path. Legacy manually provisioned memberships using arbitrary family IDs are not automatically migrated into self-service families; do not delete/reassign existing production records to bypass that boundary.
 
-```json
-{
-  "projectId": "YOUR_PROJECT_ID",
-  "familyId": "YOUR_FAMILY_UUID",
-  "subjectId": "YOUR_SUBJECT_UUID",
-  "members": [
-    {
-      "uid": "YOUR_AUTH_UID",
-      "expectedEmail": "YOUR_VERIFIED_EMAIL",
-      "role": "insights",
-      "status": "active"
-    }
-  ]
-}
-```
+## Optional configuration override
 
-The default invocation verifies identity/email and existing assignments with **no writes**. Add `--apply` to write the two matching approvals atomically. It refuses unverified/disabled accounts, emulator overrides, private plans inside the repository, and silent reassignment to another family/subject. Never run it for someone without first verifying their intended account. Console writes and this CLI use owner privileges; Firestore browser rules do not authorize them.
+An empty `FIREBASE_WEB_CONFIG` repository variable uses the committed public project. To disable all cloud connections, set it to `local-only`. A different project can be supplied as a JSON object with `apiKey`, `authDomain`, `projectId`, and `appId`. Rerun the Pages workflow after a variable change. Never supply a service-account key or private credential as web configuration.
 
-## 5. Check the connection
+## Before activity sharing
 
-- Insights shows “Your account is approved for this app.” No puzzle/history upload occurs.
-- Try the same account in Play: its connection must be rejected for that role. All local puzzles still work.
-- Change both documents' `status` to `revoked`: its connection is removed. Signing out/reloading clears displayed approval. This release uses memory-only Firestore caching, not persisted private records.
-- Sign out: the role's Firebase login is removed, while existing local guest saves remain usable. The three named Firebase apps use separate role Auth keys. Browser origin storage remains shared infrastructure; actual-device installation must still be verified.
-
-## Remaining before family sharing
-
-Consent, explicit selection of preexisting local records, UID/family/subject-bound offline outbox, deduplicated uploads, separately authorized Companion summaries, analyst data tools, automatic encrypted independent backup and tested restore, and actual-device usability must be completed before enrolling the family for connected use.
+Consent, explicit selection of old local records, UID/family/subject-bound outbox, deduplicated uploads, separately authorized Companion summaries, backups and tested restore, and actual-device checks remain required before production family activity collection. Pairing is not a live family dashboard.
 
 ## References
 
-- [Google sign-in for the web](https://firebase.google.com/docs/auth/web/google-signin)
+- [Firebase anonymous authentication](https://firebase.google.com/docs/auth/web/anonymous-auth)
+- [Google sign-in](https://firebase.google.com/docs/auth/web/google-signin)
+- [Atomic writes and getAfter validation](https://firebase.google.com/docs/firestore/manage-data/transactions)
 - [Firestore rules emulator tests](https://firebase.google.com/docs/firestore/security/test-rules-emulator)
-- [Firebase pricing plans](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans)
-
-Settings were checked against Firebase's official documentation on 2026-10-10.

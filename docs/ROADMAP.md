@@ -18,9 +18,13 @@ This is intentionally the start of the staged design. Demo dashboards are not co
 
 Selected-control contrast corrected. Optional Google sign-in in Settings; per-role Firebase Auth namespaces; server-only approval checks using memory cache; trusted owner provisioning with identity/email verification; setup guide and environment-driven public config; positive/negative emulator tests. All browser activity reads/writes remain closed. No guest enrollment or data upload occurs.
 
+## v0.3.0 — Code-only family pairing
+
+Owner self-service Google setup; separate single-use, expiring invitations for Play and Companion; persistent hidden parent identities with no email/password prompts; atomic role/subject-bound redemption; owner device listing and revocation; dedicated connection screen for invitation links. No activity upload or guest-history merge. See the setup guide for the required Anonymous provider and production rules update. This replaces the previous parent email/provisioning flow at the owner’s request.
+
 ## Phase 2b — Optional approved family sync
 
-Dedicated user-owned Firebase project, verified individual Auth, trusted membership provisioning, subject grants, consent, offline outbox, idempotent reconciliation, account-cache purge, and positive/negative emulator tests. Anonymous visitors must have no private reads and no remote writes. Never silently enroll guest records into another person's data. Companion summaries must be separately authorized rather than hidden raw-event reads.
+Dedicated user-owned Firebase project, owner Google Auth and invitation-approved anonymous parent identities, subject grants, consent, offline outbox, idempotent reconciliation, account-cache purge, and positive/negative emulator tests. Unpaired visitors cannot read/write private activity. Never silently enroll guest records into another person's data. Companion summaries must be separately authorized rather than hidden raw-event reads.
 
 ## Phase 3 — Context-aware reporting
 

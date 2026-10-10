@@ -7,16 +7,31 @@ import {
   onAuthStateChanged,
   setPersistence,
   signInWithPopup,
+  signInAnonymously,
   signOut,
   type Auth,
 } from "firebase/auth";
 import {
   doc,
+  collection,
+  getDocFromServer,
+  runTransaction,
+  setDoc,
+  writeBatch,
+  Timestamp,
   initializeFirestore,
   memoryLocalCache,
   onSnapshot,
   type Firestore,
 } from "firebase/firestore";
+import {
+  createCode,
+  hashCode,
+  invitationLink,
+  type ParentRole,
+  type Invitation,
+  type FamilyDevice,
+} from "./invitations";
 import type { Role } from "../storage/contracts";
 import { parseMembership, type Connection, type WebConfig } from "./contracts";
 
@@ -24,16 +39,72 @@ export interface FamilyClient {
   watch: (notify: (connection: Connection) => void) => () => void;
   signIn: (trusted: boolean) => Promise<void>;
   signOut: () => Promise<void>;
+  createInvitation: (role: ParentRole) => Promise<Invitation>;
+  connect: (code: string) => Promise<void>;
+  watchDevices: (
+    familyId: string,
+    notify: (devices: FamilyDevice[]) => void,
+    fail: () => void,
+  ) => () => void;
+  revokeDevice: (familyId: string, uid: string) => Promise<void>;
+  cancelInvitation: (hash: string) => Promise<void>;
 }
 const clients = new Map<Role, FamilyClient>();
 function makeClient(auth: Auth, db: Firestore, role: Role): FamilyClient {
+  async function ownerGrant() {
+    const user = auth.currentUser;
+    if (!user?.emailVerified || user.isAnonymous || role !== "insights")
+      throw Error("Sign in with Google first.");
+    const snapshot = await getDocFromServer(
+      doc(db, "accountDirectory", user.uid),
+    );
+    const grant = parseMembership(snapshot.data());
+    if (grant.role !== "insights" || grant.status !== "active")
+      throw Error("Your family connection is not active.");
+    return grant;
+  }
+  async function ensureOwner() {
+    const user = auth.currentUser;
+    if (!user?.emailVerified || user.isAnonymous)
+      throw Error("Use your Google account for family setup.");
+    const directory = doc(db, "accountDirectory", user.uid);
+    await runTransaction(db, async (transaction) => {
+      const existing = await transaction.get(directory);
+      if (existing.exists()) {
+        const grant = parseMembership(existing.data());
+        if (grant.role !== "insights" || grant.status !== "active")
+          throw Error("This account is already assigned to another app.");
+        return;
+      }
+      const grant = {
+        schemaVersion: 1,
+        familyId: user.uid,
+        subjectId: `${user.uid}_subject`,
+        role: "insights",
+        status: "active",
+      };
+      transaction.set(doc(db, "families", user.uid), {
+        schemaVersion: 1,
+        ownerUid: user.uid,
+        subjectId: grant.subjectId,
+      });
+      transaction.set(directory, grant);
+      transaction.set(
+        doc(db, "families", user.uid, "members", user.uid),
+        grant,
+      );
+    });
+  }
   return {
     watch(notify) {
+      let authGeneration = 0,
+        directoryGeneration = 0;
       let stopDirectory = () => {},
         stopMembership = () => {};
       const stopAuth = onAuthStateChanged(
         auth,
         (user) => {
+          const generation = ++authGeneration;
           // Immediately discard the previous account's approval, before any read.
           stopDirectory();
           stopMembership();
@@ -41,7 +112,10 @@ function makeClient(auth: Auth, db: Firestore, role: Role): FamilyClient {
           stopMembership = () => {};
           notify({ status: user ? "checking" : "signed-out" });
           if (!user) return;
-          if (!user.emailVerified) {
+          if (
+            !user.emailVerified &&
+            !(user.isAnonymous && role !== "insights")
+          ) {
             notify({ status: "unapproved", uid: user.uid });
             return;
           }
@@ -49,6 +123,8 @@ function makeClient(auth: Auth, db: Firestore, role: Role): FamilyClient {
             doc(db, "accountDirectory", user.uid),
             { includeMetadataChanges: true },
             (snapshot) => {
+              if (generation !== authGeneration) return;
+              const directoryVersion = ++directoryGeneration;
               stopMembership();
               stopMembership = () => {};
               // Cached snapshots never certify access, including after revocation.
@@ -72,6 +148,11 @@ function makeClient(auth: Auth, db: Firestore, role: Role): FamilyClient {
                   doc(db, "families", directory.familyId, "members", user.uid),
                   { includeMetadataChanges: true },
                   (member) => {
+                    if (
+                      generation !== authGeneration ||
+                      directoryVersion !== directoryGeneration
+                    )
+                      return;
                     if (member.metadata.fromCache) {
                       notify({ status: "checking" });
                       return;
@@ -97,18 +178,28 @@ function makeClient(auth: Auth, db: Firestore, role: Role): FamilyClient {
                       notify({ status: "unapproved", uid: user.uid });
                     }
                   },
-                  () => notify({ status: "unavailable" }),
+                  () => {
+                    if (
+                      generation === authGeneration &&
+                      directoryVersion === directoryGeneration
+                    )
+                      notify({ status: "unavailable" });
+                  },
                 );
               } catch {
                 notify({ status: "unapproved", uid: user.uid });
               }
             },
-            () => notify({ status: "unavailable" }),
+            () => {
+              if (generation === authGeneration)
+                notify({ status: "unavailable" });
+            },
           );
         },
         () => notify({ status: "unavailable" }),
       );
       return () => {
+        authGeneration++;
         stopAuth();
         stopDirectory();
         stopMembership();
@@ -122,6 +213,107 @@ function makeClient(auth: Auth, db: Firestore, role: Role): FamilyClient {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
       await signInWithPopup(auth, provider);
+      if (role === "insights") await ensureOwner();
+    },
+    async createInvitation(parentRole) {
+      const grant = await ownerGrant();
+      const code = createCode(),
+        hash = await hashCode(code),
+        expiresAt = Date.now() + 23 * 60 * 60 * 1000;
+      await setDoc(doc(db, "invitations", hash), {
+        schemaVersion: 1,
+        familyId: grant.familyId,
+        subjectId: grant.subjectId,
+        role: parentRole,
+        status: "pending",
+        claimedBy: "",
+        expiresAt: Timestamp.fromMillis(expiresAt),
+      });
+      return {
+        code,
+        hash,
+        role: parentRole,
+        expiresAt,
+        link: invitationLink(parentRole, code),
+      };
+    },
+    async connect(code) {
+      if (role === "insights") throw Error("Use Google to manage your family.");
+      const hash = await hashCode(code);
+      await setPersistence(auth, browserLocalPersistence);
+      if (auth.currentUser && !auth.currentUser.isAnonymous)
+        throw Error("Disconnect this account before using a connection code.");
+      if (!auth.currentUser) await signInAnonymously(auth);
+      const uid = auth.currentUser!.uid;
+      await runTransaction(db, async (transaction) => {
+        const invitation = doc(db, "invitations", hash);
+        const snapshot = await transaction.get(invitation);
+        if (!snapshot.exists()) throw Error("Ask for a new connection code.");
+        const invite = snapshot.data();
+        if (invite.role !== role)
+          throw Error(
+            `This code is for ${invite.role === "play" ? "Play" : "Companion"}. Open that app to connect.`,
+          );
+        if (
+          invite.status !== "pending" ||
+          invite.expiresAt.toMillis() <= Date.now()
+        )
+          throw Error("Ask for a new connection code.");
+        const grant = {
+          schemaVersion: 1,
+          familyId: invite.familyId,
+          subjectId: invite.subjectId,
+          role,
+          status: "active",
+          invitationHash: hash,
+        };
+        // The rules require all three writes together and reject any second claimant.
+        transaction.update(invitation, { status: "claimed", claimedBy: uid });
+        transaction.set(doc(db, "accountDirectory", uid), grant);
+        transaction.set(
+          doc(db, "families", invite.familyId, "members", uid),
+          grant,
+        );
+      });
+    },
+    watchDevices(familyId, notify, fail) {
+      return onSnapshot(
+        collection(db, "families", familyId, "members"),
+        { includeMetadataChanges: true },
+        (snapshot) => {
+          if (snapshot.metadata.fromCache) return;
+          try {
+            notify(
+              snapshot.docs.map((member) => ({
+                uid: member.id,
+                ...parseMembership(member.data()),
+              })),
+            );
+          } catch {
+            fail();
+          }
+        },
+        fail,
+      );
+    },
+    async revokeDevice(familyId, uid) {
+      const grant = await ownerGrant();
+      if (grant.familyId !== familyId || uid === auth.currentUser!.uid)
+        throw Error("Choose a parent device.");
+      const ref = doc(db, "families", familyId, "members", uid);
+      const snapshot = await getDocFromServer(ref);
+      if (!snapshot.exists() || snapshot.data().role === "insights")
+        throw Error("Choose a parent device.");
+      const batch = writeBatch(db);
+      batch.update(ref, { status: "revoked" });
+      batch.update(doc(db, "accountDirectory", uid), { status: "revoked" });
+      await batch.commit();
+    },
+    async cancelInvitation(hash) {
+      await ownerGrant();
+      const batch = writeBatch(db);
+      batch.update(doc(db, "invitations", hash), { status: "revoked" });
+      await batch.commit();
     },
     async signOut() {
       await signOut(auth);

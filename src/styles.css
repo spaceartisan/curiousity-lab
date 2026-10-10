@@ -1027,3 +1027,45 @@ summary {
 .family-setup details {
   margin-block: 1rem;
 }
+.family-setup form {
+  display: grid;
+  gap: 0.75rem;
+  margin-block: 1rem;
+}
+.family-setup input:not([type="checkbox"]),
+.family-setup textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.family-setup textarea {
+  overflow-wrap: anywhere;
+  resize: vertical;
+}
+.family-invitation {
+  margin-block: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+}
+.family-devices {
+  padding: 0;
+  list-style: none;
+}
+.family-devices li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 0.75rem;
+}
+.connection-page {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+.connection-page .family-setup {
+  padding: 1.25rem;
+  background: var(--paper);
+  border-radius: 1.25rem;
+}

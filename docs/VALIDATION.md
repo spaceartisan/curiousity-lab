@@ -1,3 +1,22 @@
+# v0.3.0 validation
+
+## Current checks
+
+- 38 Vitest tests passed locally: existing games/local saves; configuration and role boundaries; fresh-server grant checks; rejection of queued snapshots after account switching or revocation; anonymous parent approval; 128-bit code generation/normalization/hashing; code-only UI and safe retry; owner invitation/device controls; persistent anonymous setup; atomic owner and parent writes; wrong-role and malformed-code rejection.
+- Strict TypeScript and production multi-entry build passed. Static-only PWA caches and role identities remain unchanged.
+- The Firestore emulator suite contains 22 positive/negative scenarios, including owner bootstrap isolation, invitation expiry/cancellation/replay, concurrent claims, immutable family/role/subject assignments, atomic revocation and disabled-owner invitations. Private activity remains denied.
+- CI is configured to run 14 Chromium desktop/phone scenarios before deployment, including invitation links, URL-fragment removal, visible code fields, role-specific sign-in and responsive screenshots. Inspect the current commit’s workflow result for browser/deployment completion. Local Chromium launch remains blocked by the environment’s Unix-socket restriction.
+
+## Production boundaries
+
+No production Firebase rule deployment, anonymous sign-in or real invitation redemption was performed by the agent. The owner reports Google Auth and the authorized domain are configured; Anonymous Auth and the v0.3.0 rules must also be enabled/published. Real device Auth persistence, installed-app/browser storage sharing, clipboard behavior and recovery still require device checks.
+
+This release implements pairing, not remote activity sharing. Existing schema-v1 guest saves remain local and are never automatically merged. Consent, account-bound outbox, summaries, backup/restore and device accessibility/audio checks remain future gates.
+
+---
+
+The sections below record historical validation and permissions for older releases.
+
 # v0.2.0 validation
 
 ## Executed locally
