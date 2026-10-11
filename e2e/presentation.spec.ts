@@ -2,18 +2,20 @@ import { test, expect, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import type { LocalState } from "../src/storage/contracts";
 import { contextKey } from "../src/insights/review";
-async function saved(page: Page): Promise<LocalState> {
+async function saved(page: Page): Promise<LocalState | undefined> {
   return page.evaluate(async () => {
     const db: IDBDatabase = await new Promise((resolve, reject) => {
       const r = indexedDB.open("curiosity-lab:v1:play:guest", 1);
       r.onsuccess = () => resolve(r.result);
       r.onerror = () => reject(r.error);
     });
-    const state: LocalState = await new Promise((resolve, reject) => {
-      const r = db.transaction("state").objectStore("state").get("current");
-      r.onsuccess = () => resolve(r.result);
-      r.onerror = () => reject(r.error);
-    });
+    const state: LocalState | undefined = await new Promise(
+      (resolve, reject) => {
+        const r = db.transaction("state").objectStore("state").get("current");
+        r.onsuccess = () => resolve(r.result);
+        r.onerror = () => reject(r.error);
+      },
+    );
     db.close();
     return state;
   });
@@ -48,12 +50,12 @@ test("consented presentation settings survive offline replay, exports and review
   await expect
     .poll(
       async () =>
-        (await saved(page)).sessions.filter(
+        (await saved(page))?.sessions.filter(
           (s) => s.mode === "phrase" && s.outcome === "completed",
         ).length,
     )
     .toBe(1);
-  const completed = (await saved(page)).sessions.find(
+  const completed = (await saved(page))!.sessions.find(
     (s) => s.mode === "phrase" && s.outcome === "completed",
   )!;
   expect(completed.presentation).toMatchObject({
@@ -71,11 +73,11 @@ test("consented presentation settings survive offline replay, exports and review
     .click();
   await expect
     .poll(
-      async () => (await saved(page)).drafts.music?.presentation?.music?.views,
+      async () => (await saved(page))!.drafts.music?.presentation?.music?.views,
     )
     .toEqual(["pattern"]);
   expect(
-    (await saved(page)).sessions.find((s) => s.id === completed.id),
+    (await saved(page))!.sessions.find((s) => s.id === completed.id),
   ).toEqual(completed);
   await context.setOffline(true);
   await page.reload();
@@ -88,7 +90,7 @@ test("consented presentation settings survive offline replay, exports and review
     .getByRole("checkbox", { name: "Keep activity history on this device" })
     .uncheck();
   await expect
-    .poll(async () => (await saved(page)).drafts.music?.presentation)
+    .poll(async () => (await saved(page))!.drafts.music?.presentation)
     .toBeUndefined();
   await page
     .getByRole("checkbox", { name: "Keep activity history on this device" })
@@ -98,7 +100,7 @@ test("consented presentation settings survive offline replay, exports and review
     .click();
   await page.getByRole("button", { name: /Music Hear/ }).click();
   await expect
-    .poll(async () => (await saved(page)).drafts.music?.presentation?.coverage)
+    .poll(async () => (await saved(page))!.drafts.music?.presentation?.coverage)
     .toBe("partial");
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   const downloadEvent = page.waitForEvent("download");
@@ -119,13 +121,11 @@ test("consented presentation settings survive offline replay, exports and review
   });
   await context.setOffline(false);
   await page.goto("/curiousity-lab/insights/");
-  await page
-    .getByLabel("Open Play JSON backup")
-    .setInputFiles({
-      name: "fictional-presentation-review.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(backup)),
-    });
+  await page.getByLabel("Open Play JSON backup").setInputFiles({
+    name: "fictional-presentation-review.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(backup)),
+  });
   const review = page.getByRole("region", { name: "Imported activity review" });
   await review
     .getByRole("combobox", { name: "Review activity", exact: true })
