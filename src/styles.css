@@ -1050,6 +1050,7 @@ summary {
   }
   .game-surface {
     padding: 0.7rem;
+    padding-inline: min(0.7rem, 3vw);
   }
   .cell {
     font-size: 1.1rem;
