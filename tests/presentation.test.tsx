@@ -178,7 +178,7 @@ it("CSV keeps its existing source fields and appends a quoted exact context JSON
   ];
   const lines = sessionsCsv(state).split("\r\n");
   expect(lines[0]).toBe(
-    "id,game,puzzleId,mode,attempt,startedAt,endedAt,activeMs,hints,undos,outcome,appVersion,contentVersion,source,presentation,timing",
+    "id,game,puzzleId,mode,attempt,startedAt,endedAt,activeMs,hints,undos,outcome,appVersion,contentVersion,source,presentation,timing,clock",
   );
   expect(lines[1]).toContain(
     '"' + JSON.stringify(p).replaceAll('"', '""') + '"',

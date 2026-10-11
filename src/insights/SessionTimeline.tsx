@@ -143,8 +143,8 @@ export function SessionTimeline({
           {model.timeIssues ? (
             <p>
               Time consistency warning: {model.timeIssues} selected records have
-              an end before the start or active plus known pause time exceeding
-              elapsed time. Source values are preserved.
+              a local clock shift, an end before the start, or active plus known
+              pause time exceeding elapsed time. Source values are preserved.
             </p>
           ) : null}
           {model.exploration ? (
@@ -163,8 +163,8 @@ export function SessionTimeline({
               <p>
                 Showing {points.length} points on page {safePage} of {pages}.
                 Axes use the full selected context across pages. Dates use
-                source session end time in UTC; device clock quality is
-                unverified.
+                source session end time in UTC; local clock observations do not
+                verify UTC accuracy.
               </p>
               <div
                 ref={scrollRef}

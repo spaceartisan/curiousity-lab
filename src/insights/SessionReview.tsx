@@ -1,6 +1,7 @@
 import { SessionTimeline } from "./SessionTimeline";
 import { timingLabel } from "../storage/timing";
 import { presentationLabel } from "../storage/presentation";
+import { clockLabel } from "../storage/clock-context";
 import { useMemo, useState } from "react";
 import type { LocalState } from "../storage/contracts";
 import { download, sessionsCsv } from "../storage/local";
@@ -71,10 +72,11 @@ export function SessionReview({
         Setting observations may be unrecorded, partial or mixed. A sound-on
         setting does not prove audible playback. Explicit pause time is observed
         only while the activity is visible; background, idle and closed time are
-        excluded. Older pause time, input method and clock quality are
-        unrecorded. Matching puzzle and version does not establish equivalent
-        presentation. Play without activity history is absent, not zero
-        activity.
+        excluded. Older pause time, input method and clock context may be
+        unrecorded. Local clock checks cannot verify UTC accuracy; resumed
+        observations are partial. Matching puzzle and version does not establish
+        equivalent presentation. Play without activity history is absent, not
+        zero activity.
       </p>
       <div className="review-filters">
         <label>
@@ -251,9 +253,10 @@ export function SessionReview({
                   ) : null}
                   {s.timeIssues ? (
                     <p>
-                      Time consistency warning: {s.timeIssues} records have
-                      active plus recorded pause time exceeding elapsed time or
-                      an end before the start. Source values are preserved.
+                      Time consistency warning: {s.timeIssues} records have a
+                      local clock shift, active plus recorded pause time
+                      exceeding elapsed time, or an end before the start. Source
+                      values are preserved.
                     </p>
                   ) : null}
                 </article>
@@ -341,6 +344,8 @@ export function SessionReview({
                         : "Pause unrecorded"}
                       <br />
                       {timingLabel(s.timing)}
+                      <br />
+                      {clockLabel(s.clock)}
                     </td>
                     <td>
                       {s.hints} / {s.undos}

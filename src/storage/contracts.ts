@@ -1,11 +1,13 @@
 import { validTiming, type Timing } from "./timing";
+import { validClockObservation, type ClockObservation } from "./clock-context";
 import { validPresentation, type Presentation } from "./presentation";
 import { validateGame } from "./validate-game";
 import { validLabViews, type LabView } from "../content/lab-views";
-export const APP_VERSION = "0.26.0";
+export const APP_VERSION = "0.27.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {
+  clock?: ClockObservation;
   timing?: Timing;
   presentation?: Presentation;
   id: string;
@@ -25,6 +27,7 @@ export interface Session {
   source: "local-guest";
 }
 export interface Draft {
+  clock?: ClockObservation;
   timing?: Timing;
   presentation?: Presentation;
   id: string;
@@ -137,6 +140,7 @@ export function validateState(
       !["completed", "explored", "unfinished"].includes(s.outcome) ||
       s.source !== "local-guest" ||
       (s.timing !== undefined && !validTiming(s.timing)) ||
+      (s.clock !== undefined && !validClockObservation(s.clock)) ||
       (s.presentation !== undefined &&
         !validPresentation(s.presentation, s.game)) ||
       typeof s.puzzleId !== "string" ||
@@ -198,6 +202,7 @@ export function validateState(
       typeof d.mode !== "string" ||
       !Number.isFinite(Date.parse(d.startedAt)) ||
       (d.timing !== undefined && !validTiming(d.timing)) ||
+      (d.clock !== undefined && !validClockObservation(d.clock)) ||
       (d.presentation !== undefined &&
         !validPresentation(d.presentation, kind)) ||
       !validateGame(kind, d.data)

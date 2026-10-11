@@ -8,7 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.26.0
+## Current release · v0.27.0
+
+Optional local history now includes **local clock context**: browser time zone, observed clock shifts and long observation gaps. Resumed observations are marked partial, old records stay unknown, and dates are never corrected or described as verified UTC. Insights separates these contexts and exports their original values. See [clock context](docs/CLOCK_CONTEXT.md).
 
 The laboratory collection now has **eight real microscopy slides**, with six added bacterial/fungal fields and a chosen comparison image. The original sources, IDs and notes remain intact. Individual source credits, unchanged image hashes and review status are included; independent specialist review and higher-resolution preparation remain pending. See [microscopy collection](docs/LAB_COLLECTION.md).
 

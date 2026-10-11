@@ -86,7 +86,7 @@ it("derived exports are versioned and retain filter/date basis/source IDs and mi
   expect(report.selectedSessions).toBe(3);
   expect(report.contexts[0].sessionIds).toHaveLength(3);
   expect(report.filters).toEqual(f);
-  expect(report.limitations.join()).toContain("not recorded");
+  expect(report.limitations.join()).toContain("unrecorded");
   expect(reviewSummary([], emptyFilters()).contexts).toEqual([]);
 });
 it("the review paginates records and summaries independently and resets pages on filters", async () => {

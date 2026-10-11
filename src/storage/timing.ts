@@ -1,5 +1,6 @@
 import type { Draft, LocalState, Preferences } from "./contracts";
 import type { ClockSlice } from "../games/activity-clock";
+import { withClockObservation, mergeClockObservation } from "./clock-context";
 export const TIME_ALGORITHM = "visible-interaction-60s-v2";
 export interface Timing {
   version: 1;
@@ -27,6 +28,7 @@ export function withTiming(
   fromStart = false,
 ): Draft {
   if (draft.finalized) return draft;
+  draft = withClockObservation(draft, prefs, fromStart);
   if (!prefs.history) {
     const { timing: _ignored, ...progress } = draft;
     return progress;
@@ -57,6 +59,7 @@ export function applyClock(
       ...state.drafts,
       [slice.game]: {
         ...draft,
+        clock: mergeClockObservation(draft.clock!, slice.clock),
         activeMs: draft.activeMs + slice.activeMs,
         timing: {
           ...draft.timing!,

@@ -160,7 +160,7 @@ it("CSV preserves exact timing with unknown blank and clearing history removes o
   s.sessions = [{ ...s.sessions[0], timing: metadata }, s.sessions[1]];
   s.drafts.music = { ...draft(), timing: metadata, activeMs: 100 };
   const lines = sessionsCsv(s).split("\r\n");
-  expect(lines[0]).toMatch(/presentation,timing$/);
+  expect(lines[0]).toMatch(/presentation,timing,clock$/);
   expect(lines[1]).toContain(JSON.stringify(metadata).replaceAll('"', '""'));
   expect(lines[2]).toMatch(/,""$/);
   expect(withoutRecordedHistory(s).drafts.music).not.toHaveProperty("timing");

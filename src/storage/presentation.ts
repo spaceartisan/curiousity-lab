@@ -253,6 +253,7 @@ export function withoutRecordedHistory(state: LocalState): LocalState {
         const {
           presentation: _ignored,
           timing: _timingIgnored,
+          clock: _clockIgnored,
           ...progress
         } = draft;
         return [game, { ...progress, activeMs: 0, hints: 0, undos: 0 }];

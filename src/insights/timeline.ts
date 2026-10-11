@@ -1,7 +1,7 @@
 import type { Session } from "../storage/contracts";
 import { contextKey, hasTimeIssue } from "./review";
 export type TimelineMetric = "active" | "hints" | "pause";
-export const TIMELINE_VERSION = "local-session-points-3";
+export const TIMELINE_VERSION = "local-session-points-4";
 export const POINTS_PER_PAGE = 24;
 export interface TimelinePoint {
   session: Session;
@@ -102,6 +102,7 @@ export function timelineExport(
     points: model.points.map((p) => ({
       sessionId: p.session.id,
       sourceEndedAt: p.session.endedAt,
+      clock: p.session.clock ? { ...p.session.clock } : null,
       endedAtUtc: new Date(p.endedAtMs).toISOString(),
       value: p.value,
       unit: model.metric === "hints" ? "count" : "ms",
@@ -112,7 +113,7 @@ export function timelineExport(
     })),
     limitations: [
       "Actual selected source observations only; unrecorded play is unknown.",
-      "No trend estimate or independent-participant assumption. Clock quality unverified.",
+      "No trend estimate or independent-participant assumption. Local clock observations do not verify UTC accuracy; missing clock context is unknown.",
       "Same context does not prove equivalent difficulty or matched reference forms.",
       "Timing coverage may be partial; older pause values remain unknown.",
     ],

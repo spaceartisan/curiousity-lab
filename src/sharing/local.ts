@@ -1,6 +1,7 @@
 import { validTiming } from "../storage/timing";
 import { openDB, deleteDB } from "idb";
 import { validPresentation } from "../storage/presentation";
+import { validClockObservation } from "../storage/clock-context";
 import type { Session } from "../storage/contracts";
 import type { FamilyContext } from "../family/useFamilyConnection";
 export interface SharingScope {
@@ -110,6 +111,7 @@ function sessionPayload(session: Session): Session {
     source,
     presentation,
     timing,
+    clock,
   } = session;
   return {
     id,
@@ -127,6 +129,9 @@ function sessionPayload(session: Session): Session {
     mode,
     attempt,
     source,
+    ...(clock && validClockObservation(clock)
+      ? { clock: structuredClone(clock) }
+      : {}),
     ...(timing && validTiming(timing)
       ? { timing: structuredClone(timing) }
       : {}),

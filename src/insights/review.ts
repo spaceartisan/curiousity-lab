@@ -1,7 +1,8 @@
 import { timingKey, timingLabel } from "../storage/timing";
+import { clockKey, clockLabel } from "../storage/clock-context";
 import { presentationKey, presentationLabel } from "../storage/presentation";
 import type { GameKind, Session } from "../storage/contracts";
-export const ANALYSIS_VERSION = "local-context-review-5";
+export const ANALYSIS_VERSION = "local-context-review-6";
 export const activityNames: Record<GameKind, string> = {
   sudoku: "Sudoku",
   connections: "Word Connections",
@@ -34,10 +35,11 @@ export function contextKey(s: Session) {
     s.attempt === 1 ? "first" : "repeat",
     presentationKey(s.presentation),
     timingKey(s.timing),
+    clockKey(s.clock),
   ]);
 }
 export function contextLabel(s: Session) {
-  return `${activityNames[s.game]} · ${s.mode} · ${s.puzzleId} · ${s.contentVersion} · app ${s.appVersion} · ${s.attempt === 1 ? "first attempt" : "repeat attempts"} · ${presentationLabel(s.presentation)}${s.game === "sudoku" && s.presentation && !s.presentation.sudoku ? "; Sudoku square sizes unrecorded" : ""} · ${timingLabel(s.timing)}`;
+  return `${activityNames[s.game]} · ${s.mode} · ${s.puzzleId} · ${s.contentVersion} · app ${s.appVersion} · ${s.attempt === 1 ? "first attempt" : "repeat attempts"} · ${presentationLabel(s.presentation)}${s.game === "sudoku" && s.presentation && !s.presentation.sudoku ? "; Sudoku square sizes unrecorded" : ""} · ${timingLabel(s.timing)} · ${clockLabel(s.clock)}`;
 }
 export function filterSessions(
   sessions: Session[],
@@ -64,6 +66,7 @@ export function filterSessions(
 }
 export function hasTimeIssue(s: Session) {
   return (
+    s.clock?.wallClockShift === true ||
     Date.parse(s.endedAt) < Date.parse(s.startedAt) ||
     s.activeMs + (s.timing?.pausedMs ?? 0) >
       Date.parse(s.endedAt) - Date.parse(s.startedAt) + 1
@@ -157,7 +160,7 @@ export function reviewSummary(sessions: Session[], filters: ReviewFilters) {
     contexts: summarizeContexts(selected),
     limitations: [
       "Only records present in this selected backup; unrecorded play is unknown.",
-      "Older presentation settings were not recorded. New setting observations can be partial or mixed; sound settings do not establish audible playback. Explicit foreground pauses are observed only where timing metadata is present; hidden, idle and closed time remain excluded. Input method, clock quality and reference-set equivalence remain unrecorded.",
+      "Older presentation, input and clock context can be unrecorded. Observations can be partial or mixed; sound settings do not establish audible playback. Explicit foreground pauses are observed only where timing metadata is present; hidden, idle and closed time remain excluded. Local clock checks cannot verify UTC accuracy; browser closure and suspension leave gaps. Reference-set equivalence remains unrecorded.",
       "Same puzzle/mode/version is a grouping rule, not proof of comparable presentation or human difficulty.",
       "No trend estimate, clinical inference or enjoyment inference.",
     ],

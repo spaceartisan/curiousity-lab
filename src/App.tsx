@@ -47,6 +47,10 @@ import {
 import type { Preferences } from "./storage/contracts";
 import { withTiming, applyClock } from "./storage/timing";
 import { ActivityClock, type ClockSlice } from "./games/activity-clock";
+import {
+  ClockObserver,
+  resumeClockObservations,
+} from "./storage/clock-context";
 import { stopAudio, playNotes } from "./games/audio";
 import { specimens } from "./content/specimens";
 import {
@@ -241,6 +245,7 @@ function archive(
               (s) => s.puzzleId === draft.puzzleId && s.mode === draft.mode,
             ).length + 1,
           source: "local-guest" as const,
+          ...(draft.clock ? { clock: { ...draft.clock } } : {}),
           ...(draft.presentation ? { presentation: draft.presentation } : {}),
           ...(draft.timing
             ? {
@@ -344,7 +349,13 @@ export function App({ appRole }: { appRole: Role }) {
   const preparationError = usePreparation(family, state, restoreEpoch);
   const stateRef = useRef(state),
     screenRef = useRef(screen),
-    clock = useRef(new ActivityClock(performance.now(), !document.hidden)),
+    clock = useRef(
+      new ActivityClock(
+        performance.now(),
+        !document.hidden,
+        new ClockObserver(),
+      ),
+    ),
     heading = useRef<HTMLHeadingElement>(null);
   stateRef.current = state;
   screenRef.current = screen;
@@ -352,7 +363,7 @@ export function App({ appRole }: { appRole: Role }) {
     let active = true;
     loadState(appRole)
       .then((s) => {
-        if (active) setState(s);
+        if (active) setState(resumeClockObservations(s));
       })
       .catch(() => {
         if (active)
@@ -731,6 +742,7 @@ export function App({ appRole }: { appRole: Role }) {
                   ...d,
                   presentation: undefined,
                   timing: undefined,
+                  clock: undefined,
                   id: crypto.randomUUID(),
                   startedAt: new Date().toISOString(),
                   activeMs: 0,
@@ -1281,7 +1293,7 @@ export function App({ appRole }: { appRole: Role }) {
                 state={state}
                 onRestore={(next) => {
                   setRestoreEpoch((epoch) => epoch + 1);
-                  setState(next);
+                  setState(resumeClockObservations(next));
                   setError("");
                 }}
               />

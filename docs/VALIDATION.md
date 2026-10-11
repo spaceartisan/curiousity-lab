@@ -1,3 +1,11 @@
+# v0.27.0 validation
+
+Seven new regressions check forward/backward wall-clock divergence, zone changes, unavailable zone and long observation gaps; ensure idle changes reach only the bound attempt without adding active time; reject malformed optional metadata in saves/imports; distinguish old/partial/shifted contexts and preserve export sources; mark unfinished reload/restore observations partial; clear optional draft context from recovery copies; keep Companion preparations coarse; and exercise actual app resume/finish with immutable sessions. A desktop/phone scenario injects a local clock shift, reloads offline, exports exact context, separates unknown/stable/shifted records in Insights, and checks 320-pixel/200% text.
+
+Deployment requires all component/build, archive, security/recovery and browser gates and screenshot inspection. These are local observations, not a server time check or a diagnosis of clock/suspension behavior. Actual device review, full normalized identity/task context, cloud reporting and production recovery remain pending.
+
+---
+
 # v0.26.0 validation
 
 Three new regressions freeze original slots/hashes and six new source identities, compare actual image bytes to provenance, verify source credits and review boundaries, isolate all eight pages/presets, reject nonexistent/duplicate pages, distinguish old/new content versions, and exercise chosen comparison, note preservation and correct new-source notebook restoration. Existing return-to-original-slide tests now cycle the full collection. Build validation checks actual JPEG dimensions/checksums, inventory and Play precaching. A desktop/phone scenario loads all eight sources offline, opens all six additions, chooses a specific comparison, checks 320-pixel/200% text, files/reopens the actual source, and preserves notes across offline reload.

@@ -1,9 +1,11 @@
 import type { GameKind } from "../storage/contracts";
+import type { ClockObserver, ClockSample } from "../storage/clock-context";
 export interface ClockTarget {
   game: GameKind;
   id: string;
 }
 export interface ClockSlice extends ClockTarget {
+  clock?: ClockSample;
   activeMs: number;
   pausedMs: number;
 }
@@ -13,12 +15,17 @@ export class ActivityClock {
   private visible: boolean;
   private paused = false;
   private target: ClockTarget | null = null;
-  constructor(now: number, visible = true) {
+  constructor(
+    now: number,
+    visible = true,
+    private observer?: ClockObserver,
+  ) {
     this.last = now;
     this.interacted = now;
     this.visible = visible;
   }
   private take(now: number) {
+    const clock = this.observer?.sample(now);
     now = Math.max(this.last, now);
     const elapsed = now - this.last;
     const activeMs =
@@ -27,11 +34,12 @@ export class ActivityClock {
         : 0;
     const pausedMs = this.visible && this.paused ? elapsed : 0;
     this.last = now;
-    return { activeMs, pausedMs };
+    return { activeMs, pausedMs, ...(clock ? { clock } : {}) };
   }
   drain(now: number): ClockSlice | null {
     const time = this.take(now);
-    return this.target && (time.activeMs > 0 || time.pausedMs > 0)
+    return this.target &&
+      (time.activeMs > 0 || time.pausedMs > 0 || time.clock?.changed)
       ? { ...this.target, ...time }
       : null;
   }
