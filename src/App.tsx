@@ -34,6 +34,14 @@ import { Connections, WordSearch } from "./games/Words";
 import { Music, type MusicData } from "./games/Music";
 import { MusicRoom } from "./music/MusicRoom";
 import { LabRoom } from "./lab/LabRoom";
+import { ActivityRecorder } from "./activity/recorder";
+import {
+  GiftShelf,
+  SharingQuestion,
+  useActivitySync,
+} from "./activity/PlayFamily";
+import type { Session } from "./storage/contracts";
+const NO_SESSIONS: Session[] = [];
 import { NumbersRoom, WordsRoom } from "./puzzles/Rooms";
 import {
   nextMusicExercise,
@@ -77,6 +85,10 @@ import {
   clearRecovery,
   clearRecoveryHistory,
 } from "./storage/recovery";
+import { useFamilyData } from "./activity/useFamilyData";
+import { clearRecords } from "./activity/store";
+import { CompanionHome } from "./companion/CompanionHome";
+import { InsightsHome } from "./insights/InsightsHome";
 import "./styles.css";
 const base = import.meta.env.BASE_URL;
 const titles: Record<GameKind, string> = {
@@ -350,6 +362,11 @@ export function App({ appRole }: { appRole: Role }) {
   const [restoreEpoch, setRestoreEpoch] = useState(0);
   const [restoreBusy, setRestoreBusy] = useState(false);
   const preparationError = usePreparation(family, state, restoreEpoch);
+  const sync = useActivitySync(
+    family,
+    appRole === "play" ? (state?.sessions ?? NO_SESSIONS) : NO_SESSIONS,
+  );
+  const shared = useFamilyData(family, appRole !== "play" && demo);
   const stateRef = useRef(state),
     screenRef = useRef(screen),
     clock = useRef(
@@ -799,721 +816,742 @@ export function App({ appRole }: { appRole: Role }) {
       }
     : null;
   return (
-    <div className={`app theme-${prefs.theme} text-${prefs.textSize}`}>
-      <a className="skip-link" href="#content">
-        Skip to content
-      </a>
-      <header className="topbar">
-        <button
-          className="brand"
-          disabled={restoreBusy}
-          onClick={() => setScreen("home")}
-          aria-label="Curiosity Lab home"
-        >
-          <Icon name="lab" />
-          <span>
-            Curiosity Lab{" "}
-            <small>
-              {appRole === "play"
-                ? "Play"
-                : appRole === "companion"
-                  ? "Companion"
-                  : "Insights"}
-            </small>
-          </span>
-        </button>
-        <button
-          className="settings-button"
-          disabled={restoreBusy}
-          onClick={() => setScreen("settings")}
-        >
-          <Icon name="settings" small />
-          Settings
-        </button>
-      </header>
-      <main id="content">
-        {error && (
-          <p className="notice" role="alert">
-            {error}
-          </p>
-        )}
-        {updateReady && (
-          <div className="notice">
-            An update is ready. Your progress is saved before updating.{" "}
-            <button
-              onClick={async () => {
-                try {
-                  await saveState(state);
-                  navigator.serviceWorker.addEventListener(
-                    "controllerchange",
-                    () => location.reload(),
-                    { once: true },
-                  );
-                  updateReady.postMessage({ type: "ACTIVATE_UPDATE" });
-                } catch {
-                  setError(
-                    "Please download a backup before updating; your latest save could not be written.",
-                  );
-                }
-              }}
-            >
-              Update now
-            </button>
-          </div>
-        )}
-        {screen !== "home" && (
+    <ActivityRecorder enabled={appRole === "play" && prefs.history}>
+      <div className={`app theme-${prefs.theme} text-${prefs.textSize}`}>
+        <a className="skip-link" href="#content">
+          Skip to content
+        </a>
+        <header className="topbar">
           <button
-            className="back-button"
+            className="brand"
             disabled={restoreBusy}
             onClick={() => setScreen("home")}
+            aria-label="Curiosity Lab home"
           >
-            <Icon name="back" small />
-            {appRole === "play" ? "Back to games" : "Back to overview"}
+            <Icon name="lab" />
+            <span>
+              Curiosity Lab{" "}
+              <small>
+                {appRole === "play"
+                  ? "Play"
+                  : appRole === "companion"
+                    ? "Companion"
+                    : "Insights"}
+              </small>
+            </span>
           </button>
-        )}
-        {screen === "home" && appRole === "play" ? (
-          <>
-            <section className="welcome">
-              <p className="eyebrow">Your curiosity belongs here</p>
-              <h1 ref={heading} tabIndex={-1}>
-                What would you like
-                <br />
-                to explore?
-              </h1>
-              <p>
-                A puzzle, a melody, a closer look.
-                <br />
-                There is always time to come back.
-              </p>
-              <div className="welcome-mark" aria-hidden="true">
-                <Icon name="lab" />
-              </div>
-            </section>
-            {preparationError && <p role="alert">{preparationError}</p>}
-            {connected && (
-              <div className="connection-note" role="status">
-                Connected to your family. Your games stay on this device.
-                Optional sharing choices are in Settings.
-              </div>
-            )}
-            {!prefs.welcomeDone && (
-              <div className="welcome-note">
-                <strong>Make yourself at home.</strong>
+          <button
+            className="settings-button"
+            disabled={restoreBusy}
+            onClick={() => setScreen("settings")}
+          >
+            <Icon name="settings" small />
+            Settings
+          </button>
+        </header>
+        <main id="content">
+          {error && (
+            <p className="notice" role="alert">
+              {error}
+            </p>
+          )}
+          {updateReady && (
+            <div className="notice">
+              An update is ready. Your progress is saved before updating.{" "}
+              <button
+                onClick={async () => {
+                  try {
+                    await saveState(state);
+                    navigator.serviceWorker.addEventListener(
+                      "controllerchange",
+                      () => location.reload(),
+                      { once: true },
+                    );
+                    updateReady.postMessage({ type: "ACTIVATE_UPDATE" });
+                  } catch {
+                    setError(
+                      "Please download a backup before updating; your latest save could not be written.",
+                    );
+                  }
+                }}
+              >
+                Update now
+              </button>
+            </div>
+          )}
+          {screen !== "home" && (
+            <button
+              className="back-button"
+              disabled={restoreBusy}
+              onClick={() => setScreen("home")}
+            >
+              <Icon name="back" small />
+              {appRole === "play" ? "Back to games" : "Back to overview"}
+            </button>
+          )}
+          {screen === "home" && appRole === "play" ? (
+            <>
+              <section className="welcome">
+                <p className="eyebrow">Your curiosity belongs here</p>
+                <h1 ref={heading} tabIndex={-1}>
+                  What would you like
+                  <br />
+                  to explore?
+                </h1>
                 <p>
-                  Your puzzles and creations save on this device. Activity
-                  history is optional, stays here, and can be switched off in
-                  Settings. Connecting your family does not start sharing.
+                  A puzzle, a melody, a closer look.
+                  <br />
+                  There is always time to come back.
+                </p>
+                <div className="welcome-mark" aria-hidden="true">
+                  <Icon name="lab" />
+                </div>
+              </section>
+              {preparationError && <p role="alert">{preparationError}</p>}
+              {connected && (
+                <div className="connection-note" role="status">
+                  Connected to your family. Your games stay on this device.
+                  Optional sharing choices are in Settings.
+                </div>
+              )}
+              {sync.needsDecision && (
+                <SharingQuestion
+                  onAnswer={(on) => {
+                    void sync.decide(on);
+                    if (on) changePrefs({ history: true, welcomeDone: true });
+                  }}
+                />
+              )}
+              <GiftShelf
+                family={family}
+                familyId={sync.familyId}
+                onOpenRoom={(room) => open(room)}
+              />
+              {!prefs.welcomeDone && (
+                <div className="welcome-note">
+                  <strong>Make yourself at home.</strong>
+                  <p>
+                    Your puzzles and creations save on this device. Activity
+                    history is optional, stays here, and can be switched off in
+                    Settings. Connecting your family does not start sharing.
+                  </p>
+                  <div className="actions">
+                    <button
+                      className="primary"
+                      onClick={() =>
+                        changePrefs({ welcomeDone: true, history: false })
+                      }
+                    >
+                      Play without activity history
+                    </button>
+                    <button
+                      onClick={() =>
+                        changePrefs({ welcomeDone: true, history: true })
+                      }
+                    >
+                      Keep activity history on this device
+                    </button>
+                  </div>
+                </div>
+              )}
+              <div className="library-grid">
+                {[
+                  {
+                    title: "Numbers",
+                    icon: "numbers",
+                    text: "Settle into a Sudoku.",
+                    game: "sudoku",
+                  },
+                  {
+                    title: "Words",
+                    icon: "words",
+                    text: "Find a familiar connection.",
+                    game: "connections",
+                  },
+                  {
+                    title: "Music",
+                    icon: "music",
+                    text: "Hear, play, and make a melody.",
+                    game: "music",
+                  },
+                  {
+                    title: "My Laboratory",
+                    icon: "lab",
+                    text: "Take a closer look at your desk.",
+                    game: "lab",
+                  },
+                  {
+                    title: "My Creations",
+                    icon: "creations",
+                    text: "Your melodies and lab notebook.",
+                    game: "creations",
+                  },
+                ].map((card, i) => {
+                  const previous = state.sessions
+                    .filter((s) => s.game === card.game)
+                    .at(-1);
+                  return (
+                    <button
+                      key={card.title}
+                      className={`library-card card-${i}`}
+                      onClick={() =>
+                        card.game === "creations"
+                          ? openCreations()
+                          : open(card.game as GameKind)
+                      }
+                    >
+                      <span className="card-top">
+                        <Icon name={card.icon} />
+                        <span aria-hidden="true">↗</span>
+                      </span>
+                      <h2>{card.title}</h2>
+                      <p>{card.text}</p>
+                      <span className="card-history">
+                        {state.drafts[card.game as GameKind] &&
+                        !state.drafts[card.game as GameKind]?.finalized
+                          ? "A saved activity to continue"
+                          : previous
+                            ? `Last played: ${relativeTime(previous.endedAt)}`
+                            : card.game === "creations"
+                              ? `${state.creations.length} saved creations`
+                              : "Explore whenever you like"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="word-choice">
+                <span>Another way to enjoy words</span>
+                <button onClick={() => open("search")}>
+                  Open Word Search →
+                </button>
+              </div>
+            </>
+          ) : screen === "home" ? (
+            <>
+              <section className="welcome">
+                <p className="eyebrow">
+                  {appRole === "companion"
+                    ? "A companion to curiosity"
+                    : "A thoughtful view of activity"}
+                </p>
+                <h1 ref={heading} tabIndex={-1}>
+                  {appRole === "companion" ? (
+                    <>
+                      The little things
+                      <br />
+                      worth sharing.
+                    </>
+                  ) : (
+                    <>
+                      Keep the context.
+                      <br />
+                      Follow the curiosity.
+                    </>
+                  )}
+                </h1>
+                <p>
+                  {appRole === "companion"
+                    ? "What she has been up to, things to talk about, and a way to send her something."
+                    : "Patterns over weeks on comparable tasks. Descriptive, never a score."}
+                </p>
+              </section>
+              <div
+                className={`empty-family${shared.load === "live" || shared.load === "fictional" ? " compact" : ""}`}
+              >
+                <Icon name={appRole} />
+                <h2>
+                  {shared.load === "fictional"
+                    ? "Fictional example · No family data"
+                    : connected
+                      ? "Connected to your family"
+                      : family.connection.status === "checking"
+                        ? "Checking your family connection…"
+                        : family.connection.status === "revoked"
+                          ? "This device’s connection was removed"
+                          : family.connection.status === "unavailable"
+                            ? "Family connection could not be checked"
+                            : "Family sharing is not connected"}
+                </h2>
+                <p>
+                  {shared.load === "fictional"
+                    ? "A made-up family, so you can see how this works. Nothing here is real and nothing is saved."
+                    : shared.load === "live"
+                      ? shared.data?.records.length
+                        ? "Activity from Play appears here a minute or so after she finishes something."
+                        : "Connected. Nothing has been shared from Play yet. Her iPad asks her once whether to share."
+                      : shared.load === "waiting"
+                        ? "Loading shared activity…"
+                        : shared.load === "unavailable"
+                          ? "Shared activity couldn’t be loaded. If the Firestore rules were just changed, check that they were published."
+                          : "Connect once to join your family. Activity stays on Play’s device until she agrees to share it."}
                 </p>
                 <div className="actions">
-                  <button
-                    className="primary"
-                    onClick={() =>
-                      changePrefs({ welcomeDone: true, history: false })
-                    }
-                  >
-                    Play without activity history
-                  </button>
-                  <button
-                    onClick={() =>
-                      changePrefs({ welcomeDone: true, history: true })
-                    }
-                  >
-                    Keep activity history on this device
+                  {shared.load !== "fictional" && (
+                    <button
+                      className={connected ? undefined : "primary"}
+                      onClick={() => setScreen("connect")}
+                    >
+                      {connected
+                        ? "Manage family connection"
+                        : appRole === "insights"
+                          ? "Connect your family"
+                          : "Enter a connection code"}
+                    </button>
+                  )}
+                  <button onClick={() => setDemo(!demo)}>
+                    {demo
+                      ? "Close fictional example"
+                      : "View a fictional example"}
                   </button>
                 </div>
               </div>
-            )}
-            <div className="library-grid">
-              {[
-                {
-                  title: "Numbers",
-                  icon: "numbers",
-                  text: "Settle into a Sudoku.",
-                  game: "sudoku",
-                },
-                {
-                  title: "Words",
-                  icon: "words",
-                  text: "Find a familiar connection.",
-                  game: "connections",
-                },
-                {
-                  title: "Music",
-                  icon: "music",
-                  text: "Hear, play, and make a melody.",
-                  game: "music",
-                },
-                {
-                  title: "My Laboratory",
-                  icon: "lab",
-                  text: "Take a closer look at your desk.",
-                  game: "lab",
-                },
-                {
-                  title: "My Creations",
-                  icon: "creations",
-                  text: "Your melodies and lab notebook.",
-                  game: "creations",
-                },
-              ].map((card, i) => {
-                const previous = state.sessions
-                  .filter((s) => s.game === card.game)
-                  .at(-1);
-                return (
-                  <button
-                    key={card.title}
-                    className={`library-card card-${i}`}
-                    onClick={() =>
-                      card.game === "creations"
-                        ? openCreations()
-                        : open(card.game as GameKind)
-                    }
-                  >
-                    <span className="card-top">
-                      <Icon name={card.icon} />
-                      <span aria-hidden="true">↗</span>
-                    </span>
-                    <h2>{card.title}</h2>
-                    <p>{card.text}</p>
-                    <span className="card-history">
-                      {state.drafts[card.game as GameKind] &&
-                      !state.drafts[card.game as GameKind]?.finalized
-                        ? "A saved activity to continue"
-                        : previous
-                          ? `Last played: ${relativeTime(previous.endedAt)}`
-                          : card.game === "creations"
-                            ? `${state.creations.length} saved creations`
-                            : "Explore whenever you like"}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <div className="word-choice">
-              <span>Another way to enjoy words</span>
-              <button onClick={() => open("search")}>Open Word Search →</button>
-            </div>
-          </>
-        ) : screen === "home" ? (
-          <>
-            <section className="welcome">
-              <p className="eyebrow">
-                {appRole === "companion"
-                  ? "A companion to curiosity"
-                  : "A thoughtful view of activity"}
-              </p>
+              {shared.data &&
+                (appRole === "companion" ? (
+                  <CompanionHome family={shared} />
+                ) : (
+                  <InsightsHome family={shared} />
+                ))}
+              {appRole === "insights" && (
+                <>
+                  <section className="subtle-panel local-export-review">
+                    <h2>Review a local Play export</h2>
+                    <p>
+                      Choose a backup from Play to inspect it in this tab. It is
+                      not uploaded, merged, or stored in Insights.
+                    </p>
+                    <label className="file-control">
+                      Open Play JSON backup
+                      <input
+                        type="file"
+                        accept=".json,application/json"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) void importFile(file, true);
+                          e.target.value = "";
+                        }}
+                      />
+                    </label>
+                    {review && (
+                      <SessionReview
+                        key={reviewRevision}
+                        review={review}
+                        onClose={() => setReview(null)}
+                      />
+                    )}
+                  </section>
+                  <section className="subtle-panel">
+                    <h2>Installation links</h2>
+                    <div className="actions">
+                      {(["play", "companion", "insights"] as Role[]).map(
+                        (r) => (
+                          <a href={base + r + "/"} key={r}>
+                            Curiosity Lab — {r[0].toUpperCase() + r.slice(1)}
+                          </a>
+                        ),
+                      )}
+                    </div>
+                  </section>
+                </>
+              )}
+            </>
+          ) : null}
+          {screen === "connect" && (
+            <div className="connection-page">
               <h1 ref={heading} tabIndex={-1}>
-                {appRole === "companion" ? (
-                  <>
-                    The little things
-                    <br />
-                    worth sharing.
-                  </>
-                ) : (
-                  <>
-                    Keep the context.
-                    <br />
-                    Follow the curiosity.
-                  </>
-                )}
+                {appRole === "insights"
+                  ? "Connect your family"
+                  : "Connect your app"}
               </h1>
-              <p>
-                {appRole === "companion"
-                  ? "Favorite activities, saved discoveries, and ideas for time together."
-                  : "Review recorded activity with its source, versions, and limits."}
-              </p>
-            </section>
-            <div className="empty-family">
-              <Icon name={appRole} />
-              <h2>
-                {connected
-                  ? "Connected to your family"
-                  : family.connection.status === "checking"
-                    ? "Checking your family connection…"
-                    : family.connection.status === "revoked"
-                      ? "This device’s connection was removed"
-                      : family.connection.status === "unavailable"
-                        ? "Family connection could not be checked"
-                        : "Family sharing is not connected"}
-              </h2>
-              <button className="primary" onClick={() => setScreen("connect")}>
-                {connected
-                  ? "Manage family connection"
-                  : appRole === "insights"
-                    ? "Connect your family"
-                    : "Enter a connection code"}
-              </button>
-              <p>
-                {connected
-                  ? "Your connection is ready. Activity sharing has not started, so there are no shared records to show yet."
-                  : "Connect once to join your family. Activity stays on Play’s device until sharing is separately enabled."}
-              </p>
-              <button onClick={() => setDemo(!demo)}>
-                {demo ? "Close fictional example" : "View a fictional example"}
-              </button>
+              <FamilySetup role={appRole} context={family} />
             </div>
-            {demo && (
-              <section className="demo-panel">
-                <p className="eyebrow">Fictional example · No family data</p>
-                {appRole === "companion" ? (
-                  <>
-                    <h2>A few things to revisit together</h2>
-                    <div className="summary-grid">
-                      <article>
-                        <Icon name="music" />
-                        <h3>A melody saved</h3>
-                        <p>“Morning notes” is ready to hear again.</p>
-                      </article>
-                      <article>
-                        <Icon name="lab" />
-                        <h3>A notebook discovery</h3>
-                        <p>Fungal forms were added to the notebook.</p>
-                      </article>
-                    </div>
-                    <p>
-                      Conversation idea: “Would you like to show me your
-                      favorite slide?”
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <h2>Recorded activity</h2>
-                    <p>
-                      Compare activities only when content, difficulty, and
-                      presentation match. Duration does not establish enjoyment
-                      or cognitive change.
-                    </p>
-                    <div className="table-wrap">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Activity</th>
-                            <th>Context</th>
-                            <th>Active time</th>
-                            <th>Outcome</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Sudoku</td>
-                            <td>9×9 Classic · first attempt</td>
-                            <td>8 min</td>
-                            <td>Completed</td>
-                          </tr>
-                          <tr>
-                            <td>Laboratory</td>
-                            <td>Free exploration · PHIL 26402</td>
-                            <td>3 min</td>
-                            <td>Explored</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </>
-                )}
-              </section>
-            )}
-            {appRole === "insights" && (
-              <>
-                <section className="subtle-panel local-export-review">
-                  <h2>Review a local Play export</h2>
-                  <p>
-                    Choose a backup from Play to inspect it in this tab. It is
-                    not uploaded, merged, or stored in Insights.
-                  </p>
-                  <label className="file-control">
-                    Open Play JSON backup
+          )}
+          {screen === "settings" && (
+            <>
+              <p className="eyebrow">A comfortable place to play</p>
+              <h1 ref={heading} tabIndex={-1}>
+                Settings
+              </h1>
+              <div className="settings-grid">
+                <section>
+                  <h2>Look & sound</h2>
+                  <label>
+                    Theme{" "}
+                    <select
+                      value={prefs.theme}
+                      onChange={(e) =>
+                        changePrefs({
+                          theme: e.target.value as "light" | "dark",
+                        })
+                      }
+                    >
+                      <option value="light">Warm light</option>
+                      <option value="dark">Quiet dark</option>
+                    </select>
+                  </label>
+                  <label>
+                    Text size{" "}
+                    <select
+                      value={prefs.textSize}
+                      onChange={(e) =>
+                        changePrefs({
+                          textSize: e.target.value as "normal" | "large",
+                        })
+                      }
+                    >
+                      <option value="normal">Comfortable</option>
+                      <option value="large">Larger</option>
+                    </select>
+                  </label>
+                  <label className="check-label">
                     <input
-                      type="file"
-                      accept=".json,application/json"
+                      type="checkbox"
+                      checked={prefs.sound}
                       onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) void importFile(file, true);
-                        e.target.value = "";
+                        stopAudio();
+                        changePrefs({ sound: e.target.checked });
                       }}
                     />
+                    Sound on
                   </label>
-                  {review && (
-                    <SessionReview
-                      key={reviewRevision}
-                      review={review}
-                      onClose={() => setReview(null)}
+                  <label>
+                    Volume{" "}
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      value={prefs.volume}
+                      onChange={(e) =>
+                        changePrefs({ volume: Number(e.target.value) })
+                      }
+                    />
+                  </label>
+                  <button
+                    disabled={!prefs.sound}
+                    onClick={() =>
+                      playNotes([0, 2, 4], prefs.volume).catch(() =>
+                        setError(
+                          "Sound could not start. Check your device volume and try again.",
+                        ),
+                      )
+                    }
+                  >
+                    Try a few notes
+                  </button>
+                </section>
+                <section>
+                  <h2>Your data, your choice</h2>
+                  <p>
+                    Puzzle progress and things you save stay on this device.
+                    Optional history records active time, visible pause time,
+                    puzzle version, hints, undo counts and observed theme/text
+                    settings and Sudoku square-size choices, plus broad touch,
+                    mouse, pen or keyboard categories used within game controls.
+                    Music also records sound, volume, notation, pace and
+                    rhythm-flexibility settings, including changes. No
+                    keystrokes or audio recordings are collected. Nothing is
+                    sent to a server.
+                  </p>
+                  <label className="check-label">
+                    <input
+                      type="checkbox"
+                      checked={prefs.history}
+                      onChange={(e) =>
+                        changePrefs({ history: e.target.checked })
+                      }
+                    />
+                    Keep activity history on this device
+                  </label>
+                  <p className="muted">
+                    Switching off stops new history records. Existing history
+                    stays until you clear it. Saved progress and creations keep
+                    working.
+                  </p>
+                  <button
+                    disabled={restoreBusy}
+                    onClick={async () => {
+                      if (
+                        window.confirm(
+                          "Clear recorded activity history and prepared copies? Saved puzzles and creations will remain.",
+                        )
+                      ) {
+                        try {
+                          if (appRole === "play") {
+                            await clearAllPreparations();
+                            await clearRecords();
+                          }
+                          await clearRecoveryHistory(appRole);
+                          setState((s) => (s ? withoutRecordedHistory(s) : s));
+                        } catch {
+                          setError(
+                            "Prepared copies could not be cleared. Please try again; your history has not been removed.",
+                          );
+                        }
+                      }
+                    }}
+                  >
+                    Clear activity history
+                  </button>
+                </section>
+                <FamilySetup role={appRole} context={family} />
+                {appRole === "play" && sync.familyId && (
+                  <section className="sharing-settings">
+                    <h2>Sharing with the family</h2>
+                    <p>
+                      {sync.sharing
+                        ? "On. Finished puzzles, pieces and lab work are shared with the family."
+                        : "Off. Nothing is being shared."}
+                      {sync.sharing && sync.lastSync
+                        ? ` Last shared ${relativeTime(sync.lastSync)}.`
+                        : ""}
+                      {sync.sharing && sync.failing
+                        ? " Waiting for a connection; it will try again."
+                        : ""}
+                    </p>
+                    <button
+                      onClick={() => {
+                        void sync.decide(!sync.sharing);
+                        if (!sync.sharing) changePrefs({ history: true });
+                      }}
+                    >
+                      {sync.sharing ? "Stop sharing" : "Share with the family"}
+                    </button>
+                  </section>
+                )}
+                {appRole === "play" && (
+                  <SharingPreparation context={family} state={state} />
+                )}
+                <RecoveryPanel
+                  onRestoreBusy={setRestoreBusy}
+                  role={appRole}
+                  state={state}
+                  onRestore={(next) => {
+                    setRestoreEpoch((epoch) => epoch + 1);
+                    setState(resumeClockObservations(next));
+                    setError("");
+                  }}
+                />
+                <section>
+                  <h2>Remove local data</h2>
+                  <button
+                    disabled={restoreBusy}
+                    onClick={async () => {
+                      if (
+                        window.confirm(
+                          "Remove all local data for this app, including progress, creations, and history? Download a backup first if you want to keep it.",
+                        )
+                      ) {
+                        try {
+                          if (appRole === "play") {
+                            await clearAllPreparations();
+                            await clearRecords();
+                          }
+                          await clearRecovery(appRole);
+                          await clearState(appRole);
+                          setState(emptyState(appRole));
+                          setScreen("home");
+                        } catch {
+                          setError(
+                            "Local data could not be fully removed. Please try again.",
+                          );
+                        }
+                      }
+                    }}
+                  >
+                    Remove this app’s local data
+                  </button>
+                </section>
+                <section>
+                  <h2>Install this app</h2>
+                  <p>
+                    On iPhone or iPad: open this app link in Safari, tap Share,
+                    then Add to Home Screen. On Android or desktop: use the
+                    browser’s Install app option when offered.
+                  </p>
+                  <p>
+                    Each role has its own icon and launch link. Installation on
+                    the family’s actual devices still needs verification.
+                  </p>
+                  <p className="muted">
+                    Version {APP_VERSION} · Local recovery
+                  </p>
+                </section>
+              </div>
+            </>
+          )}
+          {screen === "creations" && (
+            <>
+              <p className="eyebrow">Made and discovered by you</p>
+              <h1 className="collection-heading" ref={heading} tabIndex={-1}>
+                {creationFilter === "notebook"
+                  ? "My Lab Notebook"
+                  : creationFilter === "melody"
+                    ? "My Melodies"
+                    : "My Creations"}
+              </h1>
+              <Creations
+                creations={state.creations}
+                filter={creationFilter}
+                onFilter={setCreationFilter}
+                relativeTime={relativeTime}
+                sound={prefs.sound}
+                volume={prefs.volume}
+                onSound={(sound) => changePrefs({ sound })}
+                onVolume={(volume) => changePrefs({ volume })}
+                onMusic={() => open("music")}
+                onLab={() => open("lab")}
+                onRevisit={revisitCreation}
+                onHear={(c) => {
+                  if (prefs.sound)
+                    void playNotes(c.notes || [], prefs.volume).catch(() =>
+                      setError(
+                        "Sound could not start. Check your volume and try again.",
+                      ),
+                    );
+                  else setError("Turn sound on here to hear your melody.");
+                }}
+                onRemove={(c) => {
+                  if (window.confirm("Remove this saved creation?"))
+                    setState((s) =>
+                      s
+                        ? {
+                            ...s,
+                            creations: s.creations.filter((x) => x.id !== c.id),
+                          }
+                        : s,
+                    );
+                }}
+              />
+            </>
+          )}
+          {game && props && (
+            <>
+              <div className="game-heading">
+                <div>
+                  <p className="eyebrow">A little discovery, at your pace</p>
+                  <h1 ref={heading} tabIndex={-1}>
+                    {titles[game]}
+                  </h1>
+                </div>
+                <div className="actions">
+                  <button onClick={() => setPaused(!paused)}>
+                    {paused ? "Resume" : "Pause"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      finish(
+                        game === "lab" || game === "music"
+                          ? "explored"
+                          : "unfinished",
+                      );
+                      setScreen("home");
+                    }}
+                  >
+                    Finish for now
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Start a new activity? Your current attempt will finish.",
+                        )
+                      )
+                        replay();
+                    }}
+                  >
+                    New activity
+                  </button>
+                </div>
+              </div>
+              {paused ? (
+                <section className="pause-panel">
+                  <h2>Your place is kept.</h2>
+                  <p>Come back whenever you like.</p>
+                  <button className="primary" onClick={() => setPaused(false)}>
+                    Resume
+                  </button>
+                </section>
+              ) : (
+                <section
+                  className="game-surface"
+                  onPointerDownCapture={(e) => recordInput(e.pointerType)}
+                  onKeyDownCapture={(e) => {
+                    if (
+                      !e.altKey &&
+                      !e.metaKey &&
+                      !e.ctrlKey &&
+                      !["Shift", "Control", "Alt", "Meta", "Escape"].includes(
+                        e.key,
+                      )
+                    )
+                      recordInput("keyboard");
+                  }}
+                >
+                  {game === "sudoku" ? (
+                    <NumbersRoom
+                      sudoku={<Sudoku key={props.draft.id} {...props} />}
+                    />
+                  ) : game === "connections" ? (
+                    <WordsRoom
+                      connections={
+                        <Connections key={props.draft.id} {...props} />
+                      }
+                    />
+                  ) : game === "search" ? (
+                    <WordSearch key={props.draft.id} {...props} />
+                  ) : game === "music" ? (
+                    <MusicRoom
+                      sound={prefs.sound}
+                      volume={prefs.volume}
+                      onSoundChange={(sound) => changePrefs({ sound })}
+                      onVolumeChange={(volume) => changePrefs({ volume })}
+                      exercises={
+                        <Music
+                          key={props.draft.id}
+                          {...props}
+                          sound={prefs.sound}
+                          volume={prefs.volume}
+                          onSoundChange={(sound) => changePrefs({ sound })}
+                          onVolumeChange={(volume) => changePrefs({ volume })}
+                        />
+                      }
+                    />
+                  ) : (
+                    <LabRoom
+                      sound={prefs.sound}
+                      atMicroscope={
+                        (props.draft.data as LabData).stage !== "desk"
+                      }
+                      microscope={
+                        <Laboratory
+                          key={props.draft.id}
+                          {...props}
+                          onNotebook={() => openCreations("notebook")}
+                          lastNotebookVisit={(() => {
+                            const value = latestNotebookVisit(
+                              state.creations,
+                              specimens[(props.draft.data as LabData).specimen]
+                                .id,
+                            );
+                            return value ? relativeTime(value) : undefined;
+                          })()}
+                        />
+                      }
                     />
                   )}
                 </section>
-                <section className="subtle-panel">
-                  <h2>Installation links</h2>
-                  <div className="actions">
-                    {(["play", "companion", "insights"] as Role[]).map((r) => (
-                      <a href={base + r + "/"} key={r}>
-                        Curiosity Lab — {r[0].toUpperCase() + r.slice(1)}
-                      </a>
-                    ))}
-                  </div>
-                </section>
-              </>
-            )}
-          </>
-        ) : null}
-        {screen === "connect" && (
-          <div className="connection-page">
-            <h1 ref={heading} tabIndex={-1}>
-              {appRole === "insights"
-                ? "Connect your family"
-                : "Connect your app"}
-            </h1>
-            <FamilySetup role={appRole} context={family} />
-          </div>
-        )}
-        {screen === "settings" && (
-          <>
-            <p className="eyebrow">A comfortable place to play</p>
-            <h1 ref={heading} tabIndex={-1}>
-              Settings
-            </h1>
-            <div className="settings-grid">
-              <section>
-                <h2>Look & sound</h2>
-                <label>
-                  Theme{" "}
-                  <select
-                    value={prefs.theme}
-                    onChange={(e) =>
-                      changePrefs({ theme: e.target.value as "light" | "dark" })
-                    }
-                  >
-                    <option value="light">Warm light</option>
-                    <option value="dark">Quiet dark</option>
-                  </select>
-                </label>
-                <label>
-                  Text size{" "}
-                  <select
-                    value={prefs.textSize}
-                    onChange={(e) =>
-                      changePrefs({
-                        textSize: e.target.value as "normal" | "large",
-                      })
-                    }
-                  >
-                    <option value="normal">Comfortable</option>
-                    <option value="large">Larger</option>
-                  </select>
-                </label>
-                <label className="check-label">
-                  <input
-                    type="checkbox"
-                    checked={prefs.sound}
-                    onChange={(e) => {
-                      stopAudio();
-                      changePrefs({ sound: e.target.checked });
-                    }}
-                  />
-                  Sound on
-                </label>
-                <label>
-                  Volume{" "}
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.05"
-                    value={prefs.volume}
-                    onChange={(e) =>
-                      changePrefs({ volume: Number(e.target.value) })
-                    }
-                  />
-                </label>
-                <button
-                  disabled={!prefs.sound}
-                  onClick={() =>
-                    playNotes([0, 2, 4], prefs.volume).catch(() =>
-                      setError(
-                        "Sound could not start. Check your device volume and try again.",
-                      ),
-                    )
-                  }
-                >
-                  Try a few notes
-                </button>
-              </section>
-              <section>
-                <h2>Your data, your choice</h2>
-                <p>
-                  Puzzle progress and things you save stay on this device.
-                  Optional history records active time, visible pause time,
-                  puzzle version, hints, undo counts and observed theme/text
-                  settings and Sudoku square-size choices, plus broad touch,
-                  mouse, pen or keyboard categories used within game controls.
-                  Music also records sound, volume, notation, pace and
-                  rhythm-flexibility settings, including changes. No keystrokes
-                  or audio recordings are collected. Nothing is sent to a
-                  server.
-                </p>
-                <label className="check-label">
-                  <input
-                    type="checkbox"
-                    checked={prefs.history}
-                    onChange={(e) => changePrefs({ history: e.target.checked })}
-                  />
-                  Keep activity history on this device
-                </label>
-                <p className="muted">
-                  Switching off stops new history records. Existing history
-                  stays until you clear it. Saved progress and creations keep
-                  working.
-                </p>
-                <button
-                  disabled={restoreBusy}
-                  onClick={async () => {
-                    if (
-                      window.confirm(
-                        "Clear recorded activity history and prepared copies? Saved puzzles and creations will remain.",
-                      )
-                    ) {
-                      try {
-                        if (appRole === "play") await clearAllPreparations();
-                        await clearRecoveryHistory(appRole);
-                        setState((s) => (s ? withoutRecordedHistory(s) : s));
-                      } catch {
-                        setError(
-                          "Prepared copies could not be cleared. Please try again; your history has not been removed.",
-                        );
-                      }
-                    }
-                  }}
-                >
-                  Clear activity history
-                </button>
-              </section>
-              <FamilySetup role={appRole} context={family} />
-              {appRole === "play" && (
-                <SharingPreparation context={family} state={state} />
               )}
-              <RecoveryPanel
-                onRestoreBusy={setRestoreBusy}
-                role={appRole}
-                state={state}
-                onRestore={(next) => {
-                  setRestoreEpoch((epoch) => epoch + 1);
-                  setState(resumeClockObservations(next));
-                  setError("");
-                }}
-              />
-              <section>
-                <h2>Remove local data</h2>
-                <button
-                  disabled={restoreBusy}
-                  onClick={async () => {
-                    if (
-                      window.confirm(
-                        "Remove all local data for this app, including progress, creations, and history? Download a backup first if you want to keep it.",
-                      )
-                    ) {
-                      try {
-                        if (appRole === "play") await clearAllPreparations();
-                        await clearRecovery(appRole);
-                        await clearState(appRole);
-                        setState(emptyState(appRole));
-                        setScreen("home");
-                      } catch {
-                        setError(
-                          "Local data could not be fully removed. Please try again.",
-                        );
-                      }
-                    }
-                  }}
-                >
-                  Remove this app’s local data
-                </button>
-              </section>
-              <section>
-                <h2>Install this app</h2>
-                <p>
-                  On iPhone or iPad: open this app link in Safari, tap Share,
-                  then Add to Home Screen. On Android or desktop: use the
-                  browser’s Install app option when offered.
-                </p>
-                <p>
-                  Each role has its own icon and launch link. Installation on
-                  the family’s actual devices still needs verification.
-                </p>
-                <p className="muted">Version {APP_VERSION} · Local recovery</p>
-              </section>
-            </div>
-          </>
-        )}
-        {screen === "creations" && (
-          <>
-            <p className="eyebrow">Made and discovered by you</p>
-            <h1 className="collection-heading" ref={heading} tabIndex={-1}>
-              {creationFilter === "notebook"
-                ? "My Lab Notebook"
-                : creationFilter === "melody"
-                  ? "My Melodies"
-                  : "My Creations"}
-            </h1>
-            <Creations
-              creations={state.creations}
-              filter={creationFilter}
-              onFilter={setCreationFilter}
-              relativeTime={relativeTime}
-              sound={prefs.sound}
-              volume={prefs.volume}
-              onSound={(sound) => changePrefs({ sound })}
-              onVolume={(volume) => changePrefs({ volume })}
-              onMusic={() => open("music")}
-              onLab={() => open("lab")}
-              onRevisit={revisitCreation}
-              onHear={(c) => {
-                if (prefs.sound)
-                  void playNotes(c.notes || [], prefs.volume).catch(() =>
-                    setError(
-                      "Sound could not start. Check your volume and try again.",
-                    ),
-                  );
-                else setError("Turn sound on here to hear your melody.");
-              }}
-              onRemove={(c) => {
-                if (window.confirm("Remove this saved creation?"))
-                  setState((s) =>
-                    s
-                      ? {
-                          ...s,
-                          creations: s.creations.filter((x) => x.id !== c.id),
-                        }
-                      : s,
-                  );
-              }}
-            />
-          </>
-        )}
-        {game && props && (
-          <>
-            <div className="game-heading">
-              <div>
-                <p className="eyebrow">A little discovery, at your pace</p>
-                <h1 ref={heading} tabIndex={-1}>
-                  {titles[game]}
-                </h1>
-              </div>
-              <div className="actions">
-                <button onClick={() => setPaused(!paused)}>
-                  {paused ? "Resume" : "Pause"}
-                </button>
-                <button
-                  onClick={() => {
-                    finish(
-                      game === "lab" || game === "music"
-                        ? "explored"
-                        : "unfinished",
-                    );
-                    setScreen("home");
-                  }}
-                >
-                  Finish for now
-                </button>
-                <button
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Start a new activity? Your current attempt will finish.",
-                      )
-                    )
-                      replay();
-                  }}
-                >
-                  New activity
-                </button>
-              </div>
-            </div>
-            {paused ? (
-              <section className="pause-panel">
-                <h2>Your place is kept.</h2>
-                <p>Come back whenever you like.</p>
-                <button className="primary" onClick={() => setPaused(false)}>
-                  Resume
-                </button>
-              </section>
-            ) : (
-              <section
-                className="game-surface"
-                onPointerDownCapture={(e) => recordInput(e.pointerType)}
-                onKeyDownCapture={(e) => {
-                  if (
-                    !e.altKey &&
-                    !e.metaKey &&
-                    !e.ctrlKey &&
-                    !["Shift", "Control", "Alt", "Meta", "Escape"].includes(
-                      e.key,
-                    )
-                  )
-                    recordInput("keyboard");
-                }}
-              >
-                {game === "sudoku" ? (
-                  <NumbersRoom
-                    sudoku={<Sudoku key={props.draft.id} {...props} />}
-                  />
-                ) : game === "connections" ? (
-                  <WordsRoom
-                    connections={
-                      <Connections key={props.draft.id} {...props} />
-                    }
-                  />
-                ) : game === "search" ? (
-                  <WordSearch key={props.draft.id} {...props} />
-                ) : game === "music" ? (
-                  <MusicRoom
-                    sound={prefs.sound}
-                    volume={prefs.volume}
-                    onSoundChange={(sound) => changePrefs({ sound })}
-                    onVolumeChange={(volume) => changePrefs({ volume })}
-                    exercises={
-                      <Music
-                        key={props.draft.id}
-                        {...props}
-                        sound={prefs.sound}
-                        volume={prefs.volume}
-                        onSoundChange={(sound) => changePrefs({ sound })}
-                        onVolumeChange={(volume) => changePrefs({ volume })}
-                      />
-                    }
-                  />
-                ) : (
-                  <LabRoom
-                    sound={prefs.sound}
-                    atMicroscope={
-                      (props.draft.data as LabData).stage !== "desk"
-                    }
-                    microscope={
-                      <Laboratory
-                        key={props.draft.id}
-                        {...props}
-                        onNotebook={() => openCreations("notebook")}
-                        lastNotebookVisit={(() => {
-                          const value = latestNotebookVisit(
-                            state.creations,
-                            specimens[(props.draft.data as LabData).specimen]
-                              .id,
-                          );
-                          return value ? relativeTime(value) : undefined;
-                        })()}
-                      />
-                    }
-                  />
-                )}
-              </section>
-            )}
-          </>
-        )}
-      </main>
-      <footer>
-        <span>Curiosity Lab · A place to explore</span>
-        <span aria-live="polite">
-          {saved ? "Saved on this device" : "Saving on this device…"}
-        </span>
-      </footer>
-    </div>
+            </>
+          )}
+        </main>
+        <footer>
+          <span>Curiosity Lab · A place to explore</span>
+          <span aria-live="polite">
+            {saved ? "Saved on this device" : "Saving on this device…"}
+          </span>
+        </footer>
+      </div>
+    </ActivityRecorder>
   );
 }

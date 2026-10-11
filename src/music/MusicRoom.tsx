@@ -1,3 +1,4 @@
+import { takeOpen } from "../activity/open-request";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { strike, unlockPiano } from "../games/piano";
 import { Keyboard } from "./Keyboard";
@@ -27,7 +28,9 @@ export function MusicRoom({
   /** The earlier Music Studio exercises, kept available. */
   exercises: ReactNode;
 }) {
-  const [room, setRoom] = useState<Room>("name");
+  // A gift from the family can ask to open a particular piece.
+  const [gifted] = useState(() => takeOpen("piece"));
+  const [room, setRoom] = useState<Room>(gifted ? "play" : "name");
   const [pieces, setPieces] = useState<Excerpt[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [progress, setProgress] = useState<MusicRoomProgress>(readProgress);
@@ -35,7 +38,13 @@ export function MusicRoom({
   const player = usePlayer(volume, sound);
 
   useEffect(() => {
-    loadRepertoire().then(setPieces, () => setFailed(true));
+    loadRepertoire().then(
+      (list) => {
+        setPieces(list);
+        if (gifted) setPractice(list.find((p) => p.id === gifted) ?? null);
+      },
+      () => setFailed(true),
+    );
   }, []);
   const update = (p: MusicRoomProgress) => {
     setProgress(p);

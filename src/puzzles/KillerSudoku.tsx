@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { keep, remember } from "./util";
+import { useRecord } from "../activity/recorder";
 
 export interface KillerPuzzle {
   id: string;
@@ -58,6 +59,8 @@ export function KillerSudoku({ puzzles }: { puzzles: KillerPuzzle[] }) {
   >([]);
   const [checked, setChecked] = useState(false);
   const [showCombos, setShowCombos] = useState(true);
+  const record = useRecord();
+  const usage = useRef({ start: 0, fills: 0, checks: 0, id: "" });
 
   const cageOf = useMemo(() => {
     const map = Array(81).fill(0);
@@ -74,6 +77,16 @@ export function KillerSudoku({ puzzles }: { puzzles: KillerPuzzle[] }) {
     setHistory((h) => [...h.slice(-80), board]);
     setChecked(false);
     const nowSolved = entries.every((v, i) => v === puzzle.solution[i]);
+    if (usage.current.id !== puzzle.id) usage.current = { start: Date.now(), fills: 0, checks: 0, id: puzzle.id };
+    if (nowSolved && !solved)
+      record({
+        activity: "killer",
+        item: puzzle.id,
+        title: `Killer Sudoku · ${puzzle.tier}`,
+        outcome: "solved",
+        seconds: (Date.now() - usage.current.start) / 1000,
+        detail: { tier: puzzle.tier, filledForMe: usage.current.fills, checks: usage.current.checks, cages: puzzle.cages.length },
+      });
     persist({
       ...saved,
       boards: { ...saved.boards, [puzzle.id]: { entries, notes } },
@@ -249,11 +262,19 @@ export function KillerSudoku({ puzzles }: { puzzles: KillerPuzzle[] }) {
             >
               Undo
             </button>
-            <button onClick={() => setChecked(true)}>Check entries</button>
+            <button
+              onClick={() => {
+                usage.current.checks++;
+                setChecked(true);
+              }}
+            >
+              Check entries
+            </button>
             <button
               onClick={() => {
                 const entries = [...board.entries];
                 entries[selected] = puzzle.solution[selected];
+                usage.current.fills++;
                 setBoard(
                   entries,
                   board.notes.map((n, i) => (i === selected ? 0 : n)),

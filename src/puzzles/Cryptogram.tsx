@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRecord } from "../activity/recorder";
 import { QUOTATIONS, type Quotation } from "../content/quotations";
 import { hashString, keep, remember, seeded } from "./util";
 
@@ -37,11 +38,29 @@ export function Cryptogram() {
   const guesses = saved.guesses[quote.id] ?? {};
   const [active, setActive] = useState<string | null>(null);
   const [showAuthor, setShowAuthor] = useState(false);
+  const record = useRecord();
+  const usage = useRef({ id: "", start: Date.now(), reveals: 0, filed: false });
+  if (usage.current.id !== quote.id) usage.current = { id: quote.id, start: Date.now(), reveals: 0, filed: saved.solved.includes(quote.id) };
   const cipherToPlain = Object.fromEntries(
     Object.entries(key).map(([p, c]) => [c, p]),
   );
   const used = [...new Set(cipher.replace(/[^A-Z]/g, ""))];
   const solved = used.every((c) => guesses[c] === cipherToPlain[c]);
+  const wasSolved = useRef(solved);
+  useEffect(() => {
+    if (solved && !wasSolved.current && !usage.current.filed) {
+      usage.current.filed = true;
+      record({
+        activity: "cryptogram",
+        item: quote.id,
+        title: `${quote.author}: “${quote.text.slice(0, 60)}${quote.text.length > 60 ? "…" : ""}”`,
+        outcome: "solved",
+        seconds: (Date.now() - usage.current.start) / 1000,
+        detail: { theme: quote.theme, revealed: usage.current.reveals, letters: used.length, authorShown: showAuthor },
+      });
+    }
+    wasSolved.current = solved;
+  });
   const counts = Object.fromEntries(
     used.map((c) => [c, cipher.split(c).length - 1]),
   );
@@ -138,6 +157,7 @@ export function Cryptogram() {
           <>
             <button
               onClick={() => {
+                usage.current.reveals++;
                 const target =
                   active && guesses[active] !== cipherToPlain[active]
                     ? active
@@ -162,7 +182,10 @@ export function Cryptogram() {
             >
               Reveal a letter
             </button>
-            <button onClick={() => setShowAuthor(true)} disabled={showAuthor}>
+            <button
+              onClick={() => setShowAuthor(true)}
+              disabled={showAuthor}
+            >
               Show the author
             </button>
           </>

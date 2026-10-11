@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { keep, remember } from "./util";
+import { useRecord } from "../activity/recorder";
 
 export interface CountdownRound {
   id: string;
@@ -44,6 +45,20 @@ export function Countdown({ rounds }: { rounds: CountdownRound[] }) {
   const [message, setMessage] = useState("");
   const [shown, setShown] = useState(false);
   const [seconds, setSeconds] = useState(30);
+  const record = useRecord();
+  const filed = useRef({ id: "", start: Date.now() });
+  function file(outcome: "solved" | "revealed" | "stopped", stepCount: number, best: number) {
+    if (filed.current.id === round.id) return;
+    filed.current.id = round.id;
+    record({
+      activity: "countdown",
+      item: round.id,
+      title: `Countdown · target ${round.target}`,
+      outcome,
+      seconds: (Date.now() - filed.current.start) / 1000,
+      detail: { steps: stepCount, away: best, clock: saved.clock, large: round.numbers.filter((n) => n >= 25).length },
+    });
+  }
 
   useEffect(() => {
     setTiles(fresh());
@@ -52,6 +67,7 @@ export function Countdown({ rounds }: { rounds: CountdownRound[] }) {
     setMessage("");
     setShown(false);
     setSeconds(30);
+    filed.current = { id: "", start: Date.now() };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [round.id]);
 
@@ -108,6 +124,7 @@ export function Countdown({ rounds }: { rounds: CountdownRound[] }) {
     setPick({ tile: newTile });
     if (result === round.target) {
       setMessage("Exactly right.");
+      file("solved", steps.length + 1, 0);
       if (!saved.solved.includes(round.id))
         persist({ ...saved, solved: [...saved.solved, round.id] });
     }
@@ -195,12 +212,20 @@ export function Countdown({ rounds }: { rounds: CountdownRound[] }) {
         >
           Start over
         </button>
-        <button onClick={() => setShown(!shown)}>
+        <button
+          onClick={() => {
+            if (!shown && !done) file("revealed", steps.length, closest);
+            setShown(!shown);
+          }}
+        >
           {shown ? "Hide the solution" : "Show a solution"}
         </button>
         <button
           className={done ? "primary" : ""}
-          onClick={() => persist({ ...saved, index: saved.index + 1 })}
+          onClick={() => {
+            if (!done && steps.length) file("stopped", steps.length, closest);
+            persist({ ...saved, index: saved.index + 1 });
+          }}
         >
           New numbers
         </button>

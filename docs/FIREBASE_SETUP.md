@@ -1,6 +1,6 @@
 # Firebase setup — v0.3.0 code-only invitations
 
-The owner signs in with Google in Insights. Mom and Dad do not need email, Google accounts, passwords, account IDs, or console access. The owner texts an invitation; each parent opens the link and taps **Connect**, or pastes its code into their app. Authentication and membership happen behind the scenes. Activity sharing is still being built; pairing does not upload local games/history.
+The owner signs in with Google in Insights. Mom and Dad do not need email, Google accounts, passwords, account IDs, or console access. The owner texts an invitation; each parent opens the link and taps **Connect**, or pastes its code into their app. Authentication and membership happen behind the scenes. Pairing alone uploads nothing. Activity is shared only after Mom answers yes on Play. See [family sharing](FAMILY_SHARING.md).
 
 ## One-time Firebase project setup
 
@@ -44,7 +44,8 @@ Clearing browser/site storage, changing browsers, losing a device or deleting it
 - Verified owners can create **only their own** family, create role-specific invitations for it, inspect its connected memberships and revoke parent devices.
 - Parents can atomically claim a valid, unexpired invitation and create only their own matching directory and membership. The invitation, directory and membership must commit together. Simultaneous claims yield one winner. No self-selected role or subject is trusted.
 - An unpaired anonymous identity can inspect its own empty directory and a valid invitation whose unpredictable hash it possesses. It cannot list invitations, families, memberships, other accounts or private activity.
-- Signed-out visitors cannot read/write these records. All activity, subjects, summaries, consent and creations remain closed in this release. Existing guest saves are never automatically merged or uploaded.
+- Signed-out visitors cannot read/write these records.
+- Since v0.33.0: Play members create activity records and the sharing state for their own family. The owner and Companion read activity and notes, write notes and send gifts. Play may mark a gift opened. Everything else stays closed. See [family sharing](FAMILY_SHARING.md).
 
 The code-only flow supersedes v0.2.x's email/Google requirement for parent identities and manually approved parent UIDs, following the owner's requested provider-managed setup. The older `family:provision` CLI is a legacy trusted-admin tool, not the normal setup path. Legacy manually provisioned memberships using arbitrary family IDs are not automatically migrated into self-service families; do not delete/reassign existing production records to bypass that boundary.
 
@@ -52,9 +53,9 @@ The code-only flow supersedes v0.2.x's email/Google requirement for parent ident
 
 An empty `FIREBASE_WEB_CONFIG` repository variable uses the committed public project. To disable all cloud connections, set it to `local-only`. A different project can be supplied as a JSON object with `apiKey`, `authDomain`, `projectId`, and `appId`. Rerun the Pages workflow after a variable change. Never supply a service-account key or private credential as web configuration.
 
-## Before activity sharing
+## Updating rules
 
-Consent, explicit selection of old local records, UID/family/subject-bound outbox, deduplicated uploads, separately authorized Companion summaries, backups and tested restore, and actual-device checks remain required before production family activity collection. Pairing is not a live family dashboard.
+Whenever `firebase/firestore.rules` changes (most recently in v0.33.0 for activity, notes, gifts and sharing), paste the whole file into **Firestore Database → Rules** and click **Publish**. Then run `npm run test:rules` locally to exercise the same rules in the emulator.
 
 ## References
 

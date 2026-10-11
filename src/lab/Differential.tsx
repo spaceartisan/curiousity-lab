@@ -9,6 +9,7 @@ import {
   type HemeCase,
 } from "./heme-cases";
 import type { LabProgress } from "./lab-progress";
+import { useRecord, since } from "../activity/recorder";
 
 const cellSrc = (file: string) =>
   import.meta.env.BASE_URL + "media/cells/" + file;
@@ -96,6 +97,8 @@ function Counter({
 }) {
   const slide = useMemo(() => buildSlide(c, c.id.length * 7919 + 17), [c]);
   const [calls, setCalls] = useState<CellType[]>([]);
+  const record = useRecord();
+  const [opened] = useState(() => Date.now());
   const wbcCounted = calls.filter((t) => t !== "nrbc").length;
   const finished = calls.length === slide.length;
   const cell = slide[calls.length];
@@ -119,7 +122,22 @@ function Counter({
       });
     if (next.length === slide.length) {
       const agree = next.filter((t, i) => t === slide[i].type).length;
-      onDone(tally(next), Math.round((agree / slide.length) * 100));
+      const agreement = Math.round((agree / slide.length) * 100);
+      onDone(tally(next), agreement);
+      const band = (t: CellType) =>
+        next.filter((x, i) => slide[i].type === t && x !== t).length;
+      record({
+        activity: "differential",
+        item: c.id,
+        title: c.title,
+        outcome: "finished",
+        seconds: since(opened),
+        detail: {
+          agreement,
+          cells: slide.length,
+          bandSegDisagreements: band("band") + band("seg"),
+        },
+      });
     }
   }
 

@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { strike, unlockPiano } from "../games/piano";
 import { Keyboard } from "./Keyboard";
 import { Score } from "./Score";
+import { useRecord, since } from "../activity/recorder";
 import { melodyOf, noteName, notesOf, type Excerpt } from "./repertoire";
 import type { usePlayer } from "./usePlayer";
 
@@ -29,6 +30,9 @@ export function PlayItYourself({
   const [accompany, setAccompany] = useState(true);
   const [pressed, setPressed] = useState<{ midi: number; right: boolean }>();
   const flash = useRef(0);
+  const record = useRecord();
+  const started = useRef(0);
+  const misses = useRef(0);
   const done = index >= melody.length;
   const target = done ? undefined : melody[index];
 
@@ -63,7 +67,21 @@ export function PlayItYourself({
     setPressed({ midi, right });
     clearTimeout(flash.current);
     flash.current = window.setTimeout(() => setPressed(undefined), 350);
+    if (index === 0 && right) {
+      started.current = Date.now();
+      misses.current = 0;
+    }
+    if (!right && target) misses.current++;
     if (right) setIndex(index + 1);
+    if (right && index + 1 === melody.length)
+      record({
+        activity: "play-it-yourself",
+        item: piece.id,
+        title: `${piece.title} — ${piece.composer}`,
+        outcome: "solved",
+        seconds: since(started.current || Date.now()),
+        detail: { notes: melody.length, wrongNotes: misses.current, showKey, accompany },
+      });
   }
 
   const others = pieces.filter((p) => p.id !== piece.id);

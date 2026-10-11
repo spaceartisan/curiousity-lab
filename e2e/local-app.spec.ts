@@ -486,7 +486,10 @@ test.describe("synthetic connected family", () => {
         contentType: "text/javascript",
         body: `
       export function familyClient(config, role) {
-        return { watch(notify) { notify({ status: "approved", uid: "synthetic-player", membership: { schemaVersion: 1, familyId: "synthetic-family", subjectId: "synthetic-subject", role, status: "active" } }); return () => {}; }, watchDevices(id, notify) { notify([]); return () => {}; } };
+        return { watch(notify) { notify({ status: "approved", uid: "synthetic-player", membership: { schemaVersion: 1, familyId: "synthetic-family", subjectId: "synthetic-subject", role, status: "active" } }); return () => {}; }, watchDevices(id, notify) { notify([]); return () => {}; },
+          watchActivity(id, notify) { notify([]); return () => {}; }, watchNotes(id, notify) { notify([]); return () => {}; },
+          watchGifts(id, notify) { notify([]); return () => {}; }, watchSharing(id, notify) { notify(null); return () => {}; },
+          async uploadActivity(id, records) { return records.map((r) => r.id); }, async setSharing() {} };
       }
     `,
       });
@@ -507,7 +510,7 @@ test.describe("synthetic connected family", () => {
           page.getByRole("heading", { name: "Connected to your family" }),
         ).toBeVisible();
         await expect(
-          page.getByText(/Activity sharing has not started/),
+          page.getByText(/Nothing has been shared from Play yet/),
         ).toBeVisible();
         await expect(
           page.getByRole("button", { name: "Manage family connection" }),
@@ -519,6 +522,32 @@ test.describe("synthetic connected family", () => {
       });
     });
   }
+  test("connected Play asks once to share, then remembers", async ({
+    page,
+  }, info) => {
+    await mockConnectedFamily(page);
+    await page.goto("/curiousity-lab/play/");
+    const ask = page.getByRole("heading", {
+      name: "Share your puzzles and music with the family?",
+    });
+    await expect(ask).toBeVisible();
+    await page.locator(".sharing-question").screenshot({
+      path: info.outputPath("sharing-question.png"),
+    });
+    await page
+      .getByRole("button", { name: "Yes, share with the family" })
+      .click();
+    await expect(ask).not.toBeVisible();
+    await page.reload();
+    await expect(
+      page.getByText(/Connected to your family. Your games stay/),
+    ).toBeVisible();
+    await expect(ask).not.toBeVisible();
+    await page.getByRole("button", { name: "Settings", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: /Stop sharing/ }),
+    ).toBeVisible();
+  });
   test("connected Play saves explicit sharing preparation locally across reload and deletes copies", async ({
     page,
   }, info) => {

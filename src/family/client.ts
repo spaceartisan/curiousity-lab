@@ -22,6 +22,10 @@ import {
   initializeFirestore,
   memoryLocalCache,
   onSnapshot,
+  query,
+  orderBy,
+  limit,
+  updateDoc,
   type Firestore,
 } from "firebase/firestore";
 import {
@@ -33,6 +37,14 @@ import {
   type FamilyDevice,
 } from "./invitations";
 import type { Role } from "../storage/contracts";
+import { validRecord, type ActivityRecord } from "../activity/records";
+import {
+  validGift,
+  validNote,
+  type FamilyNote,
+  type Gift,
+  type SharingState,
+} from "../activity/family-data";
 import { parseMembership, type Connection, type WebConfig } from "./contracts";
 
 export interface FamilyClient {
@@ -48,6 +60,35 @@ export interface FamilyClient {
   ) => () => void;
   revokeDevice: (familyId: string, uid: string) => Promise<void>;
   cancelInvitation: (hash: string) => Promise<void>;
+  /** Play: copy finished activity to the family. Returns the ids confirmed. */
+  uploadActivity: (
+    familyId: string,
+    records: ActivityRecord[],
+  ) => Promise<string[]>;
+  setSharing: (familyId: string, on: boolean) => Promise<void>;
+  watchSharing: (
+    familyId: string,
+    notify: (s: SharingState | null) => void,
+    fail: () => void,
+  ) => () => void;
+  watchActivity: (
+    familyId: string,
+    notify: (r: ActivityRecord[]) => void,
+    fail: () => void,
+  ) => () => void;
+  addNote: (familyId: string, note: FamilyNote) => Promise<void>;
+  watchNotes: (
+    familyId: string,
+    notify: (n: FamilyNote[]) => void,
+    fail: () => void,
+  ) => () => void;
+  sendGift: (familyId: string, gift: Gift) => Promise<void>;
+  watchGifts: (
+    familyId: string,
+    notify: (g: Gift[]) => void,
+    fail: () => void,
+  ) => () => void;
+  openGift: (familyId: string, giftId: string) => Promise<void>;
 }
 const clients = new Map<Role, FamilyClient>();
 function makeClient(auth: Auth, db: Firestore, role: Role): FamilyClient {
@@ -317,6 +358,104 @@ function makeClient(auth: Auth, db: Firestore, role: Role): FamilyClient {
     },
     async signOut() {
       await signOut(auth);
+    },
+    async uploadActivity(familyId, records) {
+      const uid = auth.currentUser?.uid;
+      if (!uid) throw Error("Not connected");
+      const done: string[] = [];
+      for (const r of records) {
+        if (!validRecord(r)) continue;
+        // Same id, same content: a retry after a lost acknowledgement is harmless.
+        // Firestore rejects undefined fields, so drop them first.
+        const clean = JSON.parse(JSON.stringify(r)) as ActivityRecord;
+        await setDoc(doc(db, "families", familyId, "activity", r.id), {
+          ...clean,
+          uid,
+        });
+        done.push(r.id);
+      }
+      return done;
+    },
+    async setSharing(familyId, on) {
+      const uid = auth.currentUser?.uid;
+      if (!uid) throw Error("Not connected");
+      await setDoc(doc(db, "families", familyId, "sharing", "state"), {
+        v: 1,
+        on,
+        at: new Date().toISOString(),
+        uid,
+      });
+    },
+    watchSharing(familyId, notify, fail) {
+      return onSnapshot(
+        doc(db, "families", familyId, "sharing", "state"),
+        (snap) => notify(snap.exists() ? (snap.data() as SharingState) : null),
+        fail,
+      );
+    },
+    watchActivity(familyId, notify, fail) {
+      return onSnapshot(
+        query(
+          collection(db, "families", familyId, "activity"),
+          orderBy("at"),
+          limit(10000),
+        ),
+        (snap) =>
+          notify(
+            snap.docs
+              .map((d) => d.data())
+              .filter(validRecord) as ActivityRecord[],
+          ),
+        fail,
+      );
+    },
+    async addNote(familyId, note) {
+      const uid = auth.currentUser?.uid;
+      if (!uid) throw Error("Not connected");
+      await setDoc(doc(db, "families", familyId, "notes", note.id), {
+        ...note,
+        uid,
+      });
+    },
+    watchNotes(familyId, notify, fail) {
+      return onSnapshot(
+        query(
+          collection(db, "families", familyId, "notes"),
+          orderBy("at"),
+          limit(2000),
+        ),
+        (snap) =>
+          notify(
+            snap.docs.map((d) => d.data()).filter(validNote) as FamilyNote[],
+          ),
+        fail,
+      );
+    },
+    async sendGift(familyId, gift) {
+      const uid = auth.currentUser?.uid;
+      if (!uid) throw Error("Not connected");
+      await setDoc(doc(db, "families", familyId, "gifts", gift.id), {
+        ...gift,
+        uid,
+      });
+    },
+    watchGifts(familyId, notify, fail) {
+      return onSnapshot(
+        query(
+          collection(db, "families", familyId, "gifts"),
+          orderBy("at"),
+          limit(500),
+        ),
+        (snap) =>
+          notify(snap.docs.map((d) => d.data()).filter(validGift) as Gift[]),
+        fail,
+      );
+    },
+    async openGift(familyId, giftId) {
+      await updateDoc(doc(db, "families", familyId, "gifts", giftId), {
+        status: "opened",
+        openedAt: new Date().toISOString(),
+      });
     },
   };
 }

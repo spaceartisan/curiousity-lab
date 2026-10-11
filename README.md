@@ -3,12 +3,14 @@
 A calm, adult-respectful collection of puzzles, music, and microscopy. One React / TypeScript / Vite codebase builds three independently scoped app entries:
 
 - **[Play](https://spaceartisan.github.io/curiousity-lab/play/)** — local puzzles and saved creations.
-- **[Companion](https://spaceartisan.github.io/curiousity-lab/companion/)** — companion overview; code-only family connection; activity sharing pending.
-- **[Insights](https://spaceartisan.github.io/curiousity-lab/insights/)** — context-preserving local export review; code-only family connection; activity sharing pending.
+- **[Companion](https://spaceartisan.github.io/curiousity-lab/companion/)** — Dad's view: this week at a glance, highlights, conversation starters, quick notes, and sending Mom a piece, lab case or quotation.
+- **[Insights](https://spaceartisan.github.io/curiousity-lab/insights/)** — trends on comparable tasks, engagement patterns, descriptive memory signals, notes and raw data with CSV/JSON export.
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
 ## Current release · v0.32.0
+
+**Family sharing.** After Mom agrees once on Play, what she finishes is shared with the family automatically. Companion shows Dad her week, things to talk about, and lets him send her something. Insights shows trends, engagement and descriptive memory signals. Both have a fictional example. See [family sharing](docs/FAMILY_SHARING.md).
 
 **Numbers and Words.** Numbers now holds Sudoku, Killer Sudoku and a Countdown-style numbers game. Words holds cryptograms of classic quotations, a spelling-bee-style Letter Hive, Lewis Carroll's word ladders and Connections. See [numbers and words](docs/PUZZLE_ROOMS.md).
 
@@ -92,7 +94,7 @@ For browser tests locally (requires Playwright's browser installation): `npx pla
 
 This app supports enjoyable exploration; it is not a diagnostic instrument or disease score. No remote activity collection, analytics tracking, camera, microphone, passive sensing, or public leaderboard is included. Public visitors are local-only.
 
-The included Firestore rules support owner-only family setup, unpredictable single-use invitation codes, hidden anonymous parent identities, atomic membership creation and owner device revocation. Parents need no email or password. Unpaired visitors cannot enumerate families or read/write activity. Sign-in/pairing never uploads existing guest saves. Named Firebase apps separate role login keys, and Firestore uses memory-only caching. Play now offers optional, account-bound local preparation choices with separate Insights details and coarse Companion summaries. Older history requires individual selection. Only new recorded sessions while the same account is approved are eligible for future preparation; loading, reconnecting and switching accounts do not enroll existing history. No activity is uploaded. A later release must obtain fresh upload consent after automatic independent backup and tested recovery are ready. Same-origin apps may share browser infrastructure; role scopes alone do not guarantee independent operating-system installations.
+The included Firestore rules support owner-only family setup, unpredictable single-use invitation codes, hidden anonymous parent identities, atomic membership creation and owner device revocation. Parents need no email or password. Unpaired visitors cannot enumerate families or read/write activity. Sign-in/pairing never uploads existing guest saves. Named Firebase apps separate role login keys, and Firestore uses memory-only caching. Play now offers optional, account-bound local preparation choices with separate Insights details and coarse Companion summaries. Older history requires individual selection. Only new recorded sessions while the same account is approved are eligible for future preparation; loading, reconnecting and switching accounts do not enroll existing history. Since v0.33.0, activity is uploaded only after Mom agrees on Play; see [family sharing](docs/FAMILY_SHARING.md). Same-origin apps may share browser infrastructure; role scopes alone do not guarantee independent operating-system installations.
 
 **Do not treat v0.15.0 as the connected family-production launch.** Private sync, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
 

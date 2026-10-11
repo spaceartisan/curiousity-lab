@@ -1,3 +1,11 @@
+# v0.33.0 — Companion and Insights, with family sharing
+
+- **Sharing:** Play asks Mom once whether to share. If she says yes, every finished activity (music, lab, numbers, words) is shared with the family automatically as a small record. She can turn it off in Settings. Firestore rules are extended and emulator-tested. **Paste the new rules into the Firebase console.**
+- **Companion:** this week at a glance, with a day-by-day list; highlights; conversation starters drawn from what she did; quick notes; and *Send something to Mom* (a piece, a lab case, a quotation or a message). Gifts open the music room or the bench directly from her home screen.
+- **Insights:** engagement (calendar, weekly minutes, time of day, activity mix); trends on comparable tasks with Play-update markers; descriptive memory signals (re-exposure, same-day repeats, repeated items); notes; raw records with CSV/JSON export.
+- Both apps have a fictional example. The local Play export review and install links are kept.
+- See docs/FAMILY_SHARING.md.
+
 # v0.32.0 — Numbers and Words rooms
 
 - **Numbers** now offers Sudoku, **Killer Sudoku** (34 puzzles with unique solutions, cage-combination helper, notes) and **Countdown** (150 rounds, each with a verified solution and an optional clock).
