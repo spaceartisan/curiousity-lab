@@ -1,6 +1,6 @@
 # v0.29.0 validation
 
-Three new component regressions cover versioned independent medical pools, hidden unsolved answers, incorrect grouping feedback, optional solved-root explanations, immutable completed records, replay, history-off resume and canceled replacement. Shared authored-board tests now cover all fourteen boards. Desktop/phone browser checks cover offline selected-word resume, source content version, native keyboard disclosure, long terms, 48-pixel controls and contained 320-pixel/200% text.
+Three new component regressions cover versioned independent medical pools, hidden unsolved answers, incorrect grouping feedback, optional solved-root explanations, immutable completed records, replay, history-off resume and canceled replacement. Shared authored-board tests now cover all fourteen boards. Desktop/phone browser checks cover offline selected-word resume, source content version, native keyboard disclosure, whole-term normal-size tiles, 48-pixel explanation/control targets and contained 320-pixel/200% text.
 
 All component/build, archive, security/recovery and browser gates plus actual screenshot review are required before closing the pass. Independent medical content/difficulty and actual family-device review remain pending. No cloud permissions or clinical assessment is added.
 

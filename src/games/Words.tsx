@@ -144,7 +144,7 @@ export function Connections({
               <strong>{g.title}</strong>
               <span>{g.words.join(" · ")}</span>
               {medicalExplanation(pack.id, g.title) && (
-                <details>
+                <details className="medical-root-details">
                   <summary>Explore these roots: {g.title}</summary>
                   <p>{medicalExplanation(pack.id, g.title)}</p>
                   <p>
@@ -166,7 +166,9 @@ export function Connections({
         {d.selected.length} of 4
       </p>
       <div
-        className="word-grid"
+        className={
+          tier === "Medical" ? "word-grid medical-word-grid" : "word-grid"
+        }
         role="group"
         aria-label="Connection words"
         aria-describedby="connections-instructions"

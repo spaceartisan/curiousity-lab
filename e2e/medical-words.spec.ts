@@ -49,6 +49,23 @@ test("medical Latin and Greek play resumes offline, reveals optional roots and k
     page.getByRole("heading", { name: "Two languages, one meaning" }),
   ).toBeVisible();
   await expect(page.getByText("Kidney", { exact: true })).toHaveCount(0);
+  for (const b of await page
+    .getByRole("group", { name: "Connection words" })
+    .getByRole("button")
+    .all()) {
+    const fits = await b.evaluate((el) => {
+      const style = getComputedStyle(el);
+      const c = document.createElement("canvas").getContext("2d")!;
+      c.font = style.font;
+      return (
+        c.measureText(el.textContent || "").width <=
+        el.clientWidth -
+          parseFloat(style.paddingLeft) -
+          parseFloat(style.paddingRight)
+      );
+    });
+    expect(fits).toBe(true);
+  }
   await page.screenshot({
     path: info.outputPath("medical-words-fresh.png"),
     fullPage: true,
@@ -91,6 +108,7 @@ test("medical Latin and Greek play resumes offline, reveals optional roots and k
     .locator("summary")
     .filter({ hasText: "Explore these roots: Kidney" });
   await expect(summary.locator("..")).not.toHaveAttribute("open", "");
+  expect((await summary.boundingBox())!.height).toBeGreaterThanOrEqual(48);
   await summary.focus();
   await page.keyboard.press("Enter");
   await expect(summary.locator("..")).toHaveAttribute("open", "");

@@ -1639,3 +1639,14 @@ summary {
   max-width: 100%;
   overflow-wrap: anywhere;
 }
+
+/* Medical terms need reading width before they need multiple columns. */
+.connections-workspace .medical-word-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20ch), 1fr));
+}
+.medical-root-details {
+  text-align: left;
+}
+.medical-root-details summary {
+  min-height: 48px;
+}
