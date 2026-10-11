@@ -1,3 +1,10 @@
+# v0.18.0 — Word Search undo
+
+- Undo last word returns the latest found word during an unfinished puzzle, clearing pending selection and hint cues. Crossing letters remain marked when another found word still uses them.
+- Original and current saves retain board identity and ordered progress. Necessary progress works without history; optional history counts each successful undo. Completed records remain immutable and replay starts a separate attempt with fresh counts.
+- In-game help explains finding, hints, undo and unlimited replay. Tests cover legacy reload, crossing highlights, consent, completed records, keyboard use, offline resume and 320-pixel enlarged text.
+- Full document implementation, content/device review, normalized identity/clock/task context, private sync/shared reports and production recovery remain unfinished.
+
 # v0.15.0
 
 ## v0.17.0 — Larger Sudoku squares

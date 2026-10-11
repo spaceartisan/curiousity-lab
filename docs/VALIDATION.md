@@ -1,3 +1,11 @@
+# v0.18.0 validation
+
+Three additional component regressions cover original-save undo and reload, pending selection/hint clearing, history-off exclusion, crossing-word highlights, consented undo counts, immutable completed sessions and fresh replay. A new desktop/phone browser scenario checks keyboard undo, actual crossing highlights, offline resume, repeated finding/completion, disabled completed undo, same-board replay and 320-pixel/200% text target sizes and bounded document width.
+
+Deployment requires all unit/component, archive, emulator and browser checks plus screenshot review. Actual family-device accessibility and independent word-content review remain unverified. Full architecture implementation remains in progress.
+
+---
+
 # v0.15.0 validation
 
 ## v0.17.0 checks

@@ -89,3 +89,7 @@ With local activity history enabled, visible unpaused game controls retain only 
 ## v0.17.0 — Voluntary larger Sudoku squares
 
 The actual Sudoku grid now has an optional large-square view with contained scrolling and selected-square reveal via keyboard/row/column controls. Necessary display state survives offline resume, new puzzles and replay while preserving puzzle rules and progress. Optional presentation observations retain square-size changes and missing/partial context. This advances Phase 1 usability; advanced solving tiers/preferences, independent device/content review, normalized identity/clock/task context, private sync/shared reports and production recovery remain unfinished.
+
+## v0.18.0 — Word Search undo and help
+
+In-progress undo uses the existing ordered found-word list, preserving original saves and puzzle identity. Found-letter highlights derive from all remaining words, including crossing paths. Brief help explains unlimited play, actual-path hints, undo and same-board replay. Optional history counts successful undo; history-off keeps only necessary progress. Completed attempts cannot be undone. This advances the common game usability requirements; remaining game/content work, normalized identity/clock/task context, private sync/shared reports and production/device gates remain unfinished.

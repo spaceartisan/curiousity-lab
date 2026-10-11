@@ -159,3 +159,93 @@ it("gives a real vertical hint, allows keyboard endpoints, and does not enroll r
     expect((await loadState("play")).drafts.search?.hints).toBe(0),
   );
 });
+it("undo survives legacy reload, preserves earlier discoveries and does not collect history when off", async () => {
+  const { user, view } = await openSearch(false, {
+    found: ["GARDEN", "CHORUS"],
+  });
+  await user.click(screen.getByRole("button", { name: "Hint" }));
+  await user.click(screen.getByRole("button", { name: /^Row 4, column 1:/ }));
+  await user.click(screen.getByRole("button", { name: "Undo last word" }));
+  expect(screen.getByRole("status")).toHaveTextContent("Returned chorus");
+  expect(
+    document.querySelectorAll(".hint-letter, .letter-grid .selected"),
+  ).toHaveLength(0);
+  expect(
+    screen.getByRole("button", { name: "Row 1, column 1: G, found" }),
+  ).toHaveClass("found-letter");
+  expect(
+    screen.getByRole("button", { name: "Row 2, column 1: C" }),
+  ).not.toHaveClass("found-letter");
+  await waitFor(async () => {
+    const saved = await loadState("play");
+    expect(saved.drafts.search?.data).toEqual({ found: ["GARDEN"] });
+    expect(saved.drafts.search?.undos).toBe(0);
+    expect(saved.drafts.search?.id).toBe("legacy-search");
+    expect(saved.sessions).toEqual([]);
+  });
+  view.unmount();
+  render(<App appRole="play" />);
+  await user.click(
+    await screen.findByRole("button", { name: "Open Word Search →" }),
+  );
+  expect(screen.getByText(/1 of 8 words found/)).toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Undo last word" }));
+  expect(screen.getByRole("button", { name: "Undo last word" })).toBeDisabled();
+  await find(user, 0, "CHORUS");
+  expect(screen.getByText(/1 of 8 words found/)).toBeInTheDocument();
+});
+it("undo preserves a crossing word's shared highlight and records one undo only with history", async () => {
+  const { user } = await openSearch(true);
+  await user.click(screen.getByRole("button", { name: "Another puzzle" }));
+  await find(user, 1, "SPOON");
+  await find(user, 1, "BOWL");
+  await user.click(screen.getByRole("button", { name: "Undo last word" }));
+  expect(
+    screen.getByRole("button", { name: "Row 6, column 2: O, found" }),
+  ).toHaveClass("found-letter");
+  const bowlOnly = findWordPaths(searchPacks[1], "BOWL")[0].filter(
+    (i) => !findWordPaths(searchPacks[1], "SPOON")[0].includes(i),
+  );
+  for (const index of bowlOnly)
+    expect(
+      screen.getByRole("button", {
+        name: new RegExp(
+          `^Row ${Math.floor(index / 8) + 1}, column ${(index % 8) + 1}:`,
+        ),
+      }),
+    ).not.toHaveClass("found-letter");
+  await waitFor(async () => {
+    const saved = await loadState("play");
+    expect(saved.drafts.search?.undos).toBe(1);
+    expect(saved.drafts.search?.data).toEqual({ pack: 1, found: ["SPOON"] });
+    expect(
+      saved.sessions.filter((s) => s.puzzleId === "kitchen-table-v1"),
+    ).toEqual([]);
+  });
+});
+it("completion disables undo and cannot rewrite filed history; replay resets progress and undo counts", async () => {
+  const { user } = await openSearch(true);
+  expect(screen.getByRole("button", { name: "Undo last word" })).toBeDisabled();
+  await find(user, 0, "GARDEN");
+  await user.click(screen.getByRole("button", { name: "Undo last word" }));
+  for (const word of searchPacks[0].words) await find(user, 0, word);
+  await waitFor(async () =>
+    expect((await loadState("play")).sessions).toHaveLength(1),
+  );
+  const filed = (await loadState("play")).sessions[0];
+  expect(filed.undos).toBe(1);
+  const undo = screen.getByRole("button", { name: "Undo last word" });
+  expect(undo).toBeDisabled();
+  await user.click(undo);
+  expect((await loadState("play")).sessions[0]).toEqual(filed);
+  await user.click(screen.getByRole("button", { name: "Replay this puzzle" }));
+  expect(screen.getByText(/0 of 8 words found/)).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Undo last word" })).toBeDisabled();
+  await waitFor(async () => {
+    const saved = await loadState("play");
+    expect(saved.sessions).toEqual([filed]);
+    expect(saved.drafts.search?.id).not.toBe(filed.id);
+    expect(saved.drafts.search?.undos).toBe(0);
+    expect(saved.drafts.search?.puzzleId).toBe(filed.puzzleId);
+  });
+});

@@ -218,6 +218,7 @@ export function WordSearch({
   const foundCells = new Set(
     d.found.flatMap((w) => findWordPaths(pack, w).flat()),
   );
+  const complete = d.found.length === pack.words.length;
   function select(index: number) {
     if (start === null) {
       setStart(index);
@@ -267,6 +268,19 @@ export function WordSearch({
       <p className="muted search-scroll-help">
         On a small screen, slide the board sideways to see all columns.
       </p>
+      <details>
+        <summary>How to play & get help</summary>
+        <p>
+          Found words stay marked. Undo last word returns the most recently
+          found word to the list while this puzzle is in progress. You can find
+          it again whenever you like. Hints outline a real first letter.
+        </p>
+        <p>
+          There is no time limit or limit on tries. Replay this puzzle starts a
+          fresh attempt on the same board after completion, or whenever you want
+          to begin again.
+        </p>
+      </details>
       <div className="search-layout">
         <div className="search-board-scroll">
           <div
@@ -358,6 +372,18 @@ export function WordSearch({
           disabled={d.found.length === pack.words.length}
         >
           Hint
+        </button>
+        <button
+          disabled={complete || !d.found.length}
+          onClick={() => {
+            const word = d.found[d.found.length - 1];
+            update({ ...d, found: d.found.slice(0, -1) }, { undo: true });
+            setStart(null);
+            setHint(null);
+            setMessage(`Returned ${word.toLowerCase()} to the words to find.`);
+          }}
+        >
+          Undo last word
         </button>
         <button onClick={replay}>Another puzzle</button>
         {repeat && <button onClick={repeat}>Replay this puzzle</button>}
