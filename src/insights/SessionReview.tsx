@@ -1,4 +1,5 @@
 import { SessionTimeline } from "./SessionTimeline";
+import { ContextDetails, contextTitle, exposureLabel } from "./ContextDetails";
 import { timingLabel } from "../storage/timing";
 import { presentationLabel } from "../storage/presentation";
 import { clockLabel } from "../storage/clock-context";
@@ -43,11 +44,13 @@ export function SessionReview({
         ...new Map(
           review.sessions
             .filter((s) => filters.game === "all" || s.game === filters.game)
-            .map((s) => [contextKey(s), contextLabel(s)]),
+            .map((s) => [contextKey(s), s]),
         ).entries(),
-      ].sort((a, b) => a[1].localeCompare(b[1])),
+      ].sort((a, b) => contextLabel(a[1]).localeCompare(contextLabel(b[1]))),
     [review.sessions, filters.game],
   );
+  const contextSources = new Map(contexts);
+  const contextNumbers = new Map(contexts.map(([key], i) => [key, i + 1]));
   function change(patch: Partial<ReviewFilters>) {
     setFilters((f) => ({ ...f, ...patch }));
     setPage(1);
@@ -111,9 +114,10 @@ export function SessionReview({
               .filter(
                 (entry, index) => index < 200 || entry[0] === filters.context,
               )
-              .map(([key, label]) => (
+              .map(([key, source]) => (
                 <option key={key} value={key}>
-                  {label}
+                  {contextNumbers.get(key)}. {contextTitle(source)} ·{" "}
+                  {exposureLabel(source)} · {source.puzzleId}
                 </option>
               ))}
           </select>
@@ -204,9 +208,14 @@ export function SessionReview({
                 <article
                   key={s.key}
                   className="review-context"
-                  aria-label={s.label}
+                  aria-label={`Context ${contextNumbers.get(s.key)}: ${contextTitle(contextSources.get(s.key)!)}`}
                 >
-                  <h4>{s.label}</h4>
+                  <h4>{contextTitle(contextSources.get(s.key)!)}</h4>
+                  <p className="muted">
+                    Context {contextNumbers.get(s.key)} ·{" "}
+                    {exposureLabel(contextSources.get(s.key)!)}
+                  </p>
+                  <ContextDetails session={contextSources.get(s.key)!} />
                   <button onClick={() => change({ context: s.key })}>
                     Review this context
                   </button>

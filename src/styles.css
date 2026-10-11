@@ -1482,6 +1482,30 @@ summary {
 .review-context h4 {
   margin-top: 0;
 }
+.context-details {
+  margin: 0.75rem 0 1rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.context-details summary {
+  min-height: 48px;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+.context-details dl {
+  margin: 0 0 1rem;
+}
+.context-details dl > div {
+  margin-top: 0.75rem;
+}
+.context-details dt {
+  font-weight: 600;
+}
+.context-details dd {
+  margin: 0.2rem 0 0;
+  overflow-wrap: anywhere;
+}
 .review-table {
   max-width: 100%;
 }

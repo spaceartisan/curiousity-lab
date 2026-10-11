@@ -8,7 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.27.0
+## Current release · v0.28.0
+
+Insights context cards now use **short activity headings and expandable provenance**. Numbered choices distinguish contexts with similar names; source versions, presentation, timing and clock limitations remain available in Context details. Grouping rules and exports are unchanged.
 
 Optional local history now includes **local clock context**: browser time zone, observed clock shifts and long observation gaps. Resumed observations are marked partial, old records stay unknown, and dates are never corrected or described as verified UTC. Insights separates these contexts and exports their original values. See [clock context](docs/CLOCK_CONTEXT.md).
 

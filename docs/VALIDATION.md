@@ -1,3 +1,11 @@
+# v0.28.0 validation
+
+Two new component regressions check compact first/repeat cards, closed/open provenance, exact source versions and missingness, distinct matching-title options, immutable source data and unchanged derived exports. Desktop/phone browser checks exercise native Enter activation and touch disclosure, offline review, exact CSV export, 48-pixel disclosure targets and contained 320-pixel/200% text. Existing pagination, filtering, source and clock scenarios remain required.
+
+Full component/build, archive, security/recovery and browser gates plus screenshot inspection are required before closing the pass. This is a presentation change: no new data collection, cloud permissions or analytical algorithm is introduced. Actual family-device/screen-reader review and the full architecture remain pending.
+
+---
+
 # v0.27.0 validation
 
 Seven new regressions check forward/backward wall-clock divergence, zone changes, unavailable zone and long observation gaps; ensure idle changes reach only the bound attempt without adding active time; reject malformed optional metadata in saves/imports; distinguish old/partial/shifted contexts and preserve export sources; mark unfinished reload/restore observations partial; clear optional draft context from recovery copies; keep Companion preparations coarse; and exercise actual app resume/finish with immutable sessions. A desktop/phone scenario injects a local clock shift, reloads offline, exports exact context, separates unknown/stable/shifted records in Insights, and checks 320-pixel/200% text.
