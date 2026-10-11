@@ -33,6 +33,7 @@ import {
 import { Connections, WordSearch } from "./games/Words";
 import { Music, type MusicData } from "./games/Music";
 import { MusicRoom } from "./music/MusicRoom";
+import { LabRoom } from "./lab/LabRoom";
 import {
   nextMusicExercise,
   musicPuzzle,
@@ -1473,17 +1474,26 @@ export function App({ appRole }: { appRole: Role }) {
                     }
                   />
                 ) : (
-                  <Laboratory
-                    key={props.draft.id}
-                    {...props}
-                    onNotebook={() => openCreations("notebook")}
-                    lastNotebookVisit={(() => {
-                      const value = latestNotebookVisit(
-                        state.creations,
-                        specimens[(props.draft.data as LabData).specimen].id,
-                      );
-                      return value ? relativeTime(value) : undefined;
-                    })()}
+                  <LabRoom
+                    sound={prefs.sound}
+                    atMicroscope={
+                      (props.draft.data as LabData).stage !== "desk"
+                    }
+                    microscope={
+                      <Laboratory
+                        key={props.draft.id}
+                        {...props}
+                        onNotebook={() => openCreations("notebook")}
+                        lastNotebookVisit={(() => {
+                          const value = latestNotebookVisit(
+                            state.creations,
+                            specimens[(props.draft.data as LabData).specimen]
+                              .id,
+                          );
+                          return value ? relativeTime(value) : undefined;
+                        })()}
+                      />
+                    }
                   />
                 )}
               </section>

@@ -1,0 +1,716 @@
+[
+ {
+  "pid": "10853",
+  "file": "phil-10853-camp.jpg",
+  "crop": [
+   35,
+   24,
+   315,
+   289
+  ],
+  "kind": "test",
+  "reading": "CAMP test: an arrowhead of enhanced hemolysis where the isolate\u2019s streak meets the Staphylococcus aureus \u03b2-lysin streak.",
+  "sourceCaption": "Group B streptococcus, CAMP-positive (CDC teaching plate).",
+  "credit": "CDC / Dr. Richard Facklam",
+  "year": "2008",
+  "sha256": "edf8b6e96b5fa7309c54f39afd7079bdf2db03babece065223979cac02140d43",
+  "pixelDimensions": [
+   280,
+   265
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=10853",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "Cropped/masked to remove printed labels; resized and recompressed"
+ },
+ {
+  "pid": "3621",
+  "file": "phil-3621.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: numerous very small Gram-negative coccobacilli.",
+  "sourceCaption": "Pasteurella multocida, Gram stain, 1125\u00d7.",
+  "credit": "CDC / Dr. R. Weaver",
+  "year": "1971",
+  "sha256": "4ff1b5422b8f8eb69696c4bec2aa82017852ef0f58553ac62f347165b6ba39b3",
+  "pixelDimensions": [
+   700,
+   475
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=3621",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "20145",
+  "file": "phil-20145.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: slender Gram-positive rods, singly and in short chains, some longer filaments.",
+  "sourceCaption": "Erysipelothrix rhusiopathiae, Gram stain, 1150\u00d7.",
+  "credit": "CDC / R. E. Weaver, MD, PhD",
+  "year": "1966",
+  "sha256": "d94ce224a9c4c5bd291e796338d76b90e47c1fb547345f7e4967dc0d3355f764",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=20145",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "1603",
+  "file": "phil-1603.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Blood agar, 48 h: tiny, translucent, pinpoint colonies.",
+  "sourceCaption": "Erysipelothrix rhusiopathiae on blood agar.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977",
+  "sha256": "3846e0bc4a24b7fbcc172a1857c79a0dceee15148ed428dc14be4a3c36597457",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=1603",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "15190",
+  "file": "phil-15190.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: Gram-positive coccobacilli and short rods (coryneform).",
+  "sourceCaption": "Rhodococcus equi, Gram stain.",
+  "credit": "CDC / Regina Linder: Hunter College, New York, New York, USA",
+  "year": "1977",
+  "sha256": "ce03f3f60eae393ab355de0cea6ee06d8567b9f2a82d0e0fe1ee2fd2ffd355c5",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=15190",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "1553",
+  "file": "phil-1553.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Blood agar: moist, glistening colonies along the streak; no hemolysis.",
+  "sourceCaption": "Rhodococcus equi on blood agar.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977",
+  "sha256": "271d1e5f6d87ab259c7f0ab3ddd7fbd1c110aae077bb64efb15fe14530799787",
+  "pixelDimensions": [
+   700,
+   648
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=1553",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "28021",
+  "file": "phil-28021.jpg",
+  "crop": null,
+  "kind": "scene",
+  "reading": "The pen at the farm.",
+  "sourceCaption": "Sheep with listeriosis (CDC).",
+  "credit": "CDC",
+  "year": "",
+  "sha256": "3a0856a96c8d5c10b983c70df70de65b5685e4739af90994c64a9a677d138dd1",
+  "pixelDimensions": [
+   700,
+   493
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=28021",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "28051",
+  "file": "phil-28051.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: short Gram-positive rods, singly and in short chains.",
+  "sourceCaption": "Listeria monocytogenes, Gram stain of a slant culture.",
+  "credit": "CDC / George Hermann",
+  "year": "1960",
+  "sha256": "80745466a5c9c05cdc95c1ef2bb6ef3955c22b7cd1f12a8a268f0932051442e3",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=28051",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "18990",
+  "file": "phil-18990.jpg",
+  "crop": null,
+  "kind": "test",
+  "reading": "Motility medium: growth spreading out from the stab line (right) compared with a non-motile control (left).",
+  "sourceCaption": "Motility medium, non-motile and motile reactions (CDC teaching tubes).",
+  "credit": "CDC / Dr. Theo Hawkins",
+  "year": "1979",
+  "sha256": "963c9756869c9d4f5552374c0dd10569893e3a340c491a3978f6756aadfaf412",
+  "pixelDimensions": [
+   659,
+   900
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=18990",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "12053",
+  "file": "phil-12053.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: large, blunt-ended, boxcar-shaped Gram-positive rods; no spores seen.",
+  "sourceCaption": "Clostridium perfringens type A, Gram stain, 956\u00d7.",
+  "credit": "CDC / Dr. Holdeman",
+  "year": "1965",
+  "sha256": "b81c65d2eba97c67458221eb82b8dc8bd809b3f45967cdd26712b136c54a29ce",
+  "pixelDimensions": [
+   700,
+   461
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=12053",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "3873",
+  "file": "phil-3873.jpg",
+  "crop": null,
+  "kind": "test",
+  "reading": "Egg-yolk half-antitoxin plate: opacity around colonies on the untreated half, suppressed where antitoxin was spread.",
+  "sourceCaption": "Clostridium perfringens, Nagler (lecithinase) reaction.",
+  "credit": "CDC / Dr. Stuart E. Starr",
+  "year": "1971",
+  "sha256": "1dbcdbdc7cbd7a2b9d1eed65579a7d8a2f9946a53150074e642e5cfcd3871db7",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=3873",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "3874",
+  "file": "phil-3874.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Sulfite-polymyxin-sulfadiazine (SPS) agar, anaerobic: dark colonies.",
+  "sourceCaption": "Clostridium perfringens on SPS agar.",
+  "credit": "CDC / Wallis DeWitt",
+  "year": "1973",
+  "sha256": "dc29201251734b2db6c9513b01113687428d105b8f2d50111900dc0c20bc3112",
+  "pixelDimensions": [
+   700,
+   565
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=3874",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "19255",
+  "file": "phil-19255.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: very small, faintly staining Gram-negative coccobacilli.",
+  "sourceCaption": "Brucella suis, Gram stain.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977",
+  "sha256": "1c79878b7d1e18e542a93604cca55842e94d4798ba047b413a90759a194dbcca",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=19255",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "17135",
+  "file": "phil-17135.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Sheep blood agar, close view: tiny, smooth, non-hemolytic colonies.",
+  "sourceCaption": "Brucella suis on sheep blood agar, 24 h, 5\u00d7.",
+  "credit": "CDC / Todd Parker, Ph.D., Assoc Director for Laboratory Science, Div of Preparedness and Emerging Infections at CDC",
+  "year": "2014",
+  "sha256": "576d9df8de0e143d4eb462978bec0345a80b0eb67fccd59e04a06c933e370012",
+  "pixelDimensions": [
+   700,
+   525
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=17135",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "29246",
+  "file": "phil-29246.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: slender, curved Gram-negative rods \u2014 commas, S-shapes and \u201cgull wings.\u201d",
+  "sourceCaption": "Campylobacter jejuni, Gram stain.",
+  "credit": "CDC / Dr. Martin Blaser",
+  "year": "1980",
+  "sha256": "94be675894d39c3f33afa3be0f56a955684373e9902304c85da1f1c590cf0b84",
+  "pixelDimensions": [
+   700,
+   476
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=29246",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "15984",
+  "file": "phil-15984-plate.jpg",
+  "crop": [
+   15,
+   20,
+   445,
+   445
+  ],
+  "kind": "plate",
+  "reading": "Skirrow selective blood agar, 42 \u00b0C microaerobic: small, round, grey colonies.",
+  "sourceCaption": "Campylobacter jejuni on Skirrow/Butzler medium.",
+  "credit": "CDC / Sheila W. Mitchell",
+  "year": "1979",
+  "circle": [
+   230,
+   232,
+   214
+  ],
+  "sha256": "cc32b7c9b5b83429d987e9ecaaae9d2fac11a21291a7e91d8496c86e659f8771",
+  "pixelDimensions": [
+   430,
+   425
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=15984",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "Cropped/masked to remove printed labels; resized and recompressed"
+ },
+ {
+  "pid": "1046",
+  "file": "phil-1046.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Trypticase soy agar: concentric waves of swarming growth, with a line where two strains meet (Dienes reaction).",
+  "sourceCaption": "Proteus mirabilis, swarming and Dienes reaction.",
+  "credit": "CDC / Dr. John J. Farmer",
+  "year": "1975",
+  "sha256": "6d4417462610231976f20107e6d1673f4e7f8e97bd52377e67fdce7e102ecca9",
+  "pixelDimensions": [
+   700,
+   599
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=1046",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "15213",
+  "file": "phil-15213-h2s.jpg",
+  "crop": [
+   0,
+   80,
+   190,
+   460
+  ],
+  "kind": "test",
+  "reading": "TSI: alkaline (red) slant, acid butt, heavy blackening from H\u2082S.",
+  "sourceCaption": "TSI reaction of Proteus sp., H\u2082S-positive.",
+  "credit": "CDC / Dr. M. M. Galton",
+  "year": "1966",
+  "sha256": "d931977d7ffc7cd0465335b912fa4d51610d79357e6ffed46e2a2db8702f9ff2",
+  "pixelDimensions": [
+   190,
+   380
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=15213",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "Cropped/masked to remove printed labels; resized and recompressed"
+ },
+ {
+  "pid": "15213",
+  "file": "phil-15213-gas.jpg",
+  "crop": [
+   330,
+   88,
+   545,
+   460
+  ],
+  "kind": "test",
+  "reading": "TSI: acid (yellow) slant and butt, with gas splitting the agar; no H\u2082S.",
+  "sourceCaption": "TSI reaction of Escherichia coli with gas.",
+  "credit": "CDC / Dr. M. M. Galton",
+  "year": "1966",
+  "sha256": "0d9238c268d3d0703eabec186bdc184f26159f3f314d1574c382d52f5285a8cc",
+  "pixelDimensions": [
+   215,
+   372
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=15213",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "Cropped/masked to remove printed labels; resized and recompressed"
+ },
+ {
+  "pid": "17370",
+  "file": "phil-17370.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: straight, slender Gram-negative rods.",
+  "sourceCaption": "Pseudomonas aeruginosa, Gram stain.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977",
+  "sha256": "b31b6dde7e33c35ff6a4c4c1508cf006439566d6b4c97ec7f36dfd2ea4ee3950",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=17370",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "6688",
+  "file": "phil-6688.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Blood agar: spreading, irregular colonies.",
+  "sourceCaption": "Pseudomonas aeruginosa on blood agar.",
+  "credit": "CDC / Dr. Theo. Hawkins",
+  "year": "1976",
+  "sha256": "65868f3031d1a4c10d2d05fe27fab7521b2ac31148bcd8a65377e1802ba6ab0b",
+  "pixelDimensions": [
+   700,
+   464
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=6688",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "21340",
+  "file": "phil-21340.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: lancet-shaped Gram-positive diplococci.",
+  "sourceCaption": "Streptococcus pneumoniae, Gram stain, 1700\u00d7.",
+  "credit": "CDC / Arnold Kaufman",
+  "year": "",
+  "sha256": "bf6d20fa9b7c0615d8fb72dbe548acdb4ea2b41e3a5a0ff38d2ae566391a77e7",
+  "pixelDimensions": [
+   700,
+   545
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=21340",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "10863",
+  "file": "phil-10863.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Blood agar with gentamicin, CO\u2082: small alpha-hemolytic colonies, several with collapsed \u201cdraughtsman\u201d centers.",
+  "sourceCaption": "Streptococcus pneumoniae colonies on blood agar.",
+  "credit": "CDC / Dr. Richard Facklam",
+  "year": "2008",
+  "sha256": "fa5eaf1e352c878c1579d26166a13f94f37f8dc7fefed50a8110c6117f59b454",
+  "pixelDimensions": [
+   700,
+   451
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=10863",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "19332",
+  "file": "phil-19332.jpg",
+  "crop": null,
+  "kind": "test",
+  "reading": "Optochin disks: a clear zone around the disk for your isolate (left); growth up to the disk for the control (right).",
+  "sourceCaption": "Optochin test: S. pneumoniae sensitive (left), viridans streptococcus resistant (right).",
+  "credit": "CDC / Dr. Richard Facklam",
+  "year": "1981",
+  "sha256": "4a6f31b3bf9e261e6d989c2089ecdf8c2b269022838dfb1724fbb901353b7dde",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=19332",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "1060",
+  "file": "phil-1060.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: large Gram-positive rods in short chains.",
+  "sourceCaption": "Bacillus cereus, Gram stain.",
+  "credit": "CDC / Dr. William A. Clark",
+  "year": "1977",
+  "sha256": "da56804254af4f56eab376d45765cc5a2fa420e6ad9248dfed6e2042fe542725",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=1060",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "12377",
+  "file": "phil-12377.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Sheep blood agar, 24 h: large, flat, grey, slightly granular colonies with wide hemolysis.",
+  "sourceCaption": "Bacillus cereus on sheep blood agar.",
+  "credit": "CDC / Amanda Moore, MT; Todd Parker, PhD; Audra Marsh (photo: Pete Seidel)",
+  "year": "2010",
+  "sha256": "c3304a8b20a8f2794250ddbe779a6f38369ed8f353f369c90ebce2931301c9b2",
+  "pixelDimensions": [
+   700,
+   643
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=12377",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "6707",
+  "file": "phil-6707.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Hektoen enteric agar: small colonies on a blue-green background.",
+  "sourceCaption": "Yersinia enterocolitica on Hektoen enteric agar.",
+  "credit": "CDC / Dr. Theo. Hawkins",
+  "year": "1976",
+  "sha256": "c26e7528c676865f3168b00acc598c83a1190ce7920c5878217d74b71cabf121",
+  "pixelDimensions": [
+   700,
+   469
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=6707",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "26757",
+  "file": "phil-26757.jpg",
+  "crop": null,
+  "kind": "test",
+  "reading": "Serum, about 2 hours at 37 \u00b0C: yeast cells sending out slender germ tubes without constriction at the origin.",
+  "sourceCaption": "Candida albicans germ tubes (Gram-stained).",
+  "credit": "CDC",
+  "year": "",
+  "sha256": "4f7eeff228d9444546ee5d400f87e14d2f2a588ddfb7adfeb7473fa0b1ef71fd",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=26757",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "24997",
+  "file": "phil-24997.jpg",
+  "crop": null,
+  "kind": "mount",
+  "reading": "Cornmeal agar, 48 h: pseudohyphae bearing round, thick-walled chlamydospores.",
+  "sourceCaption": "Candida albicans chlamydospores on cornmeal agar.",
+  "credit": "CDC / Dr. Robertstad",
+  "year": "1963",
+  "sha256": "48c1624a287df532e1228111ca5f506c7ece783b4d3b29a1f9679c575adb1af5",
+  "pixelDimensions": [
+   700,
+   473
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=24997",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "25080",
+  "file": "phil-25080.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Colonies on fungal medium: velvety to powdery, grey-green, with paler margins.",
+  "sourceCaption": "Aspergillus fumigatus colonies.",
+  "credit": "CDC / Merle J. Selin",
+  "year": "1963",
+  "sha256": "98f7257e598752bac8960d436e61eddb3d2feba3835032af4e8e2a4ccbac72f4",
+  "pixelDimensions": [
+   700,
+   617
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=25080",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "24963",
+  "file": "phil-24963.jpg",
+  "crop": null,
+  "kind": "mount",
+  "reading": "Tease mount, lactophenol cotton blue: a conidial head \u2014 a flask-shaped vesicle with phialides on its upper part, and columns of conidia.",
+  "sourceCaption": "Aspergillus fumigatus conidial head, 970\u00d7.",
+  "credit": "CDC / Dr. Lucille K. Georg",
+  "year": "1963",
+  "sha256": "8d3e812a26f5e2ccf62a7a76485ead633327a7706ecc1ba876aae1b5dbd677dc",
+  "pixelDimensions": [
+   700,
+   476
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=24963",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "24801",
+  "file": "phil-24801.jpg",
+  "crop": null,
+  "kind": "tissue",
+  "reading": "Lung, PAS stain: hyphae and fruiting heads growing within an air space.",
+  "sourceCaption": "Pulmonary aspergillosis in a sulphur-crested cockatoo, PAS, 600\u00d7.",
+  "credit": "CDC / Dr. William Kaplan",
+  "year": "1963",
+  "sha256": "caf13333041fdc42ec2641b61dd93429658941b9432cc53c479febc6029c0097",
+  "pixelDimensions": [
+   700,
+   535
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=24801",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "24572",
+  "file": "phil-24572.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: Gram-negative rods.",
+  "sourceCaption": "Escherichia coli, Gram stain, 1125\u00d7.",
+  "credit": "CDC / K. Skogstad",
+  "year": "1965",
+  "sha256": "69ed99fdb6448a90d5675d10fa68b7ab7a923ec1b59cb333251d9bc4c44418ba",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=24572",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "5158",
+  "file": "phil-5158-h2s.jpg",
+  "crop": [
+   0,
+   95,
+   220,
+   455
+  ],
+  "kind": "test",
+  "reading": "TSI: alkaline (red) slant, acid butt, blackened by H\u2082S.",
+  "sourceCaption": "TSI reaction of an H\u2082S-positive Salmonella.",
+  "credit": "CDC / M. M. Galton",
+  "year": "1966",
+  "sha256": "1994858181686ac426781349463bb3505b53f215ff1f9bea1263b2e974b195ec",
+  "pixelDimensions": [
+   220,
+   360
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=5158",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "Cropped/masked to remove printed labels; resized and recompressed"
+ },
+ {
+  "pid": "16674",
+  "file": "phil-16674.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "TCBS agar: green colonies (sucrose not fermented).",
+  "sourceCaption": "Vibrio parahaemolyticus on TCBS agar.",
+  "credit": "CDC / Willis DeWitt",
+  "year": "1973",
+  "sha256": "be2c267ca0e860e44556e29ead677de877938a9ae722a1da8a75f440e247f297",
+  "pixelDimensions": [
+   700,
+   628
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=16674",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ },
+ {
+  "pid": "16101",
+  "file": "phil-16101.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: small Gram-negative rods and coccobacilli.",
+  "sourceCaption": "Mannheimia haemolytica, Gram stain.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977",
+  "sha256": "06e219721da12b66a8ab8d4ec7d21bf21eb059c45e8b89854ae761522357e133",
+  "pixelDimensions": [
+   700,
+   460
+  ],
+  "sourceUrl": "https://wwwn.cdc.gov/phil/Details.aspx?pid=16101",
+  "sourceName": "CDC Public Health Image Library",
+  "license": "Public domain (CDC PHIL); credit CDC",
+  "changes": "resized and recompressed"
+ }
+]

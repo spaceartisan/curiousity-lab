@@ -15,6 +15,7 @@ test("real drag/pinch input saves a bounded view offline without blocking page s
   ).toBeVisible();
   await page.reload();
   await page.getByRole("button", { name: /My Laboratory/ }).click();
+  await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await page
     .getByRole("button", { name: "Explore Microscope", exact: true })
     .click();
@@ -98,6 +99,7 @@ test("real drag/pinch input saves a bounded view offline without blocking page s
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: /My Laboratory/ }).click();
+  await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await expect(image).toHaveAttribute("style", finalView!);
   await page.screenshot({
     path: info.outputPath("microscope-gestures.png"),

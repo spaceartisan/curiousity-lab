@@ -16,6 +16,7 @@ test("named microscope views remain slide-bound and notebook snapshots reopen of
   ).toBeVisible();
   await page.reload();
   await page.getByRole("button", { name: /My Laboratory/ }).click();
+  await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await page
     .getByRole("button", { name: "Explore Microscope", exact: true })
     .click();
@@ -62,6 +63,7 @@ test("named microscope views remain slide-bound and notebook snapshots reopen of
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: /My Laboratory/ }).click();
+  await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await summary.click();
   await expect(
     page.getByRole("button", { name: "Open saved view 1: Branch tips" }),

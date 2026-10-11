@@ -17,6 +17,7 @@ test("optional laboratory journey keeps separate notes offline and permits repea
   await page.reload();
   await context.setOffline(true);
   await page.getByRole("button", { name: /My Laboratory Take/ }).click();
+  await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await page.getByRole("button", { name: "Start a Lab Session" }).click();
   await expect(
     page.getByRole("region", { name: "Fictional specimen card" }),
@@ -81,6 +82,7 @@ test("optional laboratory journey keeps separate notes offline and permits repea
   ).toBeVisible();
   await page.reload();
   await page.getByRole("button", { name: /My Laboratory Take/ }).click();
+  await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await expect(
     page.getByRole("region", { name: "Optional image comparison" }),
   ).toBeVisible();

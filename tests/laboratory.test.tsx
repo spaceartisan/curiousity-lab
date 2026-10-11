@@ -27,6 +27,9 @@ async function start(history = false) {
   await user.click(
     await screen.findByRole("button", { name: /My Laboratory/ }),
   );
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Microscope & notebook" }),
+  );
   return { user, view };
 }
 async function saved() {
@@ -214,6 +217,9 @@ describe("laboratory workflow", () => {
     render(<App appRole="play" />);
     await user.click(
       await screen.findByRole("button", { name: /My Laboratory/ }),
+    );
+    fireEvent.click(
+      await screen.findByRole("tab", { name: "Microscope & notebook" }),
     );
     expect(
       screen.getByRole("textbox", { name: "Your notebook note" }),

@@ -1,0 +1,3048 @@
+{
+ "source": "Acevedo A, Merino A, Alf\u00e9rez S, Molina \u00c1, Bold\u00fa L, Rodellar J. A dataset of microscopic peripheral blood cell images for development of automatic recognition systems. Data in Brief 30 (2020) 105474. Mendeley Data, doi:10.17632/snkd93bnjr.1",
+ "license": "CC BY 4.0",
+ "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+ "changes": "Selected subset; resized to 240 px and recompressed. Labels are the dataset\u2019s expert annotations.",
+ "cells": [
+  {
+   "file": "seg-01.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_102699.jpg",
+   "sha256": "7b3c43df97ab9dee9a40c89782209ea5f047d5d5a674af5e192fb9932f0d7dcc",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-02.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_103795.jpg",
+   "sha256": "8c7b6f7affc3abf20254486589cab540902e5b961aab290f11e2c7fe26054dea",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-03.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_10429.jpg",
+   "sha256": "9c2c9786c1033e8e49b2914b12a0f141c791eba538cf747aff6fd09755fec73a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-04.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_10568.jpg",
+   "sha256": "df8ccc17794165a70bacbd869755688f492375ecdf1fc777131be755a477b29b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-05.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_140904.jpg",
+   "sha256": "a254e5e604e4b16dce70cf6146ee123fa111920a9d318b061021ebbe59dd2ff4",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-06.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_142694.jpg",
+   "sha256": "13ee9ba90f758bb2bae429989ad62d41f6ccb5510ba0ee5d99500f521984db99",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-07.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_148442.jpg",
+   "sha256": "39aa4fa45dd5e6750c799e9ce6d8339cc55417611a2a3d7ca4f094f1a4e90d48",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-08.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_196142.jpg",
+   "sha256": "5cf2829b27c837545e890a5976c298d628a35aed9127595abf07203b95b3332b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-09.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_210936.jpg",
+   "sha256": "8fd7cf4e4ae39ab9e367c2f3c3c3b9bedc03ec1bc41d10c82fdf5a706dc1f29f",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-10.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_230831.jpg",
+   "sha256": "f705ef6e3aa54b14575f6e350b108b6248bbc830bf3ece26461987060adaebfe",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-11.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_235627.jpg",
+   "sha256": "df7272144337e2f5e55357e6b3fa7d459f4390d99b179c8398e6618f00927cd7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-12.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_242915.jpg",
+   "sha256": "bd5d04bd39825ee051e76d7b398b8e535d995ee3482d5c2a912626924f77fabe",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-13.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_251641.jpg",
+   "sha256": "192ad2c4a0255c37f5b7f050366498cf452360393116b66b55b286e301967581",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-14.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_251761.jpg",
+   "sha256": "380e5077d5340397b4fecdc043e1e1e792dde3031edddad12a15c57b9e082c33",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-15.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_255440.jpg",
+   "sha256": "0128d7a29b8113de9037b26cf7ec2e9eb35fc15f6a13792d20ebd08c6184cb0e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-16.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_257590.jpg",
+   "sha256": "2e419455f2b1faa0add9c17d5d85231b7667393de4ebf98dead7a58f0be3387a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-17.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_26596.jpg",
+   "sha256": "f490e5e22b8ff8354f2bb39b1faf82eac58efce2bc81e17e768f6326026371f3",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-18.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_271690.jpg",
+   "sha256": "2c0eef69cfb51c48678d42949c1255837d228ec13d5d2623fb6caf2ff6c13dc3",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-19.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_274866.jpg",
+   "sha256": "6206800557cd70e4847d0e397069e4388c5cfa327a3d87ed3d367460759d08cd",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-20.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_280149.jpg",
+   "sha256": "28b408c9d34e28299cebf1db2707b630af1ca0da20e68f50d9ed36eb90b96f14",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-21.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_298760.jpg",
+   "sha256": "b2c708da824aa0f1d639c2dd551fb0fb0a14cd86af8dd5b5634eea38040da1ee",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-22.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_305469.jpg",
+   "sha256": "8524116d1c720fc16d6daaad488c8f84b4e86889a779834c9f1bbd62c3c90560",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-23.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_314177.jpg",
+   "sha256": "fccf4f181780cb1ad829c6ab0ddacf3c53a3c09191a337ddfbde0cf1948b7805",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-24.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_326733.jpg",
+   "sha256": "f55e5c087280021afac0e569d40bb283d7a34c8b9df96c1081de202d22ad5714",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-25.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_338117.jpg",
+   "sha256": "9917a7dec01432e3dcacf607be90e99b1dae2a539a1b3f10dd0dc876e70de8bd",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-26.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_339572.jpg",
+   "sha256": "57b768cf59f5aaed38a1183f96fa5df0ae85bb204b5ff9cc991aab2c1a42747d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-27.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_343862.jpg",
+   "sha256": "13edc5a9dacbd29addc0f10c1e23f82635e5440cf3f2608a873b7becbff09d08",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-28.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_36531.jpg",
+   "sha256": "b20b9b0c0690b9bd2a4a0cb033008513452bc3dd653510ca3618addfdb679d07",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-29.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_37089.jpg",
+   "sha256": "622ab9a8d592356072ad17139acc3bb1e2d5e237076f8e81290deb23d55002be",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-30.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_380978.jpg",
+   "sha256": "05d609d0979ff3258f5825749209dc46c8d4d90ebe944cbb93f86e753597743d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-31.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_387264.jpg",
+   "sha256": "afc1b0d3b343763b7cee331b2a0268bbd2805a520ce0a8f4ee706487bd1189f5",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-32.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_399708.jpg",
+   "sha256": "9f311c0100ca4ef3923ac2975e9e7aac4dee9342a5b734f5f6cbec5e02977195",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-33.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_403663.jpg",
+   "sha256": "390e53aff1a75e60b79d137a85ce676d6dea4ee5f2e0fa48aa0ec346c51af7df",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-34.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_405975.jpg",
+   "sha256": "11f1c28e33b8d79ceafa63f5e180deadf00a331bcbd02487b2eea980bcf057a7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-35.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_418745.jpg",
+   "sha256": "5585f558a0611a85e0a6457b05b8939a99617ddc5f34e0bfeb3244d5aef0368a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-36.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_419179.jpg",
+   "sha256": "75b0ee33a54eb1c951b5674327ac413c60b9024092938e7319308a97325f7c1a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-37.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_464918.jpg",
+   "sha256": "69847da2df0bf4f7b1fc2d66231b9f43a513168b04520aa5c60e6d8c9d4b530d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-38.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_471764.jpg",
+   "sha256": "6dd01adf9ba7e194fcabba68452de7a225494a8b57d6386f1d7b64d4e753f6eb",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-39.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_472654.jpg",
+   "sha256": "8147e77d5fe05fe6f5394eb00505bf82a2ab00f700591b7385961b4c422a0a33",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-40.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_474619.jpg",
+   "sha256": "d3ad93b665671877ff7bfca76db14a4135f43e6a12764577214d866d5b8f2b3e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-41.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_488757.jpg",
+   "sha256": "174ef270ddafcf1117d60ac359b96441270c12b9c1de9f2fcd7fc511411ddd93",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-42.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_502348.jpg",
+   "sha256": "c853f7685708bf1c0d065c82c33b4b196ecb41af317974084ab4535b18ccb095",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-43.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_504413.jpg",
+   "sha256": "987442873993a3d2ed14b5934656afdab522566d7fc3d4365e2eddbaf3852aa0",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-44.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_531347.jpg",
+   "sha256": "6e260745d4747623855545e30b2d169c07b681f70be1ea9fe21b8943b3e8be21",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-45.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_534184.jpg",
+   "sha256": "a63da5f028618311bf604f33389e6a669e6371eecacb361a7207e6ac662e8d23",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-46.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_537361.jpg",
+   "sha256": "fbaffd79b3c0243baf11dc5f24d37da9ed97047f51a4b20921ec59c35d4c37e6",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-47.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_56069.jpg",
+   "sha256": "9a5bc7d8d11df40340262c266e3b2771f1d21ac0d94570f09997287ebfceb545",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-48.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_564665.jpg",
+   "sha256": "94c140c08dca64564d422ffe64dd5ccc7f2d31c5b532cedff7b6b97b9ca05639",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-49.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_569771.jpg",
+   "sha256": "8971ff6fe8a1c5bfb57019e22c1656244df371ecb691b47a783eedc87b6d2c51",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-50.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_571162.jpg",
+   "sha256": "8c7c1b69f20284eb573fe3c5331c3da05bf1efce0a89e0ff8fe54b391f4f48f3",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-51.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_574922.jpg",
+   "sha256": "cc0a5b2a306986c66c8ad5e01b61764b6a1e9a90b3a21a37c4f8902390b830aa",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-52.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_599996.jpg",
+   "sha256": "e02b3dda6791cab3007d29e5b1dbc2cbb3f8cdb87401a23f9c824593d7475947",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-53.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_607393.jpg",
+   "sha256": "b7fe5023cd27484a3944180a1aa90b110f6d41117ff579169f9cca4218cfc3b5",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-54.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_608210.jpg",
+   "sha256": "97909dd58b63eaa03b27dae4d34df9aeb8e7ab338d9bdb8a5f550f9209103836",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-55.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_6105.jpg",
+   "sha256": "f9dce09f688517cbd7885f2b41781713c303d03037d7e1541879ef471023ff82",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-56.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_613918.jpg",
+   "sha256": "39a4c64a233c83d513b142e496f846fd9e2ed19a7c723e556140017dfe629e57",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-57.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_621008.jpg",
+   "sha256": "1fac60e82d60364a83f9368ea90c44ab91cd9d9aeabda87b9b163716c5587d94",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-58.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_637018.jpg",
+   "sha256": "10b2c1619bdac6e0ba870b07ebd664cb296e3e7af037bd59a6f9cebdcce57d70",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-59.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_656073.jpg",
+   "sha256": "1867ed0fab688aa3ba63446a3e6968e2511952ec36c014da37ab9b98b0c580e8",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-60.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_66862.jpg",
+   "sha256": "3235fb3bff4746482609aaffe8c0d0d861518d21fdae9b82ead28f1620dfdd7b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-61.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_671189.jpg",
+   "sha256": "fe634bbf64fcc86d7550640eb407f05194cf5177e662bdd69a43d086f36b16e4",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-62.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_677361.jpg",
+   "sha256": "9f439e8320b7405b24ab8076efe75c50df3080f7a82c258a75698b77ff036024",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-63.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_696497.jpg",
+   "sha256": "9914745a07a15126ff1e5de3e01273263927046660555a6ba484ad5a0814a402",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-64.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_704264.jpg",
+   "sha256": "f12fe1d01315eab966e3246b2a11655d879e51afde5a1001cec837eacdf47ecd",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-65.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_732623.jpg",
+   "sha256": "97c2e200627d6c2613e057e548114a296b06096fb8ff5978d5916020f0ac14c3",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-66.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_735522.jpg",
+   "sha256": "e548c89a4be2ba55ba5690db63a18a91708a7b7b32f7c8f807c88003fcea7588",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-67.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_762327.jpg",
+   "sha256": "fbf546ff5a33990351f084b4f840428424b46e9d39b8671138129010f5cfbab7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-68.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_780200.jpg",
+   "sha256": "103bda284eb48786d41796fa26d49fbbc662eabe215cd39300e31f09abe92a20",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-69.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_799574.jpg",
+   "sha256": "2e7c7596d55824fcdb141e3523329e15f3f293fb419af928669fc19859838b34",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-70.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_81248.jpg",
+   "sha256": "02c6eef069653e4b67008a1046d8e308b1fa2e2bf48ecfd69f45d60e72a533db",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-71.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_827687.jpg",
+   "sha256": "71b9ee3e6ab5c648af3be17636f53b8e1ebb7e1535722c7c16c423c3d2667cc3",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-72.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_838035.jpg",
+   "sha256": "d09d1b630e99545e759f835157918dd602128ee87ff360e37c27cdc6aeb0e65f",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-73.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_853397.jpg",
+   "sha256": "45939e812c1a28f03205c6a50093772c61b91235f5dd3757c256cd854819b53e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-74.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_859381.jpg",
+   "sha256": "ac83de0f7295c50723a6ae365c58d6cac7d3e9a0049b9d9e8045a7191468ce18",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-75.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_876453.jpg",
+   "sha256": "1ea7f96061c68942fd3573de2aa013fef3e335b497ea797d5df99dfb0ce3ee96",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-76.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_896376.jpg",
+   "sha256": "4f8f1d9578448de45368d9db462f6d97b91789abf7dfbaec639f987a91c76483",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-77.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_901811.jpg",
+   "sha256": "0062550e97f3a163acd95a2756ff0963624a5c2f0167703c0f4f543a242dfcaa",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-78.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_905720.jpg",
+   "sha256": "e494a33636ea4b5fbf2a366ccefd37b54a76699fa7117784651828d49cf83af2",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-79.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_918960.jpg",
+   "sha256": "b2a64c67f18b50f80f1cc26b9b16e6ed59abc73704ddd4d7cf469d1d33bc368c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "seg-80.jpg",
+   "cell": "seg",
+   "sourceFile": "neutrophil/SNE_975451.jpg",
+   "sha256": "4d00a895b59d1349c3ebccdc9e0997246e018d76f67b2810965ca99185c56673",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-01.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_105748.jpg",
+   "sha256": "36071bd3c26b987e0f30f9c9fd69fdb7fc119dea382f47c6e0b2221a6092fa85",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-02.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_207715.jpg",
+   "sha256": "0dd7cd895668bfd589400a635958002bfadcbb5eb1cad73928b7f16473086b82",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-03.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_208843.jpg",
+   "sha256": "db962d2195352ef08f46a343f4325171caf1dc210168a32cf332ebbff2da363c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-04.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_230478.jpg",
+   "sha256": "ecc28437d8293632e46d265f31f7688b4e822ae8637c935d1f5c04aabb07e3d0",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-05.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_233841.jpg",
+   "sha256": "5a9625da993720ec354017899edaee52e810ec56c37f25411dd4ccb0f6787ea8",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-06.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_239868.jpg",
+   "sha256": "eb1f6ca0730c7547265849658d3af29ffef3d0f2eb5d8633dc880e954c76bf26",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-07.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_243574.jpg",
+   "sha256": "7c85082c8880d2bef06641471b2419b2d5644bc25f8fb9b9fb39c5bfcf23aef9",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-08.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_275511.jpg",
+   "sha256": "edb20210c7fb4679ee1876a46415e71b68846b44f1ff9eec776fc140eaf38084",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-09.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_288616.jpg",
+   "sha256": "8806e9e0e126e66267983a623dde444cb188792f9699ae7407d98cdeb5e6c344",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-10.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_29625.jpg",
+   "sha256": "fd0dc2cc64aae2272b9d03a44d94c18db81e7fdf89b4d737f27157c184918ce7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-11.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_313131.jpg",
+   "sha256": "29d689bb68f6c024c9bb679f53357cc1c6ef64ccb2ba60d45c3d2e344eedd010",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-12.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_347850.jpg",
+   "sha256": "db374712e291952fb901e9b9622a11635aa0a3fbad07813a31f22964037489ee",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-13.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_377951.jpg",
+   "sha256": "e139c0472b1ead648b1045bc1c9e892da52fb1d7c0d68449fa95ecc806c0862d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-14.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_44826.jpg",
+   "sha256": "121bcfa208da67a5befd1d968af08a1c2c2c3abb21540730a083eb86755b1e60",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-15.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_464149.jpg",
+   "sha256": "1e8fc3b2fbf05234190e53ae0af74549d62e096dca8a595865ddcc8354fcdcac",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-16.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_471627.jpg",
+   "sha256": "8150acf8c19d2e44716ae802eb59286481f3aa5cbc87155e52396f1135a521e6",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-17.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_48402.jpg",
+   "sha256": "71befbe3eb1bebcc32927361556f3edd467a8f2eb724053432f4ae41433a2faf",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-18.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_489792.jpg",
+   "sha256": "10d2b05f90cf28c290d7130c4e763b4cb7707afead7e7fd952a2134f3225431d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-19.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_509596.jpg",
+   "sha256": "96f1eac33ed0c8fbdefb98d62d6c96ea627ed08d24d57a4e1a8d6d4175685825",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-20.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_559369.jpg",
+   "sha256": "cef89df254ca9e3a1b721d672bc49d7f7be1379e5d01944103ff6329609a94f1",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-21.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_636091.jpg",
+   "sha256": "21be975d7f2590767f3f56b89a05006743b52f3c75c3a24b1f03e4d9d22a6b06",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-22.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_693172.jpg",
+   "sha256": "dd43243ac16a444a5634597e7f6b8a90c0f5585b1d116ebed4cc45b26276fbf1",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-23.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_776860.jpg",
+   "sha256": "f24e010285d62cafc3eb8e0796918882aa10831e0408306d83826adefa234ec8",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-24.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_814356.jpg",
+   "sha256": "39bb526575c8a79e4038319199ffc2461221708084c5b54c2252d58bbeffd7f4",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-25.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_825578.jpg",
+   "sha256": "e79c483b3085f60bd34b1fc65953d3cb90ccd6ab2a5a31d43a7e317c7b860613",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-26.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_92309.jpg",
+   "sha256": "992c998f708e519bdfb46df578d9a5a3ac17994b4489e2f32d0c6eb7c41346e4",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-27.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_930707.jpg",
+   "sha256": "5b61bfed907c50de7d9d5ec6f7279d15c387e473fff80f10398523c220092a83",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-28.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_937085.jpg",
+   "sha256": "71bbc0bc3560e8f23bbc0e23ac2f0f5966472c06c81a5187f1de48c76e29240d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-29.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_961579.jpg",
+   "sha256": "1980e4492f06981cad67e5c1761fe332f46ad9840ce089663a5a2af9870634f7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "band-30.jpg",
+   "cell": "band",
+   "sourceFile": "neutrophil/BNE_965001.jpg",
+   "sha256": "7acd2ca277ed127d352c56c631f7af5610b417f4eec3381df982e0146f3bad00",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-01.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_106354.jpg",
+   "sha256": "9d2e2a6c43b8f8ecd370bb5dad3659b11c0e69d7e15f7a0e1eea6ae4659bbc76",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-02.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_109025.jpg",
+   "sha256": "e527911bc99f80a5c8ee6ebd6656584e6d7d2772b73a71278f28abb4fd08c487",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-03.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_118333.jpg",
+   "sha256": "d08ee65ad782bd1d7d5d8ee594899bc78edfaebcf43319f6da6945aa62acf854",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-04.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_123421.jpg",
+   "sha256": "92128480a097d17d2f0d85888b33aae0fcf250109ec8af78c8ecbbe8f3285fee",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-05.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_128386.jpg",
+   "sha256": "cd66397a19b21a85c7e4e60bd1027b897b31cb7063cdd030d9ac327312b298ce",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-06.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_139845.jpg",
+   "sha256": "c6e67e5e7e56206cc6c9ae7feef028c465dfddd23ff710f2420f108340104b4d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-07.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_147262.jpg",
+   "sha256": "d8af614630baccab48775b6ab46432d1d8355d37ed4877b72fcd04f5ab3c2d18",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-08.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_154914.jpg",
+   "sha256": "57efed95b970e95f93bddde186fbf26a72bdf10fbfc98707eb67c7c9a846a84c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-09.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_168926.jpg",
+   "sha256": "a7c3c697667383b819476ea48054cbb3a4d4bef3e19af9bcb555678fdacca059",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-10.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_186621.jpg",
+   "sha256": "e38978e115fa75c2c9fac339859680e0941ca988352c313943fbf32cefd76f22",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-11.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_204996.jpg",
+   "sha256": "34b5fb31552992fd47330c1bbf9c6eaf5c946d871501b4506be5edf6a9b92106",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-12.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_226845.jpg",
+   "sha256": "4d555d0d792a4e480d0b8f4e61af69e78c72a39edf93db0b437226942a64e417",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-13.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_241450.jpg",
+   "sha256": "38f863c5d827c71e02dee7e89f2ea99d72b01d6d2649f695b9c337f5896eda15",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-14.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_262697.jpg",
+   "sha256": "7c422c3c4cb0a578d353daf89065bd63c4fd2d829df05fb308446dcb6855c496",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-15.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_273418.jpg",
+   "sha256": "6a43b6f7a73f8892f99eab90745d45b975c7ae70a8f515144d465df2136c0110",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-16.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_310222.jpg",
+   "sha256": "fb5621c5d78031d7f042a2d7a5f1baa24a1f724d8e5bb9b54ae36d442d0c8742",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-17.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_321982.jpg",
+   "sha256": "73caae8ae1415266fe09837a2d7cea05dad65bc0e4fb716276abde3724c32eda",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-18.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_344050.jpg",
+   "sha256": "6d8f088d4375bfc645571861c7b3ad8a00a6fab79944cebbc3120b365bdf0efb",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-19.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_3530.jpg",
+   "sha256": "dcf3f26455b7c33e686554ef9f28b4963c4a2eb8078e6dd937125756e41ccc1f",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-20.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_357552.jpg",
+   "sha256": "50b2ae19599d48c1d35ba010ab9a4588d66a46069d881f2300a6ef968bf40a59",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-21.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_358883.jpg",
+   "sha256": "96ee89f26a4a7d30882b6df540326f0007b5bea8362580890b71b0d478b02ab2",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-22.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_384251.jpg",
+   "sha256": "8b8c29dbb283252d2c56d996db1d5d1661ede31e987bafa5e572427edfd233b2",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-23.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_387243.jpg",
+   "sha256": "da2d73b8feab1d37af11753fddd3ba3c09c5ae7268319a5d4c5d8e3ccea79efc",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-24.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_397238.jpg",
+   "sha256": "a64fccca17e050738dd61bdc4c85057371b18673002da010c6e8e4b8782b45e1",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-25.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_409311.jpg",
+   "sha256": "131e9e41df785c9cea8147ca6b6f971dc268e17068544fd8106ceed1f86a4069",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-26.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_415793.jpg",
+   "sha256": "351daae73199d3eb929cf2729f7cfc4e240aba4a319fe8814c66175729663622",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-27.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_445892.jpg",
+   "sha256": "5642d6e544d5190b9c90539ef69ed110ac8ac7ace856deaab524353671c04591",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-28.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_471743.jpg",
+   "sha256": "ee65407c2c53fd46bb1d0a4bdd145eed88011ee5260505f5699cf2669dafcf1c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-29.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_472472.jpg",
+   "sha256": "6069962f48b61a6c888cc1ff33e0492ce9beebce0bd45958d5e456b95cd4c40a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-30.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_483388.jpg",
+   "sha256": "6371c3adcb218adaaff32c49fb32e46f000dfa505bb5d016389a9f64b15c8940",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-31.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_48852.jpg",
+   "sha256": "32e4c87aca33a529edbf7c4cc8028d4ded3de1a2741a70bb5c226d849f2c4966",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-32.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_517573.jpg",
+   "sha256": "c382dc731b91fc14101f9ab927e745ec2d4a89f9b9346a7748742ecec7abf06d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-33.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_519097.jpg",
+   "sha256": "056c8fa5daf0314a613928c14a1353651636a665820b06a76670f24dfaf30d73",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-34.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_524303.jpg",
+   "sha256": "0b0ae6df36b5f082e5a1fa4d549db46e15923cde7384b71fa19c6a179310e6db",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-35.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_544639.jpg",
+   "sha256": "126ad5d33a11081f8f08b9ac11b0306069098cb13293f42c0a36007e760e1fa5",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-36.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_550491.jpg",
+   "sha256": "7071315129334fb63f4c3754bbbe540e3435f2533e70f9d05cb2bccc4b304b55",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-37.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_563513.jpg",
+   "sha256": "fcfc95acf992bb84a55e3dafb6436df6a3d2098945a40841aee747964e4f3b9c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-38.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_570413.jpg",
+   "sha256": "3b0cd510bb0256429a586dbb7f06b90315a0a83f89d9cab49262f63860d6402b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-39.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_598957.jpg",
+   "sha256": "ae6937c4b6574e162d8f49380dcd782d3525917f6e0e153bbf9f2237aeb0c6c7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-40.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_637341.jpg",
+   "sha256": "34074a6b5b2d56d86dbbb348a5c7d357b776b1adeb88e94250405a6baa6a65e4",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-41.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_638750.jpg",
+   "sha256": "1d773f9a95ad7c596a719778fd00e62cc709912b9b1a25038d2c8be96aeefa96",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-42.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_640533.jpg",
+   "sha256": "2318f24851a47783d58469fd445c3a8ab4d6b0154a596cd1a53a793ef4671227",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-43.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_656082.jpg",
+   "sha256": "32f163ac1b80ecd198471a8b7c61f125c81885dad759190de006f98080aa93be",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-44.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_660571.jpg",
+   "sha256": "1240745478bb19de5175646927f379a8898a2cc6b47ac0e5c064c9432eef2b6d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-45.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_668316.jpg",
+   "sha256": "1a333801871d4f900e43d4eeb73dec889961f3eb97079864874168bbcc87512c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-46.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_69243.jpg",
+   "sha256": "c11b450d00ae6daa2c75c245937e9157082600c0b796a3a676b8688e201e5673",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-47.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_705334.jpg",
+   "sha256": "0d072c26c29d38f53cf1458972da184c6d614f785d59a4bb9ee067277e17a653",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-48.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_720395.jpg",
+   "sha256": "8facfd8a998a2cf916f1da74772fce678772187a1b32caf71a726eebf81486d5",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-49.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_722701.jpg",
+   "sha256": "296ac8e6d2f70ff75391da4cfbfcd2b428b421f3451f1186d38c16876f8e35a7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-50.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_727511.jpg",
+   "sha256": "cc90d5fb8573487a0fb2d914c082e9f5742a0c33ea14dfc3b28ddc228be9e20f",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-51.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_769569.jpg",
+   "sha256": "1643dffbdcb606e0d3619ae4a7682c04c5d8eddec0628bab105b476d16a82957",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-52.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_776513.jpg",
+   "sha256": "c5e7f23b7fafd411f36aee99881926b6fd94bc283541367dc117abff11a652cc",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-53.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_796625.jpg",
+   "sha256": "0a9eb498828197644eed314571cf01e89349a27d36b294fef7ff7d93b3851442",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-54.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_798487.jpg",
+   "sha256": "62e9f37df5f4226ca46054335ca573e048349985fcdd448ed835b6a19e2e3a22",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-55.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_818779.jpg",
+   "sha256": "d6f207a0e1b2b4918ff1d3138e2bd92176aea44238f9f0322a41ade1077e80bb",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-56.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_827566.jpg",
+   "sha256": "cf229080a22ca3aa3c6582f7fc218a1e3a5430ee941de92e9be832a29eae110d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-57.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_830593.jpg",
+   "sha256": "ca8b0f7b615a2339dc0e1e8de527284f846d2567045e5b523bd81dfe4181be16",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-58.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_839729.jpg",
+   "sha256": "39dbb5149031e80932c83dde17d4bb1a45fc0b844e5dcb3fe7596b3e8b5b6c4a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-59.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_842868.jpg",
+   "sha256": "3d564de5bcd4fa8db35cef1a1c8ab7455b0ac3af2d501652406561dce4663e10",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-60.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_872377.jpg",
+   "sha256": "36b10dc9aa0980357b921617b240c57f175d82f30a0e026f409ff976645422ff",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-61.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_873630.jpg",
+   "sha256": "8d8f38a84457088e2652d3d5e4d0762a9caa5dbfa4f9e090c74df167a46c3b11",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-62.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_875286.jpg",
+   "sha256": "0be028718bb125a23d4c9c9ffa5bc07aa4da70e5c9c45a6de6df9f4712a680b5",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-63.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_919323.jpg",
+   "sha256": "1e00a77133485d826e1f16efff403f3412fb572eb1031f243adc9d68eaf10b43",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-64.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_928141.jpg",
+   "sha256": "4180cbe0c43d82d808dc4a8aa3137e268f7b9dd81d95f4d36ad67fc45702fe41",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-65.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_934441.jpg",
+   "sha256": "c1381e0ea254fed4c1a6a7c4ecc51f38ddb4cfdb138c53e0fc2d9e0a25b14c79",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-66.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_936131.jpg",
+   "sha256": "63837524c4885a39ee86944f341803f3b1a292bed74448e35cd986062ef8593a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-67.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_947790.jpg",
+   "sha256": "3cc7d8d9802f25416eb2281041a7da08c16d424d0bd8c944454a0befa17e1fb9",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-68.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_953443.jpg",
+   "sha256": "0f2c32005a67917b413c5ac53f304791616b4a5e6404930a9bd8ae257785ad33",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-69.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_986779.jpg",
+   "sha256": "b455bccbc68693ca1cce8590d395dccacf46f45a52fde9505b6ecd7f7e5182f5",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "lymph-70.jpg",
+   "cell": "lymph",
+   "sourceFile": "lymphocyte/LY_988983.jpg",
+   "sha256": "b62ca17fc5feba7979e66497dd7177a767ee800e24239152a064b8ba6d9bb721",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-01.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_133271.jpg",
+   "sha256": "8ac1f82ae2e808a9a21dc8ed976c18ef58148583886662dd98dc29e21542c6ad",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-02.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_134963.jpg",
+   "sha256": "5f53b2f9d922bc2d3cf6fe4753517e951aff6ee4f937e7fe360197b6c656aae0",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-03.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_238063.jpg",
+   "sha256": "f8ef68082b03bd1437648fa10df93fd8d4e8e55f37623af631778a294ae645eb",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-04.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_293124.jpg",
+   "sha256": "b48c0f5bcca58da9c088d84df30f8c5ca57e7d50ed5dcdda5d988dfdb7a84076",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-05.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_314702.jpg",
+   "sha256": "c7244c8a9a10e53b0b05f24af5d96bd0bed7df1bac15eabbea81fe446b2035e6",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-06.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_325850.jpg",
+   "sha256": "6b04966e93324dd5e3444c6ba311a8494f83488154b06eabd62889897b0f20f8",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-07.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_327883.jpg",
+   "sha256": "3dbf7e63acd9bdec9c0f4d4c4d5a76c43dd9abf5a94839bd1151a69dbe2ff4ca",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-08.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_340650.jpg",
+   "sha256": "a0edb32da6e10accf8179b4e81d3289680b2693447d060b882dd481414323ff6",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-09.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_437529.jpg",
+   "sha256": "ecbade4cc19ee34c4c98ac42a5cbe5bc635b72cf5dd54a9ef23c4177b4cc4e0d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-10.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_452917.jpg",
+   "sha256": "16386223d267903f774f48c54efd1b5cabdb59f6c2ef186fc9e731e9e5edd136",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-11.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_457419.jpg",
+   "sha256": "a68c21b47a67fe87f67720e478867f6c548f690e1d6aa84c2fed15fbe1ebe9d6",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-12.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_46784.jpg",
+   "sha256": "18203a1c4f53f29c8c386f9389aa40099b9f16bdcc7ab4590fa0fa736c5b48f7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-13.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_487470.jpg",
+   "sha256": "8e0dd926aba0298445aeb563f65373f5aff8ffeb2ce07fcefa24c048c87bab4e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-14.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_499033.jpg",
+   "sha256": "0377094289fa3db39871b5a7ad636f5c0ca81e34f571364422ba2688a6bfa572",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-15.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_507377.jpg",
+   "sha256": "8ab92a9e7e88b273aedecb3209d007eab7e10276c01d79cc1710c9bb53fcbff5",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-16.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_507386.jpg",
+   "sha256": "854107b4263180d1035c856af894f5b8a02ac0013259c74c5ef1c0726b29169a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-17.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_519360.jpg",
+   "sha256": "707ec2d5f80d20cca233875f3d91d5d98a4ca22e165978ca833dd5b36000d01b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-18.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_55488.jpg",
+   "sha256": "94c8f9650ea36e07824ac3adda698c61359425d7ef205c3a4f9a3e10b7d305fd",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-19.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_61548.jpg",
+   "sha256": "6b8703bbefa0eb977a24510fd92d561d4ecbe8d44af7fc9a1d43198fecf28ff2",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-20.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_672954.jpg",
+   "sha256": "d3c911d0de0583bb733bb4f8906a7173dd7213d5fb39b56922c63a0feb37158c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-21.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_675510.jpg",
+   "sha256": "be42760dd4e6850213d761dc32066ae48167417b8656d7f42b7c24fb24ffdcad",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-22.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_794687.jpg",
+   "sha256": "510bbf89c4f3321858c6f5fe30f532a82e7d9b98f43660424fe4bfe3069c4d94",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-23.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_795847.jpg",
+   "sha256": "7a1799a7eb7c478cd9b861ad1cfa9805f42f3d02182cdc1bea953ce9e9630196",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-24.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_801881.jpg",
+   "sha256": "c5e6966af0106553cf8b2f3d36a9bc269f53afbc95abb6079e6a3bbf66ef04f9",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-25.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_817026.jpg",
+   "sha256": "dc364637676230c97bd670460a1d1a5ce7e31a05113bd1481ff210f55d490b57",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-26.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_832241.jpg",
+   "sha256": "77d6483df64e61386a88a18abbeb90b7aa2e91c154a4ec2693fc13267fd7c721",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-27.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_848218.jpg",
+   "sha256": "504b55273266805f8096c06ca7c56b5c4f3bfe0247e37d8be355531844ea38a4",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-28.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_896706.jpg",
+   "sha256": "de9ca9c42d07b09df958defeb142cd716a7fbdb126a52571eb594959addd51ff",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-29.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_898257.jpg",
+   "sha256": "90a9c737d228fc0d9bfcf113fb650bfc6e73abe2fd6d89d0a367e2e8e04f9cd7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "mono-30.jpg",
+   "cell": "mono",
+   "sourceFile": "monocyte/MO_935222.jpg",
+   "sha256": "b2cc25334efa05696a26401d1a4455bd8a982e0dfe7a2895ee7d634242386fc5",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-01.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_109976.jpg",
+   "sha256": "96a9b10aae33906a5db60b3de1430a0b5f7afa09720e274043d0f8fcd850d58d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-02.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_151527.jpg",
+   "sha256": "4194e271cbabea9986b73dd769605644f4da7c1d72d4ec7a294c48ee755d74da",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-03.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_197585.jpg",
+   "sha256": "686b049941cbf9c20c35d79d1afaad628f5d27bb2d64d269b0a3c9be42e6c05e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-04.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_223866.jpg",
+   "sha256": "ef148052ce835995d657b5bd9276aab1a2ef8804546f09306937a2880252a941",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-05.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_25065.jpg",
+   "sha256": "4da63f8fedf4353083665f42ba589667be85351456bfe7f104dba826febe559c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-06.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_253430.jpg",
+   "sha256": "abb364ea8002c7cfa66c13330539866e52f2e3099347bc7149cc2ecc38a8bc63",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-07.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_260172.jpg",
+   "sha256": "0fafe687ffd7cd8add6c5841c07990070d73c0b8cfc6b245772ac7ecd20c9b5c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-08.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_334306.jpg",
+   "sha256": "700ababd4112ec1769caa15f1e5b24c7546dbb36878c45ecd362bc549cba3553",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-09.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_376283.jpg",
+   "sha256": "26d14ea510dcf0932f53b9a1c393b3ecee35d5f318611b312796ba6e1049b31c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-10.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_392948.jpg",
+   "sha256": "1039dae43d08776d5fa2864ef68a8c680aa58a6a74cc9540e28f1bd5f53d2ae7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-11.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_401601.jpg",
+   "sha256": "19764f9d9f36d8732b72b9077789e82b705094ce43a61e82175a4d679cac4938",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-12.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_419252.jpg",
+   "sha256": "4e49fc702e532657b4bc4f1cba11f159bf935226c63de4ccb3bb93cb53f83770",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-13.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_505506.jpg",
+   "sha256": "bce92ed6c6f6b786ef9d076e9de03f545833826df2a41472c1f35c945bcb4cff",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-14.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_529022.jpg",
+   "sha256": "ee8e7b9c76fc54fa22f3d0e3a38eff6b73d28b1b2e42fbb1386367bacac1e767",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-15.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_534614.jpg",
+   "sha256": "6d811a07a1c0421bb260d80c1099db6160a7637205850601558c376980059a61",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-16.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_569294.jpg",
+   "sha256": "b0624bf5ee0126ce9ff3435fa179588d2188c739b3e6047dbd1b7c93ed959340",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-17.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_573590.jpg",
+   "sha256": "2f8e8a78d4deebd3c14d3a93528cc9a206009c18b42caf4723b8aabf2662b971",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-18.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_586528.jpg",
+   "sha256": "ad7964b5a545f5419c10868805d0355477a92c4a44f650da6de6660e5636bbf9",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-19.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_598317.jpg",
+   "sha256": "dfcf477c596e25e92baabfebb1d7c639b8832af369391d094741a32775c09ba4",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-20.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_641313.jpg",
+   "sha256": "736777e75f8645935ee752b842c78679a1c0a0ef3f080f11382ea21858ff8cdf",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-21.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_704557.jpg",
+   "sha256": "04b2a449d914248567890f2d3b71c021d6f65e8a0c3bd0f96e89f09af8326be7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-22.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_743865.jpg",
+   "sha256": "1969404342c04947f1f6483065f3621d9437fdfc9d8c1ad671fde10bd3f32493",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-23.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_747892.jpg",
+   "sha256": "08503aea245eeb9411813425e17e9a1555fcca9d50f6a80fe2c8b2049b4b394e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-24.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_780321.jpg",
+   "sha256": "1fd660617081f48a565dd307766d4d14451027eaa5d9d87aea9306073e8895f7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-25.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_793941.jpg",
+   "sha256": "a6619fe01aaa093ff152079c54c27aee4baf87d776579d6479bcb56bbc3b7710",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-26.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_794671.jpg",
+   "sha256": "2d2dd2d4e30c15eb811381ae480e1d89fa6424f217cfc0a837073ea2d52e070d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-27.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_844947.jpg",
+   "sha256": "b23d58243f8d5ccd48cc1677b2ff2ac52f0c081b61c46d156b06f66211e68a32",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-28.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_86510.jpg",
+   "sha256": "94b9fc4e1204200dfb0cd1404f7778dbb685c0baa301eb4ae00a9c918b60e674",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-29.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_95450.jpg",
+   "sha256": "4fb78b4c6621ac8b08bb2c595c47c72fa66678e9cde34c09a2b537fa12ae658a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "eos-30.jpg",
+   "cell": "eos",
+   "sourceFile": "eosinophil/EO_975239.jpg",
+   "sha256": "2786724bd6f1a98a9b893589fd252dd5ff50d3d43d5157ae546c9521211d7ba0",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-01.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_285156.jpg",
+   "sha256": "4c2883e419b2e2593746312ea987c8cfa39665ef125b0fc6d3e429da9b06a4a9",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-02.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_324268.jpg",
+   "sha256": "ec695a74ac3317b696d4b960f9981e4c883e1ef54add94953e4d93e5495e737e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-03.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_362887.jpg",
+   "sha256": "816be5ba0a12996ba57e03bff4b6b6fa54e4b3b53549cb9bb2bed8f5df160fcf",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-04.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_372252.jpg",
+   "sha256": "0f3adb889f184f6e153c165183e05a8cb434740e7df583ef02660005e5ccbc9d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-05.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_383011.jpg",
+   "sha256": "7b1d28cb375c97b44fd44d54a2cd9057893660416099b1b1a8dedc8610e9489e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-06.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_570415.jpg",
+   "sha256": "9769a1d5dc940dc537b8459154f3008c1f0db1eb246c59d477b44a9a3e22e0ff",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-07.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_646371.jpg",
+   "sha256": "aa2344b73e1a8b1e80b6d9589c21d9e0f0bc843054ef55755a81491ab49043a4",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-08.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_661622.jpg",
+   "sha256": "b0cb07bdb4173674de61bab4f731a97ea9db28c12029e0af459c9ba2927eff28",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-09.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_687195.jpg",
+   "sha256": "f40cafbf97ced6d472043536cbb14a7d23bdc51106d66440f97f292d68e5fd6d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-10.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_724023.jpg",
+   "sha256": "d7cdb6260423ad7b86293e25a42de3ff9d715a2d152f9aa9e54bf253a697cc59",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-11.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_78609.jpg",
+   "sha256": "19991d3864b9fbe8065de1ca0d48a3245b03a899953ecb45234dc653f5a8c66e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-12.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_802408.jpg",
+   "sha256": "579b92c9fd5b8e9a117459427f6bea57442b6aeb0e5c8f818e994d9ab73bba3d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-13.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_92205.jpg",
+   "sha256": "789c88720fa106d4b627ce616adfed9ba0d309290db365f5a9a32315e299317b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "baso-14.jpg",
+   "cell": "baso",
+   "sourceFile": "basophil/BA_949913.jpg",
+   "sha256": "7fe4e78bf510a983341335fe8ecf6ef29528efe3ced6ab12427eb17e39c479a8",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-01.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_103779.jpg",
+   "sha256": "eb46d0d5410b5c37c2ed0ecbf2e6f3be5023f5c79433c3dc831939b62b348e56",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-02.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_263520.jpg",
+   "sha256": "aa920ad8ca80b1559c6d0fa10e428f47310d3d521b4b482a791e202ed5b5d009",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-03.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_275256.jpg",
+   "sha256": "3dca700dcb5ea7048033220522b75241349815d7ad9d6885a7e3887fb6fdcc4a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-04.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_303175.jpg",
+   "sha256": "246048948d9306bfae4fda45a47513dc0f78be1a2f9e9fdd3391a74a96637e0e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-05.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_434567.jpg",
+   "sha256": "5b309d204bae1084babdf101a50740685da388f0fec763300f2dc725edb5a77a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-06.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_539990.jpg",
+   "sha256": "bc44555c5744f32c3135ce374f873709428b1698defcf346861b713971ceb0e1",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-07.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_556551.jpg",
+   "sha256": "dad69899bc8edc37ebb073ff7b1334f1b6c26b27a71123771857c62af1fe3564",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-08.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_603469.jpg",
+   "sha256": "f15264b22a98cf6795dd078dffef22c71c35b435754423a7665e64e718f734a7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-09.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_678834.jpg",
+   "sha256": "3dcc738f08e7c28822487387ab6f471b11c99909e5a9bb910c6485eb9c52598b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-10.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_723798.jpg",
+   "sha256": "ff6aeec79caaaa7e6d16bd2f6dfc0ee07263476d50f21996042e38e68ef21ed5",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-11.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_800672.jpg",
+   "sha256": "b2aaf226252ba5d3cc0698b8d7d3832b902fb8a1ebcffaae1343df29c66b4f75",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-12.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_860532.jpg",
+   "sha256": "59a30d2800736ce28426536a24bb865b78892a94c062a50e119764af0a074709",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-13.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_925956.jpg",
+   "sha256": "52eb71c22e15c3a7adb6e7c64fa8b8d6ce3064c3389473af2695e797965db797",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "meta-14.jpg",
+   "cell": "meta",
+   "sourceFile": "ig/MMY_94277.jpg",
+   "sha256": "f120391ef662e112120a387b8d94e2306c5ce574fd8af6db323fcc0a72dd4b9c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-01.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_100463.jpg",
+   "sha256": "a53977871ca5680aab414ef8239bb89477f1c46cc82042d5cafca00e5e78f890",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-02.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_236757.jpg",
+   "sha256": "bdee6b7b76ff4f0a9c9ef774ab583ba17e026f2a7e0c01a22116164436d0973a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-03.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_334793.jpg",
+   "sha256": "18d6e191786c8ea8831a8c9e75559ce014498c3a43c4a4deb1e33d28130e5a4c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-04.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_365894.jpg",
+   "sha256": "bbc3a800feadbcda3eb9cff625cf45b553ec3eed31aa4dc1481d36cc3a312e2c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-05.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_436403.jpg",
+   "sha256": "ca895f2d8df84fbf7513f0949737fce05d418fb6a89619cd0f7cb30fb7236a6a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-06.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_471394.jpg",
+   "sha256": "aa00ca400104a8d6f99f9dd415f7e71e3ded573ae91fbab54979c49ee4075a98",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-07.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_511064.jpg",
+   "sha256": "b1c87d63cc9ffc30dd3349ec3c47f6873229c5005efd56e8e587e296da55c175",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-08.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_670617.jpg",
+   "sha256": "6a2b8f59215c6152038852fc749635eec6fea31801f6eed222016931da1635cb",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-09.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_721808.jpg",
+   "sha256": "e73b9e21420441a22c6f14c251c7f7d41b4af430c762338d8ce546e75c83613a",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-10.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_754507.jpg",
+   "sha256": "bd0f7c4f161c35c1acebc61c1b7c0414ef3290334e27b0bfc8d3f4d51c579d7f",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-11.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_781874.jpg",
+   "sha256": "938a649ba25f0b3c524568235b5460384728cf3a76b51403c8e68d41afc2db4b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-12.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_889147.jpg",
+   "sha256": "de396f9a253c6484ecd2e021b7969b44f70bed67d0343b9c554334c1617f00e7",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-13.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_899717.jpg",
+   "sha256": "ad48011bed6da8f2786f5b5b83a6ac5560ffefa84524434f865587980e6bcf98",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "myelo-14.jpg",
+   "cell": "myelo",
+   "sourceFile": "ig/MY_998168.jpg",
+   "sha256": "bc2a059d2fdaf6e8e3fa5f205ac3e0642c66075454b0534646e328ce81008112",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "pro-01.jpg",
+   "cell": "pro",
+   "sourceFile": "ig/PMY_121356.jpg",
+   "sha256": "05e9d21ed678f143ccdfb672492319f46e4b50ba3bc820bded65a3df5bfb2c86",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "pro-02.jpg",
+   "cell": "pro",
+   "sourceFile": "ig/PMY_582919.jpg",
+   "sha256": "cb9094fb49ad1b9a88b5d86062a0853c3b951a0a42ddeb5cfc6aad7db6d79360",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "pro-03.jpg",
+   "cell": "pro",
+   "sourceFile": "ig/PMY_702550.jpg",
+   "sha256": "9b543fc5f17fc779d4f716f9726289adb27d9a35a3e0219e941e954059b3f295",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "pro-04.jpg",
+   "cell": "pro",
+   "sourceFile": "ig/PMY_782838.jpg",
+   "sha256": "24c02e7f1e12f667c64c106cb7f0987749ce0189143d2fdd8d9fe49d64cae478",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "pro-05.jpg",
+   "cell": "pro",
+   "sourceFile": "ig/PMY_7841.jpg",
+   "sha256": "d21a60cded8444fbfa42aeb505db8fe1fc8dd351694b13df3b09a25ca762df97",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "pro-06.jpg",
+   "cell": "pro",
+   "sourceFile": "ig/PMY_832615.jpg",
+   "sha256": "c59ae5370f5b1ccdd0e240dc5adc83e51622b0661fe20aa4bd408195e934f91d",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "pro-07.jpg",
+   "cell": "pro",
+   "sourceFile": "ig/PMY_858724.jpg",
+   "sha256": "d749daa1858ea8c8c2f6a8fad9c93d3005fa70b5af50619ca934155944155f83",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "pro-08.jpg",
+   "cell": "pro",
+   "sourceFile": "ig/PMY_916015.jpg",
+   "sha256": "ea4a63d33fed2efdda09a6fe447692f13b348a831fdc7ba401a8cecd61020c01",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-01.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_131467.jpg",
+   "sha256": "812fa2a855f11d58243bc1692444529bfc769b6fe2058c24a9c82402e2cb6d81",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-02.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_136567.jpg",
+   "sha256": "a1af7180dc18cc0fd79fcb02b9eaf5cac78f27dd405dd30d58f1a0a5b1f1734c",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-03.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_143717.jpg",
+   "sha256": "2b6ce4172baf2c8281135814c9d37de0da2f80b557a2ba6820d646be29c28604",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-04.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_167870.jpg",
+   "sha256": "104ae2600468497c3a7ab9f8d5480b0c76307fe5d0820f5b073472fafb422481",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-05.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_198977.jpg",
+   "sha256": "a0a5b6fa5536e392c35ffe4739d0f3a768a8d61bb8c2db59d91b63d3c2ba7832",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-06.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_202057.jpg",
+   "sha256": "857495a4608bc51ace847511757565827923f91843a085a098d1b344e5004bf9",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-07.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_249022.jpg",
+   "sha256": "3e076f9b3bfdb8a689c8e17b5ce35240b8f446ac04a72fb83f547ad6b9c2293e",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-08.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_2850.jpg",
+   "sha256": "26dc0439e82505fc792942a96856f443fa46ea71289859da66744425ea4f3376",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-09.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_30882.jpg",
+   "sha256": "e7162ddadd7344499c2fc50e869dac7392e6a3e9568423b443e80fd3a12d8602",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-10.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_566185.jpg",
+   "sha256": "c1fc59f773c275a41d61a04078bc18b58b90b9695848ec16f96a41ee9c2bfa0b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-11.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_57472.jpg",
+   "sha256": "4175cf6fb6428901e3c6bbf2fcedbf5f123953ab3f15737ddf6842740b7ff7cb",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-12.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_582434.jpg",
+   "sha256": "e5fb67491ba942002f485abd304e2189844ea25ad6c6243365e5c3c8177c8e75",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-13.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_883493.jpg",
+   "sha256": "fcf7e2383dcecd14f724d46814eb42d8f742f62c2dd60780f2a657d316b4265b",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  },
+  {
+   "file": "nrbc-14.jpg",
+   "cell": "nrbc",
+   "sourceFile": "erythroblast/ERB_911555.jpg",
+   "sha256": "b3cc15e5c76fc0026ef97bf8096e7d6d948a040b9be08378b5e8d2103bdf70ef",
+   "pixelDimensions": [
+    222,
+    224
+   ]
+  }
+ ]
+}

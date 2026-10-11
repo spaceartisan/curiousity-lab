@@ -93,7 +93,11 @@ for (const role of ["play", "companion", "insights"]) {
     scope + "icon-512.png",
     // Piano samples are only needed by Play's music room.
     ...shared.filter(
-      (url) => role === "play" || !url.startsWith(base + "media/piano/"),
+      (url) =>
+        role === "play" ||
+        !["media/piano/", "media/lab/", "media/cells/"].some((dir) =>
+          url.startsWith(base + dir),
+        ),
     ),
   ];
   const hash = (await import("node:crypto")).createHash("sha256");

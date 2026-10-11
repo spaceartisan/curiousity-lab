@@ -17,6 +17,7 @@ test("eight real slide assets load offline; chosen comparison and notebook prese
   await page.reload();
   await context.setOffline(true);
   await page.getByRole("button", { name: /My Laboratory/ }).click();
+  await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   const cards = page.getByRole("button", { name: /Explore specimen/ });
   await expect(cards).toHaveCount(8);
   for (const img of await cards.locator("img").all())
@@ -120,6 +121,7 @@ test("eight real slide assets load offline; chosen comparison and notebook prese
   ).toBeVisible();
   await page.reload();
   await page.getByRole("button", { name: /My Laboratory/ }).click();
+  await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await expect(
     page.getByRole("textbox", { name: "Your notebook note" }),
   ).toHaveValue("Synthetic observation: brush-like groups");
