@@ -15,6 +15,11 @@ import {
   type ReviewFilters,
 } from "./review";
 const PAGE = 12;
+function durationRange(minutes: [number, number]) {
+  const seconds = minutes[1] < 1;
+  const factor = seconds ? 60 : 1;
+  return `${(minutes[0] * factor).toFixed(1)}–${(minutes[1] * factor).toFixed(1)} ${seconds ? "seconds" : "minutes"}`;
+}
 export function SessionReview({
   review,
   onClose,
@@ -206,12 +211,11 @@ export function SessionReview({
                     {s.counts.explored} · Unfinished: {s.counts.unfinished}
                   </p>
                   <p>
-                    Observed active time: {s.activeMinutesRange[0].toFixed(1)}–
-                    {s.activeMinutesRange[1].toFixed(1)} minutes.
+                    Observed active time: {durationRange(s.activeMinutesRange)}.
                   </p>
                   <p>
                     {s.pausedMinutesRange
-                      ? `Observed foreground pause: ${s.pausedMinutesRange[0].toFixed(1)}–${s.pausedMinutesRange[1].toFixed(1)} minutes (${s.pauseRecords} recorded sessions).`
+                      ? `Observed foreground pause: ${durationRange(s.pausedMinutesRange)} (${s.pauseRecords} recorded sessions).`
                       : "Paused time is unavailable."}
                   </p>
                   {s.exploration ? (

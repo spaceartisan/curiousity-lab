@@ -76,19 +76,19 @@ test("foreground pause survives offline finish and export while legacy timing st
   });
   await context.setOffline(false);
   await page.goto("/curiousity-lab/insights/");
-  await page
-    .getByLabel("Open Play JSON backup")
-    .setInputFiles({
-      name: "fictional-timing-review.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(backup)),
-    });
+  await page.getByLabel("Open Play JSON backup").setInputFiles({
+    name: "fictional-timing-review.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(backup)),
+  });
   const review = page.getByRole("region", { name: "Imported activity review" });
   await expect(review.getByRole("article")).toHaveCount(2);
   await expect(
     review.getByText("Paused time is unavailable.", { exact: true }),
   ).toBeVisible();
-  await expect(review.getByText(/Observed foreground pause:/)).toBeVisible();
+  await expect(
+    review.getByText(/Observed foreground pause: .* seconds/),
+  ).toBeVisible();
   await review
     .getByRole("combobox", { name: "Puzzle context", exact: true })
     .selectOption({ value: contextKey(finished) });
@@ -98,6 +98,9 @@ test("foreground pause survives offline finish and export while legacy timing st
       name: new RegExp(`${finished.timing!.pausedMs} ms foreground pause`),
     }),
   ).toBeVisible();
+  await review
+    .getByRole("article")
+    .screenshot({ path: info.outputPath("insights-timing-summary.png") });
   await page.screenshot({
     path: info.outputPath("insights-timing-context.png"),
     fullPage: true,
