@@ -1,4 +1,11 @@
-import { useState, useMemo, useEffect, useId } from "react";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useId,
+} from "react";
 import type { Session } from "../storage/contracts";
 import { download } from "../storage/local";
 import {
@@ -33,6 +40,30 @@ export function SessionTimeline({
     safePage * POINTS_PER_PAGE,
   );
   const focused = points.find((p) => p.session.id === selected) ?? points[0];
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const reveal = () => {
+      const point = container.querySelector<SVGElement>(
+        ".timeline-point.selected",
+      );
+      if (!point || !container.clientWidth) return;
+      const r = point.getBoundingClientRect(),
+        box = container.getBoundingClientRect();
+      if (r.left < box.left + 12)
+        container.scrollLeft -= box.left + 12 - r.left;
+      else if (r.right > box.right - 12)
+        container.scrollLeft += r.right - box.right + 12;
+    };
+    reveal();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(reveal);
+    observer.observe(container);
+    const svg = container.querySelector("svg");
+    if (svg) observer.observe(svg);
+    return () => observer.disconnect();
+  }, [focused?.session.id, safePage, metric, context]);
   const title = useId(),
     description = useId();
   const x = (time: number) =>
@@ -136,6 +167,7 @@ export function SessionTimeline({
                 unverified.
               </p>
               <div
+                ref={scrollRef}
                 className="timeline-scroll"
                 role="region"
                 aria-label="Scrollable session plot"
@@ -246,9 +278,9 @@ export function SessionTimeline({
                 </svg>
               </div>
               <p>
-                Shapes: circle = completed · square = explored · triangle =
-                unfinished. Overlapping values remain separate records. No
-                record is a separate participant.
+                Scroll the plot sideways when needed. Shapes: circle = completed
+                · square = explored · triangle = unfinished. Overlapping values
+                remain separate records. No record is a separate participant.
               </p>
               <label>
                 Selected plotted session

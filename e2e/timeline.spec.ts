@@ -14,13 +14,11 @@ test("local session plots retain source values, overlap, fixed axes and missingn
   });
   await page.reload();
   await context.setOffline(true);
-  await page
-    .getByLabel("Open Play JSON backup")
-    .setInputFiles({
-      name: "fictional-timeline.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(fixture)),
-    });
+  await page.getByLabel("Open Play JSON backup").setInputFiles({
+    name: "fictional-timeline.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
   const plot = page.getByRole("region", {
     name: "Individual session timeline",
     exact: true,
@@ -58,6 +56,17 @@ test("local session plots retain source values, overlap, fixed axes and missingn
   await expect(
     plot.getByRole("button", { name: /^fictional-point-/ }),
   ).toHaveCount(8);
+  await expect
+    .poll(() =>
+      plot.locator(".timeline-scroll").evaluate((el) => {
+        const marker = el
+            .querySelector(".timeline-point.selected")!
+            .getBoundingClientRect(),
+          box = el.getBoundingClientRect();
+        return marker.left >= box.left && marker.right <= box.right;
+      }),
+    )
+    .toBe(true);
   await plot
     .getByRole("combobox", { name: "Plot value", exact: true })
     .selectOption({ value: "hints" });
@@ -88,9 +97,41 @@ test("local session plots retain source values, overlap, fixed axes and missingn
       .getByRole("region", { name: "Plot source values", exact: true })
       .getByRole("row"),
   ).toHaveCount(25);
+  await plot.getByText("Plot data table", { exact: true }).click();
   await plot.screenshot({
     path: info.outputPath("insights-session-points.png"),
   });
+  const normalWidth = await plot
+    .locator("svg")
+    .evaluate((el) => el.getBoundingClientRect().width);
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Text size", exact: true })
+    .selectOption({ value: "large" });
+  await page
+    .getByRole("button", { name: "Back to overview", exact: true })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Puzzle context", exact: true })
+    .selectOption({ value: key });
+  expect(
+    await plot
+      .locator("svg")
+      .evaluate((el) => el.getBoundingClientRect().width),
+  ).toBeGreaterThan(normalWidth * 1.15);
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Text size", exact: true })
+    .selectOption({ value: "normal" });
+  await page
+    .getByRole("button", { name: "Back to overview", exact: true })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Puzzle context", exact: true })
+    .selectOption({ value: key });
+  await plot
+    .getByRole("combobox", { name: "Plot value", exact: true })
+    .selectOption({ value: "hints" });
   await page.setViewportSize({ width: 320, height: 740 });
   await page.evaluate(() => {
     document.documentElement.style.fontSize = "200%";
