@@ -44,6 +44,12 @@ test("local clock shifts survive offline resume/export, stay distinct from unkno
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
+  await expect
+    .poll(async () => (await saved(page))?.preferences.history)
+    .toBe(true);
+  await expect
+    .poll(async () => (await saved(page))?.preferences.welcomeDone)
+    .toBe(true);
   await page.reload();
   await page.getByRole("button", { name: /Music Hear/ }).click();
   await expect
@@ -101,20 +107,18 @@ test("local clock shifts survive offline resume/export, stay distinct from unkno
   );
   await context.setOffline(false);
   await page.goto("/curiousity-lab/insights/");
-  await page
-    .getByLabel("Open Play JSON backup")
-    .setInputFiles({
-      name: "synthetic-clock-history.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(backup)),
-    });
+  await page.getByLabel("Open Play JSON backup").setInputFiles({
+    name: "synthetic-clock-history.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(backup)),
+  });
   const review = page.getByRole("region", { name: "Imported activity review" });
   await expect(review.getByRole("article")).toHaveCount(3);
   await expect(
     review
-      .getByText(/Clock context unrecorded; UTC accuracy unverified/)
-      .first(),
-  ).toBeVisible();
+      .getByRole("article")
+      .filter({ hasText: "Clock context unrecorded; UTC accuracy unverified" }),
+  ).toHaveCount(1);
   await review
     .getByRole("combobox", { name: "Puzzle context", exact: true })
     .selectOption({ value: contextKey(finished) });
