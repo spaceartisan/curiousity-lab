@@ -77,6 +77,30 @@ test("large Sudoku squares retain the board and selected-square visibility offli
   await page
     .locator(".game-surface")
     .screenshot({ path: info.outputPath("sudoku-large-squares.png") });
+  await expect
+    .poll(() =>
+      page.evaluate(async () => {
+        const db: IDBDatabase = await new Promise((resolve, reject) => {
+          const request = indexedDB.open("curiosity-lab:v1:play:guest", 1);
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+        try {
+          return await new Promise<boolean | undefined>((resolve, reject) => {
+            const request = db
+              .transaction("state")
+              .objectStore("state")
+              .get("current");
+            request.onsuccess = () =>
+              resolve(request.result?.drafts.sudoku?.data.largeCells);
+            request.onerror = () => reject(request.error);
+          });
+        } finally {
+          db.close();
+        }
+      }),
+    )
+    .toBe(true);
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: /Numbers Settle/ }).click();
