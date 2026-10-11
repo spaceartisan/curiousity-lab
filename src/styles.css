@@ -1303,6 +1303,12 @@ summary {
   max-width: 100%;
   padding-inline: min(0.7rem, 2vw);
 }
+@media (max-width: 420px) {
+  .connections-challenge select {
+    width: 100%;
+    padding-inline: min(0.4rem, 1vw);
+  }
+}
 /* Keep up to four columns, but give enlarged words enough reading width. */
 .connections-workspace .word-grid {
   grid-template-columns: repeat(
