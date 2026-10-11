@@ -144,11 +144,15 @@ test("consented presentation settings survive offline replay, exports and review
     .getByRole("combobox", { name: "Puzzle context", exact: true })
     .selectOption({ value: contextKey(completed) });
   await expect(review.getByRole("article")).toHaveCount(1);
+  const observedDetails = review
+    .getByRole("article")
+    .locator("details.context-details");
+  await observedDetails.locator("summary").click();
   await expect(
-    review.getByRole("heading", { name: /sound setting off \/ on/ }),
+    observedDetails.getByText(/sound setting off \/ on/),
   ).toBeVisible();
   await expect(
-    review.getByRole("heading", { name: /by ear \/ staff notation/ }),
+    observedDetails.getByText(/by ear \/ staff notation/),
   ).toBeVisible();
   await page.screenshot({
     path: info.outputPath("insights-presentation-context.png"),

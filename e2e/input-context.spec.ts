@@ -116,10 +116,14 @@ test("game input categories survive offline use and retain unknown legacy contex
     .getByRole("combobox", { name: "Puzzle context", exact: true })
     .selectOption({ value: contextKey(filed) });
   await expect(review.getByRole("article")).toHaveCount(1);
+  const observedDetails = review
+    .getByRole("article")
+    .locator("details.context-details");
+  await observedDetails.locator("summary").click();
   await expect(
-    review.getByRole("heading", {
-      name: new RegExp("input observations from start: keyboard / " + method),
-    }),
+    observedDetails.getByText(
+      new RegExp("input observations from start: keyboard / " + method),
+    ),
   ).toBeVisible();
   await review.screenshot({
     path: info.outputPath("insights-input-context.png"),
