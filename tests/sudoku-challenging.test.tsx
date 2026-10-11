@@ -178,7 +178,7 @@ it("optional elimination explanation changes no cells or notes; hint and undo re
   const step = findAdvancedStep(d.cells, 9)!;
   expect(step.technique).toBe("candidate-chain");
   expect(
-    screen.getByText("Controls & solving techniques").closest("details"),
+    screen.getByText("Controls & help").closest("details"),
   ).not.toHaveAttribute("open");
   expect(screen.getByRole("status")).toBeEmptyDOMElement();
   const original = structuredClone(d);

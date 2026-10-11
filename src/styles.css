@@ -1376,6 +1376,7 @@ summary {
 .sudoku-workspace select {
   min-width: 0;
   max-width: 100%;
+  padding-inline: min(0.7rem, 2vw);
 }
 .sudoku-workspace .numberpad {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 3.25rem), 1fr));

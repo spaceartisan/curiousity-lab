@@ -35,13 +35,11 @@ test("challenging Sudoku offers optional pair deductions, offline progress and d
     await navigator.serviceWorker.ready;
   });
   await page.getByRole("button", { name: "Settings", exact: true }).click();
-  await page
-    .getByLabel("Restore this app’s JSON backup")
-    .setInputFiles({
-      name: "synthetic-challenge.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(state)),
-    });
+  await page.getByLabel("Restore this app’s JSON backup").setInputFiles({
+    name: "synthetic-challenge.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(state)),
+  });
   await page
     .getByRole("button", { name: "Restore this backup", exact: true })
     .click();
@@ -57,11 +55,9 @@ test("challenging Sudoku offers optional pair deductions, offline progress and d
     exact: true,
   });
   await expect(challenge).toHaveValue("Challenging");
-  const help = page
-    .locator("details")
-    .filter({
-      has: page.getByText("Controls & solving techniques", { exact: true }),
-    });
+  const help = page.locator("details").filter({
+    has: page.getByText("Controls & help", { exact: true }),
+  });
   await expect(help).not.toHaveAttribute("open");
   await expect(page.getByRole("status")).toBeEmpty();
   await page
@@ -98,6 +94,9 @@ test("challenging Sudoku offers optional pair deductions, offline progress and d
       .locator("button")
       .evaluateAll((elements) => elements.map((e) => e.textContent!.trim())),
   ).toEqual(d.givens.map((n) => (n ? String(n) : "")));
+  await page.locator(".game-surface").screenshot({
+    path: info.outputPath("sudoku-challenging-fresh.png"),
+  });
   await page.setViewportSize({ width: 320, height: 740 });
   await page.evaluate(() => {
     document.documentElement.style.fontSize = "200%";
@@ -107,11 +106,25 @@ test("challenging Sudoku offers optional pair deductions, offline progress and d
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await page
-    .locator(".game-surface")
-    .screenshot({
-      path: info.outputPath("sudoku-challenging-200-percent.png"),
-    });
+  const challengeFits = await challenge.evaluate((element) => {
+    const select = element as HTMLSelectElement;
+    const style = getComputedStyle(select);
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d")!;
+    context.font = `${style.fontSize} ${style.fontFamily}`;
+    const needed = context.measureText(select.selectedOptions[0].text).width;
+    return (
+      needed <=
+      select.clientWidth -
+        parseFloat(style.paddingLeft) -
+        parseFloat(style.paddingRight) -
+        24
+    );
+  });
+  expect(challengeFits).toBe(true);
+  await page.locator(".game-surface").screenshot({
+    path: info.outputPath("sudoku-challenging-200-percent.png"),
+  });
   page.once("dialog", (dialog) => dialog.dismiss());
   await challenge.selectOption("Classic");
   await expect(challenge).toHaveValue("Challenging");

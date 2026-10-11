@@ -195,7 +195,7 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
           : "Advanced challenges use the 9 × 9 grid."}
       </p>
       <details>
-        <summary>Controls & solving techniques</summary>
+        <summary>Controls & help</summary>
         <p>
           Select a square and enter a number. Arrow keys move; Home/End select
           row endpoints; Control+Home/End select board endpoints. Delete or
