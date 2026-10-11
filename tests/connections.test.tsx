@@ -42,9 +42,9 @@ async function saved() {
   );
   return loadState("play");
 }
-it("twelve authored packs have unique IDs, four disjoint four-word groups and exact matching", () => {
-  expect(connections).toHaveLength(12);
-  expect(new Set(connections.map((p) => p.id)).size).toBe(12);
+it("fourteen authored packs have unique IDs, four disjoint four-word groups and exact matching", () => {
+  expect(connections).toHaveLength(14);
+  expect(new Set(connections.map((p) => p.id)).size).toBe(14);
   connections.forEach((p, pack) => {
     expect(p.groups).toHaveLength(4);
     expect(new Set(p.groups.map((g) => g.title)).size).toBe(4);
@@ -90,14 +90,14 @@ it("legacy puzzle IDs/content remain unchanged while new packs have stable disti
     "ROSE",
   ]);
   expect(new Set(connections.map((_, i) => connectionsPuzzle(i))).size).toBe(
-    12,
+    14,
   );
 });
 it("save validation bounds all actual groups, remaining words, duplicates and display order", () => {
   const base = { pack: 0, solved: ["In the garden"], selected: ["PIANO"] };
   expect(validateGame("connections", base)).toBe(true);
   for (const p of [
-    { pack: 12 },
+    { pack: 14 },
     { pack: -1 },
     { solved: ["Anything"] },
     { solved: ["In the garden", "In the garden"] },

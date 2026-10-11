@@ -5,6 +5,7 @@ import {
   findWordPaths,
   wordPath,
 } from "../content/words";
+import { medicalExplanation } from "../content/medical-words";
 import type { GameProps } from "./types";
 import {
   matchingConnection,
@@ -54,7 +55,7 @@ export function Connections({
     const group = matchingConnection(d);
     if (!group) {
       setMessage(
-        tier === "Challenging"
+        tier !== "Classic"
           ? "That isn't one of this puzzle's four groups. Try another grouping."
           : "These words have different connections. Try another grouping, or use a hint.",
       );
@@ -96,6 +97,7 @@ export function Connections({
         >
           <option>Classic</option>
           <option>Challenging</option>
+          <option>Medical</option>
         </select>
       </label>
       <h2>{pack.title}</h2>
@@ -106,13 +108,21 @@ export function Connections({
       <p id="connections-instructions">
         Select four related words, then choose “Connect.”
       </p>
+      {tier === "Medical" && (
+        <p>
+          Medical Latin &amp; Greek: connect terms by meaning. Explanations are
+          available after a group is solved.
+        </p>
+      )}
       <details>
         <summary>How to play & get help</summary>
         <p>
           Classic groups use direct categories. Challenging groups may use
           compound words, phrases, alternate meanings or sounds. A plausible
           grouping may leave other words without a match; consider the full
-          board. Wordplay can use one word or a phrase with spaces.
+          board. Wordplay can use one word or a phrase with spaces. Medical
+          boards mix roots or prefixes; a word can contain more than one
+          meaningful part. Look for four groups that cover the whole board.
         </p>
         <p>
           Select a word to add it; select it again to remove it. You can choose
@@ -133,6 +143,21 @@ export function Connections({
             <div className="solved" key={g.title}>
               <strong>{g.title}</strong>
               <span>{g.words.join(" · ")}</span>
+              {medicalExplanation(pack.id, g.title) && (
+                <details>
+                  <summary>Explore these roots: {g.title}</summary>
+                  <p>{medicalExplanation(pack.id, g.title)}</p>
+                  <p>
+                    <a
+                      href="https://medlineplus.gov/appendixa.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Word-part reference · MedlinePlus
+                    </a>
+                  </p>
+                </details>
+              )}
             </div>
           ))}
       </div>

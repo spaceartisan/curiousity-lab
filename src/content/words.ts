@@ -1,3 +1,4 @@
+import { medicalConnections } from "./medical-words";
 export const classicConnections = [
   {
     id: "garden-and-craft-v1",
@@ -189,7 +190,11 @@ export const challengingConnections = [
     ],
   },
 ];
-export const connections = [...classicConnections, ...challengingConnections];
+export const connections = [
+  ...classicConnections,
+  ...challengingConnections,
+  ...medicalConnections,
+];
 export const searchPack = {
   id: "quiet-garden-v1",
   title: "Quiet garden",

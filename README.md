@@ -8,7 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.28.0
+## Current release · v0.29.0
+
+Words now offers **Medical**: two authored connection boards exploring Latin/Greek roots and Latin position prefixes. Meaning-based groups have closed, optional explanations after solving, independent replay and offline resume. See [medical word puzzles](docs/MEDICAL_WORDS.md).
 
 Insights context cards now use **short activity headings and expandable provenance**. Numbered choices distinguish contexts with similar names; source versions, presentation, timing and clock limitations remain available in Context details. Grouping rules and exports are unchanged.
 

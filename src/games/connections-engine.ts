@@ -1,7 +1,15 @@
-import { connections, classicConnections } from "../content/words";
-export type ConnectionsTier = "Classic" | "Challenging";
+import {
+  connections,
+  classicConnections,
+  challengingConnections,
+} from "../content/words";
+export type ConnectionsTier = "Classic" | "Challenging" | "Medical";
 export function connectionsTier(pack: number): ConnectionsTier {
-  return pack < classicConnections.length ? "Classic" : "Challenging";
+  return pack < classicConnections.length
+    ? "Classic"
+    : pack < classicConnections.length + challengingConnections.length
+      ? "Challenging"
+      : "Medical";
 }
 export function connectionsPool(tier: ConnectionsTier) {
   return Array.from({ length: connections.length }, (_, i) => i).filter(
@@ -14,14 +22,20 @@ export function nextConnectionsPack(pack: number, samePuzzle = false) {
   return pool[(pool.indexOf(pack) + 1) % pool.length];
 }
 export function connectionsMode(pack: number) {
-  return connectionsTier(pack) === "Challenging" ? "wordplay" : "explore";
+  return connectionsTier(pack) === "Medical"
+    ? "medical-roots"
+    : connectionsTier(pack) === "Challenging"
+      ? "wordplay"
+      : "explore";
 }
 export function connectionsContentVersion(pack: number) {
-  return connectionsTier(pack) === "Challenging"
-    ? "connections-wordplay-1"
-    : pack < 2
-      ? "starter-1"
-      : "connections-2";
+  return connectionsTier(pack) === "Medical"
+    ? "medical-roots-1"
+    : connectionsTier(pack) === "Challenging"
+      ? "connections-wordplay-1"
+      : pack < 2
+        ? "starter-1"
+        : "connections-2";
 }
 export interface ConnectionsData {
   pack: number;
