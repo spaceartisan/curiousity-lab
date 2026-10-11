@@ -109,3 +109,7 @@ Four original five-note Challenging comparisons retain the same contour and endp
 ## v0.22.0 — Chosen phrase reasoning
 
 Four original five-note Challenging phrases specify alternating-step, changing-stride and interleaved-line rules. Rules avoid ambiguous guesswork; explanations and answers appear only on request. Separate collections cycle independently, preserve existing phrase IDs/content, recordings and presentation, and identify challenging task/content versions without rewriting filed sessions. Longer controls help stays closed. Broader rhythm/lab content, human calibration, independent media/device review, normalized context, private sync/shared reports and production recovery remain unfinished. The full document is not complete.
+
+## v0.23.0 — Chosen six-beat rhythm sequences
+
+Three original six-beat Challenging rhythms extend sequencing with unchanged relative-spacing tolerance. Chosen collections cycle separately; optional spacing hints derive from actual beat offsets. Per-exercise validation bounds partial/completed tap progress, old four-beat saves remain unchanged, and resumed sequences report unavailable timing honestly. Raw tap timestamps stay only in component memory. New task/content versions separate optional history, and completed exploration records stay immutable. Broader lab content, human calibration, independent media/device review, normalized context, private sync/shared reports and production recovery remain unfinished. The full document is not complete.

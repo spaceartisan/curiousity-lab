@@ -1,7 +1,11 @@
 import { generateSudoku, validSudoku, type Size } from "../games/sudoku-engine";
 import { connections, searchBoard, searchPacks } from "../content/words";
 import { specimens } from "../content/specimens";
-import { exerciseCount, type MusicMode } from "../content/music";
+import {
+  exerciseCount,
+  rhythmBeatCount,
+  type MusicMode,
+} from "../content/music";
 const record = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
 const strings = (v: unknown, max = 32) =>
@@ -117,12 +121,16 @@ export function validateGame(kind: string, value: unknown): boolean {
       (value.taps === undefined ||
         (Number.isInteger(value.taps) &&
           Number(value.taps) >= 0 &&
-          Number(value.taps) <= 4)) &&
+          Number(value.taps) <=
+            (value.mode === "rhythm"
+              ? rhythmBeatCount(Number(value.exercise ?? 0))
+              : 4))) &&
       (value.flexibility === undefined ||
         ["gentle", "extra"].includes(String(value.flexibility))) &&
       (value.mode !== "rhythm" ||
         value.taps === undefined ||
-        value.solved === (value.taps === 4))
+        value.solved ===
+          (value.taps === rhythmBeatCount(Number(value.exercise ?? 0))))
     );
   if (kind === "lab") {
     const page = (v: unknown): boolean =>

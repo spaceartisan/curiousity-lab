@@ -9,6 +9,8 @@ import {
   melodyPool,
   phraseTier,
   phrasePool,
+  rhythmTier,
+  rhythmPool,
   musicTaskMode,
   type MelodyTier,
   type MusicMode,
@@ -231,7 +233,7 @@ export function Music({
         ? phrase.heard
         : d.mode === "match"
           ? melody.target
-          : [0, 0, 0, 0];
+          : rhythm.beats.map(() => 0);
   function play(
     sequence: number[],
     offsets?: number[],
@@ -325,19 +327,30 @@ export function Music({
       { mode: musicTaskMode({ mode: next, exercise: 0 }) },
     );
   }
-  function changeMelodyTier(tier: MelodyTier) {
+  function changeChallenge(tier: MelodyTier) {
     if (
-      tier === (d.mode === "phrase" ? phraseTier(index) : melodyTier(index)) ||
+      tier ===
+        (d.mode === "phrase"
+          ? phraseTier(index)
+          : d.mode === "rhythm"
+            ? rhythmTier(index)
+            : melodyTier(index)) ||
       !window.confirm(
-        d.mode === "phrase"
-          ? "Start a fresh phrase? Your current exercise will be replaced."
-          : "Start a fresh melody? Your current exercise will be replaced.",
+        d.mode === "rhythm"
+          ? "Start a fresh rhythm? Your current exercise will be replaced."
+          : d.mode === "phrase"
+            ? "Start a fresh phrase? Your current exercise will be replaced."
+            : "Start a fresh melody? Your current exercise will be replaced.",
       )
     )
       return;
     cancelPlayback();
     const exercise = (
-      d.mode === "phrase" ? phrasePool(tier) : melodyPool(tier)
+      d.mode === "phrase"
+        ? phrasePool(tier)
+        : d.mode === "rhythm"
+          ? rhythmPool(tier)
+          : melodyPool(tier)
     )[0];
     const data = { ...d, exercise, solved: false, taps: 0 };
     update(data, { mode: musicTaskMode(data) });
@@ -396,17 +409,25 @@ export function Music({
           </button>
         ))}
       </div>
-      {(d.mode === "match" || d.mode === "phrase") && (
+      {d.mode !== "piano" && (
         <label className="melody-challenge">
           Challenge{" "}
           <select
             aria-label={
-              d.mode === "phrase"
-                ? "Phrase challenge"
-                : "Melody matching challenge"
+              d.mode === "rhythm"
+                ? "Rhythm challenge"
+                : d.mode === "phrase"
+                  ? "Phrase challenge"
+                  : "Melody matching challenge"
             }
-            value={d.mode === "phrase" ? phraseTier(index) : melodyTier(index)}
-            onChange={(e) => changeMelodyTier(e.target.value as MelodyTier)}
+            value={
+              d.mode === "phrase"
+                ? phraseTier(index)
+                : d.mode === "rhythm"
+                  ? rhythmTier(index)
+                  : melodyTier(index)
+            }
+            onChange={(e) => changeChallenge(e.target.value as MelodyTier)}
           >
             <option>Classic</option>
             <option>Challenging</option>
@@ -429,8 +450,28 @@ export function Music({
             ? phrase.rule
             : d.mode === "match"
               ? "Play the target phrase, then choose its matching pattern. You can hear either choice before selecting it."
-              : `${rhythm.description} Listen or watch, then tap four beats at your own pace. There is no timing score.`}
+              : `${rhythm.description} Listen or watch, then tap ${rhythm.beats.length === 4 ? "four" : "six"} beats at your own pace. There is no timing score.`}
       </p>
+      {d.mode === "rhythm" && (
+        <>
+          <p>
+            Rhythm {rhythmPool(rhythmTier(index)).indexOf(index) + 1} of{" "}
+            {rhythmPool(rhythmTier(index)).length}
+          </p>
+          <details>
+            <summary>Rhythm controls & help</summary>
+            <p>
+              Replay as often as you like, then tap the full sequence at your
+              own pace. Feedback compares relative spaces, with the same Gentle
+              and Extra flexible tolerance in either collection. Hint shows the
+              relative spaces on request. Tap progress resumes after reload;
+              timing feedback requires a full sequence in one visit. Try again
+              starts a fresh sequence; Another rhythm stays in the chosen
+              collection.
+            </p>
+          </details>
+        </>
+      )}
       {d.mode === "phrase" && (
         <>
           <p>
@@ -562,6 +603,22 @@ export function Music({
               );
               setMessage(
                 `Compare note ${different + 1}. The target has ${noteName(melody.target[different])} at that position.`,
+              );
+              update(d, { hint: true });
+            }}
+          >
+            Hint
+          </button>
+        )}
+        {d.mode === "rhythm" && (
+          <button
+            disabled={d.solved}
+            onClick={() => {
+              setMessage(
+                `Spaces between beats: ${rhythm.beats
+                  .slice(1)
+                  .map((b, i) => b - rhythm.beats[i])
+                  .join(" · ")}. Keep these relative spaces at your own pace.`,
               );
               update(d, { hint: true });
             }}
@@ -704,25 +761,37 @@ export function Music({
             </button>
           </div>
           <p aria-live="polite">
-            {taps} of 4 beats tapped
+            {taps} of {rhythm.beats.length} beats tapped
             {d.solved ? " · This exploration is complete." : "."}
           </p>
           <button
             className="tap-button"
-            disabled={d.solved || taps >= 4}
+            disabled={d.solved || taps >= rhythm.beats.length}
             onClick={() => {
               if (tapLock.current) return;
               tapLock.current = true;
               tapTimes.current.push(performance.now());
               previewNote(0);
               const next = taps + 1;
-              update({ ...d, taps: next, solved: next === 4 });
-              if (next === 4) {
+              update({
+                ...d,
+                taps: next,
+                solved: next === rhythm.beats.length,
+              });
+              if (next === rhythm.beats.length) {
                 finish("explored");
                 setMessage(
-                  rhythmFeedback(tapTimes.current, rhythm.beats, d.flexibility)
-                    ? "Your spacing followed the pattern at your own pace. Try again whenever you like."
-                    : "You explored four beats. Listen or watch again, and try another rhythm whenever you like.",
+                  tapTimes.current.length !== rhythm.beats.length
+                    ? "Sequence complete. Timing feedback is unavailable for a resumed sequence."
+                    : rhythmFeedback(
+                          tapTimes.current,
+                          rhythm.beats,
+                          d.flexibility,
+                        )
+                      ? "Your spacing followed the pattern at your own pace. Try again whenever you like."
+                      : rhythmTier(index) === "Challenging"
+                        ? "Sequence complete. The spacing differed from this pattern."
+                        : "You explored four beats. Listen or watch again, and try another rhythm whenever you like.",
                 );
               }
               queueMicrotask(() => {

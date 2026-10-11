@@ -158,9 +158,15 @@ export function nextMusicExercise(
     const pool = phrasePool(phraseTier(index));
     return pool[(pool.indexOf(index) + 1) % pool.length];
   }
+  if (data.mode === "rhythm") {
+    const pool = rhythmPool(rhythmTier(index));
+    return pool[(pool.indexOf(index) + 1) % pool.length];
+  }
   return (index + 1) % exerciseCount(data.mode);
 }
 export function musicTaskMode(data: { mode: MusicMode; exercise?: number }) {
+  if (data.mode === "rhythm" && rhythmTier(data.exercise) === "Challenging")
+    return "rhythm:challenging";
   if (data.mode === "phrase" && phraseTier(data.exercise) === "Challenging")
     return "phrase:challenging";
   return data.mode === "match" && melodyTier(data.exercise) === "Challenging"
@@ -175,11 +181,13 @@ export function musicContentVersion(
     ? "music-melodies-2"
     : musicTaskMode(data) === "phrase:challenging"
       ? "music-phrases-2"
-      : puzzleId === "music-studio-v1"
-        ? "starter-1"
-        : "music-exercises-1";
+      : musicTaskMode(data) === "rhythm:challenging"
+        ? "music-rhythms-2"
+        : puzzleId === "music-studio-v1"
+          ? "starter-1"
+          : "music-exercises-1";
 }
-export const rhythmExercises = [
+export const classicRhythms = [
   {
     id: "steady-four-v1",
     title: "Four steady beats",
@@ -199,6 +207,37 @@ export const rhythmExercises = [
     description: "Three beats, a longer space, then one last beat.",
   },
 ];
+export const challengingRhythms = [
+  {
+    id: "two-trios-v1",
+    title: "Two trios",
+    beats: [0, 1, 2, 6, 7, 8],
+    description: "Three close beats, a longer space, then three close beats.",
+  },
+  {
+    id: "separated-pairs-v1",
+    title: "Separated pairs",
+    beats: [0, 1, 5, 6, 10, 11],
+    description:
+      "Three pairs of close beats, with a longer space between each pair.",
+  },
+  {
+    id: "four-and-two-v1",
+    title: "Four and two",
+    beats: [0, 1, 2, 3, 7, 8],
+    description: "Four close beats, a longer space, then two close beats.",
+  },
+];
+export const rhythmExercises = [...classicRhythms, ...challengingRhythms];
+export function rhythmTier(exercise = 0): MelodyTier {
+  return exercise < classicRhythms.length ? "Classic" : "Challenging";
+}
+export function rhythmPool(tier: MelodyTier) {
+  return rhythmExercises.map((_, i) => i).filter((i) => rhythmTier(i) === tier);
+}
+export function rhythmBeatCount(exercise = 0) {
+  return rhythmExercises[exercise]?.beats.length ?? 4;
+}
 export type MusicMode = "piano" | "phrase" | "match" | "rhythm";
 export function exerciseCount(mode: MusicMode) {
   return mode === "phrase"

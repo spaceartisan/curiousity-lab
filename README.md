@@ -8,7 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.22.0
+## Current release · v0.23.0
+
+Rhythm Echo now offers three chosen **Challenging** six-beat sequences. Relative-spacing tolerance remains unchanged; hints are requested, and resumed sequences explicitly lack timing feedback when the full tap timings are unavailable. See [rhythm challenges](docs/RHYTHM_CHALLENGES.md).
 
 Complete the Phrase now offers four chosen **Challenging** five-note patterns with alternating steps and interleaved melodic lines. Each rule is stated clearly; solution explanations appear only on request, and new phrases/replay keep the chosen collection. See [phrase challenges](docs/PHRASE_CHALLENGES.md).
 

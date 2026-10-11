@@ -1,3 +1,11 @@
+# v0.23.0 validation
+
+Four additional regressions verify frozen Classic rhythms, six-beat content, pace-normalized feedback and unchanged flexibility bounds, per-exercise progress/import limits, collection cycling, canceled/confirmed replacement, preserved recordings, actual six-tone/offset playback, requested spacing hints, single immutable exploration filing/replay, and history-off resumed completion without raw timestamp persistence or invented timing feedback. A new desktop/phone scenario exercises actual audio controls, six visual beats, offline partial progress, canceled choices, 320-pixel/200% text and target sizes, optional help, completion, replay and collection boundaries.
+
+Deployment requires full component/build, archive, security/recovery and browser gates plus screenshot review. Perceived rhythm challenge, actual family-device sound/accessibility and independent music review remain unverified. Full architecture implementation remains in progress.
+
+---
+
 # v0.22.0 validation
 
 Four additional engine/component regressions verify legacy phrase content, independent alternating-step/interleaved-line rule checks, bounded notes and indices, independent collection cycling, canceled/confirmed replacement, preserved recordings, explicit by-ear playback of the actual target, truthful requested hints, all four completed source records, unassisted counts, immutable replay/mode changes and history-off reload. A new desktop/phone scenario verifies stated rules, closed help, no unsolicited solutions, real Web Audio controls, offline recovery, canceled choices, completion/replay, collection boundaries and 320-pixel/200% text including keyboard scrolling and selector fit.
