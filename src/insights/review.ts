@@ -62,6 +62,13 @@ export function filterSessions(
         a.id.localeCompare(b.id),
     );
 }
+export function hasTimeIssue(s: Session) {
+  return (
+    Date.parse(s.endedAt) < Date.parse(s.startedAt) ||
+    s.activeMs + (s.timing?.pausedMs ?? 0) >
+      Date.parse(s.endedAt) - Date.parse(s.startedAt) + 1
+  );
+}
 export interface ContextSummary {
   key: string;
   label: string;
@@ -134,12 +141,7 @@ export function summarizeContexts(sessions: Session[]): ContextSummary[] {
               }
             : null,
         exploration,
-        timeIssues: records.filter(
-          (s) =>
-            Date.parse(s.endedAt) < Date.parse(s.startedAt) ||
-            s.activeMs + (s.timing?.pausedMs ?? 0) >
-              Date.parse(s.endedAt) - Date.parse(s.startedAt) + 1,
-        ).length,
+        timeIssues: records.filter(hasTimeIssue).length,
       };
     })
     .sort((a, b) => a.label.localeCompare(b.label));

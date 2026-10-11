@@ -1481,3 +1481,72 @@ summary {
 .local-export-review .file-control input {
   padding-inline: min(0.5rem, 2vw);
 }
+
+.session-review .session-timeline {
+  margin-block: 1.5rem;
+  padding: min(1.25rem, 4vw);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  min-width: 0;
+}
+.session-timeline label {
+  display: block;
+  margin-block: 1rem;
+}
+.timeline-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+}
+.timeline-svg {
+  display: block;
+  width: 40rem;
+  height: 22.5rem;
+  color: var(--ink);
+  background: var(--paper);
+}
+.timeline-svg text {
+  fill: currentColor;
+}
+.timeline-grid {
+  stroke: var(--line);
+  stroke-dasharray: 3 4;
+}
+.timeline-axis {
+  stroke: currentColor;
+  stroke-width: 1;
+}
+.timeline-point {
+  fill: var(--ink);
+  stroke: var(--paper);
+  stroke-width: 2;
+  cursor: pointer;
+}
+.timeline-point.unfinished {
+  fill: var(--paper);
+  stroke: var(--ink);
+}
+.timeline-point.selected,
+.timeline-point:focus {
+  stroke: var(--focus);
+  stroke-width: 4;
+  outline: none;
+}
+.timeline-details {
+  margin-block: 1rem;
+  padding: min(1rem, 3vw);
+  background: var(--bg);
+  border-radius: 0.6rem;
+  overflow-wrap: anywhere;
+}
+.timeline-data {
+  margin-block: 1rem;
+}
+.timeline-data summary {
+  cursor: pointer;
+  padding-block: 0.7rem;
+}
+.timeline-data table {
+  min-width: 48rem;
+}

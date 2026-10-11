@@ -1,3 +1,13 @@
+# v0.15.0 validation
+
+Deployment gates: 152 unit/component checks, fourteen archive/remote checks with age, twenty-two Firestore security cases plus encrypted emulator recovery, and forty-eight desktop/phone browser scenarios (237 total). Ten new tests cover explicit context gating, UTC ordering/ties/source immutability, completed-hint and exploration exclusions, observed-zero versus unknown pause, zero/single/extreme domains and source clock warnings, exact versioned exports and all inclusion IDs, overlapping-point keyboard selection, fixed axes/paging/metric reset, missing pause/exploration controls, actual filtered review exports and source immutability.
+
+The new browser scenario imports a clearly fictional backup offline, verifies overlapping keyboard-selected source values and offset timestamps, fixed axes across pages, completed-only hint denominators, actual all-page JSON downloads, table alternatives, 320-pixel/200% text and keyboard plot scrolling, unknown pause, exploration exclusion, reset and reload isolation. Final release requires this commit's full workflow and visual evidence review. Age-specific encryption remains CI-only locally; CI runs the actual encrypted recovery case.
+
+There is no family fixture, added collection, upload or Firestore permission. Plots remain descriptive source observations, with unverified clocks, related same-player/day records, partial/missing context and no matched-reference or clinical interpretation. The full architecture and actual-device/content/production gates remain unfinished.
+
+---
+
 # v0.14.0 validation
 
 Deployment gates: 142 unit/component checks, fourteen archive/remote checks with age, twenty-two Firestore security cases plus encrypted emulator recovery, and forty-six desktop/phone browser scenarios (225 total). New deterministic checks cover final fractions, idle cutoff before input, original-ID isolation, foreground-only pause, hidden/backward samples, history/finalized guards, strict additive validation, legacy compatibility, context separation/ranges, exact CSV/purge, real pause/resume/finish controls, legacy partial collection and pagehide update ordering. Existing preparation checks also verify valid timing inclusion and Companion/unknown-field exclusion.

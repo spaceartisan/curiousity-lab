@@ -1,3 +1,10 @@
+# v0.15.0
+
+- Added genuine local Insights plots of individual sessions within one explicitly selected context, sorted by original end time in UTC. Plot active time, known foreground pauses or hints in completed puzzle sessions, with truthful denominators and exclusion reasons.
+- Preserve overlapping observations, source offset timestamps, outcomes, first/repeat labels, hints and undo in keyboard-selectable details and a source table. Exploration has no performance plot; missing pause remains unknown.
+- Keep full-context axes/units fixed across twenty-four-point pages, reflow controls at enlarged text sizes and scope horizontal scrolling to the chart/table. Preserve original values and surface existing time-consistency warnings.
+- Export every eligible page's exact values with selected/plotted/excluded source IDs and plot version `local-session-points-1`. No imported-state persistence, activity upload, Firestore permission, fitted trend or clinical score is added.
+
 # v0.14.0
 
 - Correct active-time boundaries: drain before extending idle recency and before filing, changing attempts, navigation or visibility/pause transitions. Preserve final fractions instead of losing time between one-second samples. Clock slices carry the original attempt ID.

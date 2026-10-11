@@ -77,3 +77,7 @@ New local attempts record bounded theme/text and music presentation-setting obse
 ## v0.14.0 — Accurate local timing boundaries
 
 Close active intervals before idle-window extension, pause/visibility transitions, navigation, attempt changes and filing. Fractional final intervals survive fast completion; explicit pauses count only visible selected activity with history enabled. Optional timing algorithm/coverage and pause values survive schema-v1 backups, CSV and validated local Insights preparation; legacy/partial collection stays distinct in review. History clearing removes optional timing from current and recovery drafts. Hidden, idle and closed time are not inferred as pauses. Clock verification, normalized identities/input, private sync, shared reports and all production/device gates remain unfinished.
+
+## v0.15.0 — Genuine local session plots
+
+One explicitly selected context now has chronological source points for active time, known foreground pause or hints in completed puzzle sessions, with outcome/repeat details, keyboard selection, table alternatives, fixed full-context axes across twenty-four-point pages and a reproducible all-page JSON export. Overlapping observations remain individual records; missing pause stays unknown and exploration has no performance score. This advances Phase 3 without any trend estimate or cloud upload. Full normalized context, matched reference forms, private sync/shared reports, remaining game/content work and production/device gates remain unfinished.

@@ -8,7 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.14.0
+## Current release · v0.15.0
+
+Insights now has individual-session plots for one explicitly selected local backup context, with active time, known foreground pauses and completed-session hints. Keyboard selection, source details/table, fixed axes across pages and a versioned all-page data export preserve the original observations. See [session plots](docs/SESSION_PLOTS.md).
 
 This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. Owner Google sign-in and code-only parent invitations are available after enabling Anonymous Auth and publishing the included Firebase rules. Activity sharing remains disabled. No personal records, emails, service credentials, or private design document are published here.
 
@@ -62,7 +64,7 @@ This app supports enjoyable exploration; it is not a diagnostic instrument or di
 
 The included Firestore rules support owner-only family setup, unpredictable single-use invitation codes, hidden anonymous parent identities, atomic membership creation and owner device revocation. Parents need no email or password. Unpaired visitors cannot enumerate families or read/write activity. Sign-in/pairing never uploads existing guest saves. Named Firebase apps separate role login keys, and Firestore uses memory-only caching. Play now offers optional, account-bound local preparation choices with separate Insights details and coarse Companion summaries. Older history requires individual selection. Only new recorded sessions while the same account is approved are eligible for future preparation; loading, reconnecting and switching accounts do not enroll existing history. No activity is uploaded. A later release must obtain fresh upload consent after automatic independent backup and tested recovery are ready. Same-origin apps may share browser infrastructure; role scopes alone do not guarantee independent operating-system installations.
 
-**Do not treat v0.10.0 as the connected family-production launch.** Private sync, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
+**Do not treat v0.15.0 as the connected family-production launch.** Private sync, family dashboards, automatic independent encrypted backups with tested recovery, full accessibility review, and actual-device installations/audio checks remain launch gates. See [implementation roadmap](docs/ROADMAP.md).
 
 See [backup and recovery](docs/BACKUP_RECOVERY.md) for device-local undo, the encrypted archive tools, synthetic monthly drills and the remaining real-backup setup. No production export, new credential or billing change is included.
 

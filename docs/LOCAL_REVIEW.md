@@ -15,3 +15,7 @@ Legacy schema-v1 sessions have no presentation observations. Since v0.13.0, opti
 Full-source CSV preserves the defined imported session fields, appending quoted presentation and timing JSON (blank for legacy records); filtered CSV scopes the same fields to the current selection. The raw table includes IDs, original timestamps, exact active and known foreground-pause milliseconds, attempts, hints, undo, source and outcomes. Summaries and records have independent twelve-entry pages. The context selector initially lists 200 contexts; any paged summary can select its own exact context.
 
 Summary JSON uses `analysisVersion: local-context-review-3`, records the selection/filter and source-session IDs, and includes interpretation limitations. It is derived and can be recomputed; it does not replace the source JSON. CSV uses the existing quoted/formula-safe exporter. A review cannot enable activity sharing or change Firestore permissions.
+
+## Individual-session plots (v0.15.0)
+
+Selecting one exact context opens a chronological raw-point plot, with metric selection, outcome shapes, repeat/hint details and a source table. Known pause zero remains distinct from unrecorded pause; hints use completed puzzle sessions only, with no exploration score. Fixed full-context axes span twenty-four-point pages. Plot JSON includes all selected/plotted/excluded IDs and exact original values under `local-session-points-1`. No connecting line, trend or clinical inference is added. See [session plots](SESSION_PLOTS.md).

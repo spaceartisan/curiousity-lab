@@ -1,3 +1,4 @@
+import { SessionTimeline } from "./SessionTimeline";
 import { timingLabel } from "../storage/timing";
 import { presentationLabel } from "../storage/presentation";
 import { useMemo, useState } from "react";
@@ -167,6 +168,11 @@ export function SessionReview({
         {selected.length} of {review.sessions.length} recorded sessions in this
         view · {summaries.length} separate contexts.
       </p>
+      <SessionTimeline
+        key={`${filters.context}:${filters.game}:${filters.from}:${filters.to}:${filters.exposure}`}
+        sessions={selected}
+        context={filters.context}
+      />
       <h3>Separate context summaries</h3>
       <p>
         Each summary keeps the same puzzle, activity, mode, content version, app
