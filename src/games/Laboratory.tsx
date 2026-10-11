@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { specimens } from "../content/specimens";
+import type { LabView } from "../content/lab-views";
 import {
   labWorkflows,
   labMode,
@@ -38,6 +39,11 @@ export function Laboratory({
 }: GameProps & { onNotebook?: () => void; lastNotebookVisit?: string }) {
   const d = draft.data as LabData;
   const [message, setMessage] = useState("");
+  const [viewName, setViewName] = useState("");
+  const [removedView, setRemovedView] = useState<{
+    view: LabView;
+    index: number;
+  } | null>(null);
   const s = specimens[d.specimen];
   const workflow = labWorkflows[d.specimen];
   const other = (d.specimen + 1) % specimens.length;
@@ -80,6 +86,9 @@ export function Laboratory({
       text: d.text,
       zoom: d.zoom,
       pan: d.pan,
+      ...(d.views !== undefined
+        ? { views: d.views.map((v) => ({ ...v, pan: [...v.pan] })) }
+        : {}),
       ...(d.workflowRevision === 1
         ? {
             labExperience: d.experience ?? "workbench",
@@ -288,6 +297,98 @@ export function Laboratory({
                 <button onClick={() => pan(0, -5)}>Move up</button>
                 <button onClick={() => pan(0, 5)}>Move down</button>
               </div>
+              <details>
+                <summary>
+                  Saved microscope views
+                  {d.views?.length ? ` (${d.views.length})` : ""}
+                </summary>
+                <p>
+                  Save digital view settings for this slide. Digital zoom adds
+                  no detail; framing can vary with screen shape. These are view
+                  presets, not calibrated magnifications or specimen
+                  measurements.
+                </p>
+                <label>
+                  View name{" "}
+                  <input
+                    maxLength={80}
+                    value={viewName}
+                    onChange={(e) => setViewName(e.target.value)}
+                  />
+                </label>
+                <div className="actions">
+                  <button
+                    disabled={!viewName.trim() || (d.views?.length ?? 0) >= 6}
+                    onClick={() => {
+                      const view = {
+                        id: crypto.randomUUID(),
+                        name: viewName.trim(),
+                        zoom: d.zoom,
+                        pan: [...d.pan],
+                      };
+                      set({ views: [...(d.views ?? []), view] }, true);
+                      setViewName("");
+                      setRemovedView(null);
+                      setMessage("Microscope view saved for this slide.");
+                    }}
+                  >
+                    Save current view
+                  </button>
+                  {removedView && (
+                    <button
+                      onClick={() => {
+                        const views = [...(d.views ?? [])];
+                        views.splice(removedView.index, 0, removedView.view);
+                        set({ views }, true);
+                        setRemovedView(null);
+                        setMessage("Saved view restored.");
+                      }}
+                    >
+                      Undo view removal
+                    </button>
+                  )}
+                </div>
+                {(d.views?.length ?? 0) >= 6 && (
+                  <p>
+                    Six views saved for this slide. Remove a view to save
+                    another.
+                  </p>
+                )}
+                <ol className="lab-saved-views">
+                  {(d.views ?? []).map((view, i) => (
+                    <li key={view.id}>
+                      <strong>{view.name}</strong>
+                      <span>Digital zoom {view.zoom.toFixed(2)}×</span>
+                      <div className="actions">
+                        <button
+                          aria-label={`Open saved view ${i + 1}: ${view.name}`}
+                          onClick={() => {
+                            set({ zoom: view.zoom, pan: [...view.pan] }, true);
+                            setMessage(`Opened saved view: ${view.name}.`);
+                          }}
+                        >
+                          Open view
+                        </button>
+                        <button
+                          aria-label={`Remove saved view ${i + 1}: ${view.name}`}
+                          onClick={() => {
+                            setRemovedView({ view, index: i });
+                            set(
+                              {
+                                views: d.views!.filter((v) => v.id !== view.id),
+                              },
+                              true,
+                            );
+                            setMessage("Saved view removed.");
+                          }}
+                        >
+                          Remove view
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </details>
               <ImageSource index={d.specimen} />
               <div className="actions">
                 <button

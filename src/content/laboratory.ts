@@ -1,8 +1,10 @@
 import { specimens } from "./specimens";
+import type { LabView } from "./lab-views";
 export type LabExperience = "workbench" | "explorer";
 export type LabStage =
   "desk" | "case" | "microscope" | "observations" | "compare";
 export interface LabPage {
+  views?: LabView[];
   specimen: number;
   zoom: number;
   pan: number[];
@@ -47,6 +49,15 @@ export const labWorkflows = [
 export function blankLabPage(specimen: number): LabPage {
   return { specimen, zoom: 1, pan: [0, 0], observations: [], text: "" };
 }
+export function savedLabViews(data: LabData | undefined, specimen: number) {
+  const views =
+    data?.specimen === specimen
+      ? data.views
+      : data?.pages?.find((p) => p.specimen === specimen)?.views;
+  return views === undefined
+    ? {}
+    : { views: views.map((v) => ({ ...v, pan: [...v.pan] })) };
+}
 export function labMode(data: LabData) {
   return data.workflowRevision === undefined
     ? "explore"
@@ -74,6 +85,7 @@ export function selectLabSlide(
     pan: data.pan,
     observations: data.observations,
     text: data.text,
+    ...(data.views !== undefined ? { views: data.views } : {}),
   };
   const pages = [
     ...(data.pages ?? []).filter((p) => p.specimen !== current.specimen),

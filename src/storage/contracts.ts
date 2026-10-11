@@ -1,7 +1,8 @@
 import { validTiming, type Timing } from "./timing";
 import { validPresentation, type Presentation } from "./presentation";
 import { validateGame } from "./validate-game";
-export const APP_VERSION = "0.23.0";
+import { validLabViews, type LabView } from "../content/lab-views";
+export const APP_VERSION = "0.24.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {
@@ -38,6 +39,7 @@ export interface Draft {
   finalized?: boolean;
 }
 export interface Creation {
+  views?: LabView[];
   id: string;
   kind: "melody" | "notebook";
   title: string;
@@ -172,6 +174,8 @@ export function validateState(
         !["workbench", "explorer"].includes(c.labExperience)) ||
       (c.labWorkflowVersion !== undefined && c.labWorkflowVersion !== 1) ||
       (c.labDomain !== undefined && c.labDomain !== "microbiology") ||
+      (c.views !== undefined &&
+        (c.kind !== "notebook" || !validLabViews(c.views))) ||
       !["melody", "notebook"].includes(c.kind) ||
       (c.notes &&
         (!Array.isArray(c.notes) ||

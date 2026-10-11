@@ -53,6 +53,7 @@ import {
   labMode,
   labPuzzle,
   blankLabPage,
+  savedLabViews,
   selectLabSlide,
   type LabData,
 } from "./content/laboratory";
@@ -148,6 +149,10 @@ function newDraft(
               }
             : {
                 ...blankLabPage(samePuzzle && oldLab ? oldLab.specimen : 0),
+                ...savedLabViews(
+                  oldLab,
+                  samePuzzle && oldLab ? oldLab.specimen : 0,
+                ),
                 stage: samePuzzle && oldLab ? "microscope" : "desk",
                 experience: oldLab?.experience ?? "workbench",
                 workflowRevision: 1,
@@ -634,6 +639,9 @@ export function App({ appRole }: { appRole: Role }) {
         pan: c.pan || [0, 0],
         observations: c.observations || [],
         text: c.text || "",
+        ...(c.views !== undefined
+          ? { views: c.views.map((v) => ({ ...v, pan: [...v.pan] })) }
+          : {}),
         pages: s.drafts.lab
           ? selectLabSlide(
               s.drafts.lab.data as LabData,

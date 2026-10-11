@@ -212,6 +212,13 @@ export function Creations(props: Props) {
                       </p>
                     )}
                     <p>{c.observations?.join(" · ")}</p>
+                    {!!c.views?.length && (
+                      <p>
+                        {c.views.length} saved microscope{" "}
+                        {c.views.length === 1 ? "view" : "views"}:{" "}
+                        {c.views.map((v) => v.name).join(" · ")}
+                      </p>
+                    )}
                     <p className="notebook-text">
                       {c.text || "No notebook note added."}
                     </p>

@@ -1,3 +1,11 @@
+# v0.24.0 validation
+
+Four new regressions cover bounded optional view contracts in active/stored slide pages and notebook imports, old saves and wrong-kind rejection, slide isolation and defensive copies, real zoom/pan save and reopen, history-off reload, removal undo, the six-view limit, notebook name search, immutable saved snapshots/session records, new exploration and notebook reopens. A desktop/phone scenario exercises these flows offline and checks 320-pixel/200% text and action targets.
+
+Deployment requires full component/build, archive, security/recovery and browser gates followed by screenshot review. Presets save existing display settings; responsive framing can vary and no calibrated field/magnification claim is made. The image pack and actual family-device/scientific review remain unfinished, as does the full architecture.
+
+---
+
 # v0.23.0 validation
 
 Four additional regressions verify frozen Classic rhythms, six-beat content, pace-normalized feedback and unchanged flexibility bounds, per-exercise progress/import limits, collection cycling, canceled/confirmed replacement, preserved recordings, actual six-tone/offset playback, requested spacing hints, single immutable exploration filing/replay, and history-off resumed completion without raw timestamp persistence or invented timing feedback. A new desktop/phone scenario exercises actual audio controls, six visual beats, offline partial progress, canceled choices, 320-pixel/200% text and target sizes, optional help, completion, replay and collection boundaries.

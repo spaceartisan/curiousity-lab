@@ -1,6 +1,7 @@
 import { generateSudoku, validSudoku, type Size } from "../games/sudoku-engine";
 import { connections, searchBoard, searchPacks } from "../content/words";
 import { specimens } from "../content/specimens";
+import { validLabViews } from "../content/lab-views";
 import {
   exerciseCount,
   rhythmBeatCount,
@@ -149,7 +150,8 @@ export function validateGame(kind: string, value: unknown): boolean {
       ) &&
       strings(v.observations, 12) &&
       typeof v.text === "string" &&
-      v.text.length <= 1000;
+      v.text.length <= 1000 &&
+      (v.views === undefined || validLabViews(v.views));
     return (
       page(value) &&
       ["desk", "case", "microscope", "observations", "compare"].includes(

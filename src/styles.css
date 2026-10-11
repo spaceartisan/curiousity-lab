@@ -631,6 +631,17 @@ main {
   border-radius: 16px;
   margin: 1rem 0;
 }
+.lab-saved-views {
+  padding-inline-start: 1.4rem;
+}
+.lab-saved-views li {
+  padding: 0.6rem 0;
+  overflow-wrap: anywhere;
+}
+.lab-saved-views strong,
+.lab-saved-views span {
+  display: block;
+}
 .microscope img {
   width: 100%;
   height: 100%;

@@ -24,6 +24,7 @@ export function selectCreations(
             c.title,
             c.text ?? "",
             ...(c.observations ?? []),
+            ...(c.views ?? []).map((v) => v.name),
             asset?.title ?? "",
           ].join(" "),
         ).includes(needle)
