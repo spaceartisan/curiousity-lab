@@ -8,7 +8,11 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.31.0
+## Current release · v0.32.0
+
+**Numbers and Words.** Numbers now holds Sudoku, Killer Sudoku and a Countdown-style numbers game. Words holds cryptograms of classic quotations, a spelling-bee-style Letter Hive, Lewis Carroll's word ladders and Connections. See [numbers and words](docs/PUZZLE_ROOMS.md).
+
+### Earlier · v0.31.0
 
 **Laboratory bench.** My Laboratory now opens on real bench work. There are 19 microbiology unknowns, mostly veterinary and agricultural: mastitis, fowl cholera, swine erysipelas, foal pneumonia, circling sheep, calf scours and more. Each is worked from requisition to sign-out with CDC photographs of real stains, plates and test reactions. There are also seven 100-cell hematology differentials on real labeled blood cells. See [laboratory bench](docs/LAB_BENCH.md).
 

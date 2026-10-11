@@ -1,5 +1,5 @@
 import { beforeEach, expect, it } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../src/App";
 import { connections } from "../src/content/words";
@@ -34,6 +34,7 @@ async function open(history = false, pack = 0, data?: ConnectionsData) {
   const view = render(<App appRole="play" />);
   const user = userEvent.setup();
   await user.click(await screen.findByRole("button", { name: /Words/ }));
+  fireEvent.click(await screen.findByRole("tab", { name: "Connections" }));
   return { user, view };
 }
 async function saved() {
@@ -234,6 +235,7 @@ it("legacy selection/solved group and shuffled presentation survive remount with
   view.unmount();
   render(<App appRole="play" />);
   await user.click(await screen.findByRole("button", { name: /Words/ }));
+  fireEvent.click(await screen.findByRole("tab", { name: "Connections" }));
   expect(
     screen.getByRole("group", { name: "Connection words" }).textContent,
   ).toBe(order);

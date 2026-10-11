@@ -45,6 +45,7 @@ describe("player flow", () => {
     const user = userEvent.setup();
     render(<App appRole="play" />);
     await user.click(await screen.findByRole("button", { name: /Words/ }));
+    fireEvent.click(await screen.findByRole("tab", { name: "Connections" }));
     for (let i = 0; i < 7; i++) {
       await user.click(screen.getByRole("button", { name: "New activity" }));
     }
@@ -62,6 +63,7 @@ describe("player flow", () => {
     );
     await user.click(screen.getByRole("button", { name: "Back to games" }));
     await user.click(screen.getByRole("button", { name: /Words/ }));
+    fireEvent.click(await screen.findByRole("tab", { name: "Connections" }));
     await user.click(screen.getByRole("button", { name: "New activity" }));
     await user.click(screen.getByRole("button", { name: "Back to games" }));
     await waitFor(() =>
@@ -104,6 +106,7 @@ describe("player flow", () => {
     const user = userEvent.setup();
     render(<App appRole="play" />);
     await user.click(await screen.findByRole("button", { name: /Words/ }));
+    fireEvent.click(await screen.findByRole("tab", { name: "Connections" }));
     for (const w of ["TULIP", "DAHLIA", "IRIS", "ROSE"])
       await user.click(screen.getByRole("button", { name: w }));
     await user.click(screen.getByRole("button", { name: "Connect" }));

@@ -1,5 +1,5 @@
 import { beforeEach, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../src/App";
 import {
@@ -27,6 +27,7 @@ async function open(history = true) {
   const view = render(<App appRole="play" />);
   const user = userEvent.setup();
   await user.click(await screen.findByRole("button", { name: /Words/ }));
+  fireEvent.click(await screen.findByRole("tab", { name: "Connections" }));
   vi.spyOn(window, "confirm").mockReturnValue(true);
   await user.selectOptions(
     screen.getByRole("combobox", { name: "Word Connections challenge" }),
@@ -107,6 +108,7 @@ it("medical selection survives history-off reload and canceled replacement witho
   view.unmount();
   render(<App appRole="play" />);
   await user.click(await screen.findByRole("button", { name: /Words/ }));
+  fireEvent.click(await screen.findByRole("tab", { name: "Connections" }));
   vi.mocked(window.confirm).mockReturnValue(false);
   await user.selectOptions(
     screen.getByRole("combobox", { name: "Word Connections challenge" }),

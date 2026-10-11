@@ -34,6 +34,7 @@ import { Connections, WordSearch } from "./games/Words";
 import { Music, type MusicData } from "./games/Music";
 import { MusicRoom } from "./music/MusicRoom";
 import { LabRoom } from "./lab/LabRoom";
+import { NumbersRoom, WordsRoom } from "./puzzles/Rooms";
 import {
   nextMusicExercise,
   musicPuzzle,
@@ -79,8 +80,8 @@ import {
 import "./styles.css";
 const base = import.meta.env.BASE_URL;
 const titles: Record<GameKind, string> = {
-  sudoku: "Sudoku",
-  connections: "Word Connections",
+  sudoku: "Numbers",
+  connections: "Words",
   search: "Word Search",
   music: "Music Studio",
   lab: "My Laboratory",
@@ -1451,9 +1452,15 @@ export function App({ appRole }: { appRole: Role }) {
                 }}
               >
                 {game === "sudoku" ? (
-                  <Sudoku key={props.draft.id} {...props} />
+                  <NumbersRoom
+                    sudoku={<Sudoku key={props.draft.id} {...props} />}
+                  />
                 ) : game === "connections" ? (
-                  <Connections key={props.draft.id} {...props} />
+                  <WordsRoom
+                    connections={
+                      <Connections key={props.draft.id} {...props} />
+                    }
+                  />
                 ) : game === "search" ? (
                   <WordSearch key={props.draft.id} {...props} />
                 ) : game === "music" ? (

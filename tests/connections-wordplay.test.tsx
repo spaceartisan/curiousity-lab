@@ -1,5 +1,5 @@
 import { beforeEach, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../src/App";
 import { connections } from "../src/content/words";
@@ -37,6 +37,7 @@ async function open(history = true, pack = 0) {
   const view = render(<App appRole="play" />);
   const user = userEvent.setup();
   await user.click(await screen.findByRole("button", { name: /Words/ }));
+  fireEvent.click(await screen.findByRole("tab", { name: "Connections" }));
   return { user, view };
 }
 async function saved() {
@@ -190,6 +191,7 @@ it("history off retains chosen board and shuffled selection across reload withou
   view.unmount();
   render(<App appRole="play" />);
   await user.click(await screen.findByRole("button", { name: /Words/ }));
+  fireEvent.click(await screen.findByRole("tab", { name: "Connections" }));
   expect(
     screen.getByRole("group", { name: "Connection words" }).textContent,
   ).toBe(order);
