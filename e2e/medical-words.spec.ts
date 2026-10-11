@@ -40,6 +40,7 @@ test("medical Latin and Greek play resumes offline, reveals optional roots and k
     page.getByText("Saved on this device", { exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: /Words Find/ }).click();
+  await page.getByRole("tab", { name: "Connections" }).click();
   page.once("dialog", (d) => d.accept());
   const choice = page.getByRole("combobox", {
     name: "Word Connections challenge",
@@ -87,6 +88,7 @@ test("medical Latin and Greek play resumes offline, reveals optional roots and k
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: /Words Find/ }).click();
+  await page.getByRole("tab", { name: "Connections" }).click();
   await expect(choice).toHaveValue("Medical");
   await expect(
     page.getByRole("button", { name: "RENAL", exact: true }),

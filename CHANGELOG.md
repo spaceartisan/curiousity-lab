@@ -1,3 +1,9 @@
+# v0.32.0 — Numbers and Words rooms
+
+- **Numbers** now offers Sudoku, **Killer Sudoku** (34 puzzles with unique solutions, cage-combination helper, notes) and **Countdown** (150 rounds, each with a verified solution and an optional clock).
+- **Words** now offers **Cryptograms** of 50 public-domain quotations, **Letter Hive** (60 spelling-bee-style hives of common words), **Word Ladder** (Lewis Carroll’s original Doublets plus 40 generated ladders) and the existing Connections.
+- See docs/PUZZLE_ROOMS.md.
+
 # v0.31.0 — Laboratory bench and hematology
 
 - My Laboratory opens on a **microbiology bench**: 19 unknowns, mostly veterinary and agricultural. Read the requisition, the Gram stain and the plates, run any of 22 bench tests, and sign out an ID. Then see the reference ID, the key findings, and a note. Photos are CDC PHIL (public domain); labels that gave away the answer were cropped or masked.

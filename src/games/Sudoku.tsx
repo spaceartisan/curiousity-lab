@@ -147,89 +147,6 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
   }
   return (
     <div className="sudoku-workspace">
-      <div className="toolbar">
-        <label>
-          Grid{" "}
-          <select
-            aria-label="Grid"
-            value={d.size}
-            onChange={(e) =>
-              change(
-                Number(e.target.value) as Size,
-                (d.tier === "Hidden singles" || d.tier === "Challenging") &&
-                  Number(e.target.value) !== 9
-                  ? "Classic"
-                  : d.tier,
-              )
-            }
-          >
-            <option value={9}>9 × 9</option>
-            <option value={6}>6 × 6</option>
-            <option value={4}>4 × 4</option>
-          </select>
-        </label>
-        <label>
-          Challenge{" "}
-          <select
-            aria-label="Challenge"
-            value={d.tier}
-            onChange={(e) => change(d.size, e.target.value as SudokuTier)}
-          >
-            <option>Relaxed</option>
-            <option>Classic</option>
-            <option disabled={d.size !== 9}>Hidden singles</option>
-            <option disabled={d.size !== 9}>Challenging</option>
-          </select>
-        </label>
-      </div>
-      <p className="muted sudoku-technique">
-        {d.tier === "Challenging"
-          ? "Challenging · Locked candidates and naked pairs."
-          : d.tier === "Hidden singles"
-            ? "Hidden singles · Single-candidate and hidden-single placements."
-            : d.tier === "Relaxed"
-              ? "Relaxed · More givens; single-candidate placements."
-              : "Classic · Fewer givens; single-candidate placements."}{" "}
-        {d.tier === "Hidden singles" || d.tier === "Challenging"
-          ? "9 × 9 only; smaller grids start Classic."
-          : "Advanced challenges use the 9 × 9 grid."}
-      </p>
-      <details>
-        <summary>Controls & help</summary>
-        <p>
-          Select a square and enter a number. Arrow keys move; Home/End select
-          row endpoints; Control+Home/End select board endpoints. Delete or
-          Backspace erases. Pencil notes and Undo are available below.
-        </p>
-        <p>
-          A hidden single has only one possible place in a row, column or box.
-          Locked candidates confine a number to the overlap of a box and a row
-          or column, removing it elsewhere in that unit. A naked pair consists
-          of two squares in one unit with the same two candidates, removing
-          those candidates from other squares in that unit.
-        </p>
-        <p>
-          Show a step explains a deduction without entering a number. Hint fills
-          a square. Assistance and checking are optional; nothing is revealed
-          automatically. All challenges have a unique solution and can be solved
-          logically without guessing.
-        </p>
-      </details>
-      <label className="check-label sudoku-size-choice">
-        <input
-          type="checkbox"
-          checked={largeCells}
-          onChange={(e) =>
-            update({ ...d, largeCells: e.target.checked }, { view: true })
-          }
-        />
-        Larger Sudoku squares
-      </label>
-      <p className="muted" id="sudoku-size-help">
-        {largeCells
-          ? "Scroll inside the grid; navigation keeps the selected square visible."
-          : "Optional larger squares keep the same puzzle."}
-      </p>
       <div className="sudoku-layout">
         <div
           ref={viewport}
@@ -428,6 +345,91 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
           {complete ? "Play another" : "Another puzzle"}
         </button>
       </div>
+      <section className="sudoku-settings" aria-label="Grid and challenge">
+        <div className="toolbar">
+          <label>
+            Grid{" "}
+            <select
+              aria-label="Grid"
+              value={d.size}
+              onChange={(e) =>
+                change(
+                  Number(e.target.value) as Size,
+                  (d.tier === "Hidden singles" || d.tier === "Challenging") &&
+                    Number(e.target.value) !== 9
+                    ? "Classic"
+                    : d.tier,
+                )
+              }
+            >
+              <option value={9}>9 × 9</option>
+              <option value={6}>6 × 6</option>
+              <option value={4}>4 × 4</option>
+            </select>
+          </label>
+          <label>
+            Challenge{" "}
+            <select
+              aria-label="Challenge"
+              value={d.tier}
+              onChange={(e) => change(d.size, e.target.value as SudokuTier)}
+            >
+              <option>Relaxed</option>
+              <option>Classic</option>
+              <option disabled={d.size !== 9}>Hidden singles</option>
+              <option disabled={d.size !== 9}>Challenging</option>
+            </select>
+          </label>
+        </div>
+        <p className="muted sudoku-technique">
+          {d.tier === "Challenging"
+            ? "Challenging · Locked candidates and naked pairs."
+            : d.tier === "Hidden singles"
+              ? "Hidden singles · Single-candidate and hidden-single placements."
+              : d.tier === "Relaxed"
+                ? "Relaxed · More givens; single-candidate placements."
+                : "Classic · Fewer givens; single-candidate placements."}{" "}
+          {d.tier === "Hidden singles" || d.tier === "Challenging"
+            ? "9 × 9 only; smaller grids start Classic."
+            : "Advanced challenges use the 9 × 9 grid."}
+        </p>
+        <details>
+          <summary>Controls & help</summary>
+          <p>
+            Select a square and enter a number. Arrow keys move; Home/End select
+            row endpoints; Control+Home/End select board endpoints. Delete or
+            Backspace erases. Pencil notes and Undo are available below.
+          </p>
+          <p>
+            A hidden single has only one possible place in a row, column or box.
+            Locked candidates confine a number to the overlap of a box and a row
+            or column, removing it elsewhere in that unit. A naked pair consists
+            of two squares in one unit with the same two candidates, removing
+            those candidates from other squares in that unit.
+          </p>
+          <p>
+            Show a step explains a deduction without entering a number. Hint
+            fills a square. Assistance and checking are optional; nothing is
+            revealed automatically. All challenges have a unique solution and
+            can be solved logically without guessing.
+          </p>
+        </details>
+        <label className="check-label sudoku-size-choice">
+          <input
+            type="checkbox"
+            checked={largeCells}
+            onChange={(e) =>
+              update({ ...d, largeCells: e.target.checked }, { view: true })
+            }
+          />
+          Larger Sudoku squares
+        </label>
+        <p className="muted" id="sudoku-size-help">
+          {largeCells
+            ? "Scroll inside the grid; navigation keeps the selected square visible."
+            : "Optional larger squares keep the same puzzle."}
+        </p>
+      </section>
     </div>
   );
 }

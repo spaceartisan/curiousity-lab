@@ -2076,3 +2076,416 @@ button.big {
   align-items: center;
   font-weight: 600;
 }
+/* Numbers & words rooms */
+.killer,
+.countdown,
+.crypto,
+.hive,
+.ladder {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+.killer-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  align-items: start;
+}
+.killer-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  width: min(100%, 560px);
+  aspect-ratio: 1;
+  border: 3px solid var(--ink);
+  background: var(--paper);
+}
+.kcell {
+  position: relative;
+  padding: 0;
+  min-height: 0;
+  border: 1px solid #c9d2cc;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: clamp(1rem, 4.5vw, 1.6rem);
+  display: grid;
+  place-items: center;
+}
+.kcell.box-r {
+  border-right: 3px solid var(--ink);
+}
+.kcell.box-b {
+  border-bottom: 3px solid var(--ink);
+}
+.kcell.peer {
+  background: var(--hover);
+}
+.kcell.sel {
+  background: #f3dcbd;
+}
+.theme-dark .kcell.sel {
+  background: #5a4a2c;
+}
+.kcell.wrong .kval {
+  color: #b23a28;
+  text-decoration: underline wavy;
+}
+.kcage {
+  position: absolute;
+  border: 1.5px dashed #6f7f77;
+  pointer-events: none;
+}
+.ksum {
+  position: absolute;
+  top: 1px;
+  left: 3px;
+  font-size: clamp(0.55rem, 2.2vw, 0.72rem);
+  font-weight: 700;
+  background: var(--paper);
+  line-height: 1;
+  padding: 1px;
+  z-index: 1;
+}
+.kval {
+  font-weight: 600;
+}
+.knotes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 80%;
+  font-size: clamp(0.45rem, 1.8vw, 0.62rem);
+  color: var(--muted);
+  line-height: 1.1;
+}
+.killer-side {
+  flex: 1 1 260px;
+  display: grid;
+  gap: 0.8rem;
+  min-width: 0;
+}
+.combos ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.4rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+.combos .ruled-out {
+  color: var(--muted);
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.cd-target {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+}
+.cd-target span {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8rem;
+}
+.cd-target strong {
+  font-size: 3rem;
+  font-variant-numeric: tabular-nums;
+  font-family: Georgia, "Times New Roman", serif;
+}
+.cd-clock {
+  font-style: normal;
+  font-weight: 700;
+}
+.cd-clock.low {
+  color: #b23a28;
+}
+.cd-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.cd-tile {
+  min-width: 72px;
+  min-height: 64px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: #1f4e79;
+  color: #fff;
+  border-color: #163a5a;
+}
+.cd-tile:hover {
+  background: #2a6299;
+}
+.cd-tile.selected {
+  background: #e3a33c;
+  color: #1d1d1d;
+  border-color: #b97f21;
+}
+.cd-ops {
+  display: flex;
+  gap: 0.5rem;
+}
+.cd-ops button {
+  min-width: 64px;
+  font-size: 1.4rem;
+}
+.cd-steps {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.1rem;
+}
+.cd-steps.solution {
+  color: var(--muted);
+}
+.crypto-theme {
+  color: var(--muted);
+  margin: 0;
+}
+.crypto-text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem 1.2rem;
+  padding: 1rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.crypto-word {
+  display: flex;
+  gap: 0.15rem;
+  align-items: end;
+}
+.crypto-cell {
+  min-height: 0;
+  min-width: 0;
+  width: 2rem;
+  padding: 0.1rem 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  display: grid;
+  justify-items: center;
+}
+.crypto-guess {
+  height: 1.5rem;
+  width: 100%;
+  border-bottom: 2px solid var(--ink);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.crypto-cipher {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-family: ui-monospace, Menlo, monospace;
+}
+.crypto-cell.active {
+  background: #f3dcbd;
+}
+.theme-dark .crypto-cell.active {
+  background: #5a4a2c;
+}
+.crypto-punct {
+  font-size: 1.2rem;
+  align-self: end;
+  padding-bottom: 1.2rem;
+}
+.crypto-keys {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  gap: 0.35rem;
+}
+.crypto-keys button {
+  min-width: 0;
+  padding: 0.4rem 0;
+  font-weight: 700;
+}
+.crypto-keys .used {
+  opacity: 0.45;
+}
+.hive-word {
+  min-height: 3rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+.hive-word .center {
+  color: #c08a14;
+}
+.hive-word .caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.8rem;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-left: 2px;
+}
+.hive-cells {
+  position: relative;
+  width: 264px;
+  height: 270px;
+  margin: 0 auto;
+}
+.hex {
+  position: absolute;
+  width: 88px;
+  height: 80px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  background: #e6e2d3;
+  color: #233e38;
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+.hex:hover {
+  background: #d9d3bd;
+}
+.hex.center {
+  background: #f2c94c;
+  left: 88px;
+  top: 95px;
+}
+.hex.pos1 {
+  left: 88px;
+  top: 10px;
+}
+.hex.pos2 {
+  left: 154px;
+  top: 52px;
+}
+.hex.pos3 {
+  left: 154px;
+  top: 138px;
+}
+.hex.pos4 {
+  left: 88px;
+  top: 180px;
+}
+.hex.pos5 {
+  left: 22px;
+  top: 138px;
+}
+.hex.pos6 {
+  left: 22px;
+  top: 52px;
+}
+.hive-actions {
+  justify-content: center;
+}
+.hive-found ul,
+.hive-all {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+.hive-found .pangram {
+  font-weight: 800;
+  color: #c08a14;
+}
+.hive-found .bonus {
+  color: var(--muted);
+  font-style: italic;
+}
+.hive-all li {
+  color: var(--muted);
+}
+.hive-all li.got {
+  color: var(--ink);
+  font-weight: 600;
+}
+.ladder-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  margin: 0;
+}
+.ladder-rungs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.4rem;
+  justify-items: start;
+}
+.ladder-rungs li {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 1.5rem;
+  letter-spacing: 0.35em;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+}
+.ladder-rungs li.start,
+.ladder-rungs li.end {
+  border-color: var(--accent);
+}
+.ladder-rungs li.ghost {
+  opacity: 0.5;
+  border-style: dashed;
+}
+.ladder-rungs li.ladder-entry {
+  border: 0;
+  background: none;
+  padding: 0;
+}
+.ladder-entry form {
+  display: flex;
+  gap: 0.5rem;
+}
+.ladder-entry input {
+  font: inherit;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  width: 8.5em;
+  padding: 0.3rem 0.6rem;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.ladder-answer {
+  font-family: ui-monospace, Menlo, monospace;
+  color: var(--muted);
+}
+.crypto-text {
+  max-width: 100%;
+  gap: 0.8rem 0.9rem;
+}
+.crypto-cell {
+  width: clamp(1.3rem, 6.4vw, 2rem);
+}
+.crypto-guess {
+  font-size: clamp(0.95rem, 4.2vw, 1.2rem);
+}
+.sudoku-settings {
+  display: grid;
+  gap: 0.8rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+.crypto {
+  grid-template-columns: minmax(0, 1fr);
+}
+.crypto-cell {
+  width: clamp(1.05rem, 5.4vw, 2rem);
+}
+.crypto-word {
+  gap: 0.1rem;
+}
+@media (max-width: 480px) {
+  .crypto-text {
+    padding: 0.6rem;
+  }
+}
