@@ -1,5 +1,5 @@
 import { beforeEach, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../src/App";
 import {
@@ -56,6 +56,9 @@ async function open(history = true, exercise = 0, taps = 0) {
   const view = render(<App appRole="play" />),
     user = userEvent.setup();
   await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   return { user, view };
 }
 async function saved() {
@@ -201,6 +204,9 @@ it("history-off reload retains six-beat progress without raw timestamps and resu
   view.unmount();
   render(<App appRole="play" />);
   await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   expect(screen.getByText(/2 of 6 beats tapped/)).toBeInTheDocument();
   for (let i = 0; i < 4; i++)
     await user.click(screen.getByRole("button", { name: "Tap a beat" }));

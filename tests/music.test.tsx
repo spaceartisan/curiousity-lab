@@ -55,6 +55,9 @@ async function openMusic(history = false, data?: MusicData) {
   const user = userEvent.setup();
   const view = render(<App appRole="play" />);
   await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   return { user, view };
 }
 it("music content has distinct bounded exercises and alternating matching positions", () => {

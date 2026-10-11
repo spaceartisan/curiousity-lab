@@ -32,6 +32,7 @@ import {
 } from "./games/connections-engine";
 import { Connections, WordSearch } from "./games/Words";
 import { Music, type MusicData } from "./games/Music";
+import { MusicRoom } from "./music/MusicRoom";
 import {
   nextMusicExercise,
   musicPuzzle,
@@ -1455,13 +1456,21 @@ export function App({ appRole }: { appRole: Role }) {
                 ) : game === "search" ? (
                   <WordSearch key={props.draft.id} {...props} />
                 ) : game === "music" ? (
-                  <Music
-                    key={props.draft.id}
-                    {...props}
+                  <MusicRoom
                     sound={prefs.sound}
                     volume={prefs.volume}
                     onSoundChange={(sound) => changePrefs({ sound })}
                     onVolumeChange={(volume) => changePrefs({ volume })}
+                    exercises={
+                      <Music
+                        key={props.draft.id}
+                        {...props}
+                        sound={prefs.sound}
+                        volume={prefs.volume}
+                        onSoundChange={(sound) => changePrefs({ sound })}
+                        onVolumeChange={(volume) => changePrefs({ volume })}
+                      />
+                    }
                   />
                 ) : (
                   <Laboratory

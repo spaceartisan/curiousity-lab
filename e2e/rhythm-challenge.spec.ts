@@ -16,6 +16,7 @@ test("six-beat rhythm challenge resumes honestly offline and retains its chosen 
   ).toBeVisible();
   await page.reload();
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await page.getByRole("button", { name: "Rhythm echo", exact: true }).click();
   const choice = page.getByRole("combobox", { name: "Rhythm challenge" });
   page.once("dialog", (d) => d.accept());
@@ -55,6 +56,7 @@ test("six-beat rhythm challenge resumes honestly offline and retains its chosen 
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect(choice).toHaveValue("Challenging");
   await expect(page.getByText(/2 of 6 beats tapped/)).toBeVisible();
   await page.setViewportSize({ width: 320, height: 740 });

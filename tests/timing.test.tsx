@@ -178,6 +178,9 @@ async function open(legacy = false) {
   await saveState(s);
   render(<App appRole="play" />);
   fireEvent.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   return (t: number) => {
     now = t;
   };

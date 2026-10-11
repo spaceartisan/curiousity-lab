@@ -8,9 +8,11 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.29.0
+## Current release · v0.30.0
 
-Words now offers **Medical**: two authored connection boards exploring Latin/Greek roots and Latin position prefixes. Meaning-based groups have closed, optional explanations after solving, independent replay and offline resume. See [medical word puzzles](docs/MEDICAL_WORDS.md).
+**Music room.** Music Studio now opens on real music: 65 public-domain excerpts (Beethoven, Mozart, Chopin, Bach, Debussy, Scott Joplin's rags, and familiar hymns and carols) played on a sampled grand piano. Name the piece by ear or from the score, see the engraved score highlighted as it plays, then play the melody yourself on a full keyboard while the piano accompanies you. See [music room](docs/MUSIC_ROOM.md).
+
+### Earlier · v0.28.0
 
 Insights context cards now use **short activity headings and expandable provenance**. Numbered choices distinguish contexts with similar names; source versions, presentation, timing and clock limitations remain available in Context details. Grouping rules and exports are unchanged.
 

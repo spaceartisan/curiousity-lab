@@ -193,6 +193,9 @@ async function open(draft?: Draft, history = true) {
   const user = userEvent.setup(),
     view = render(<App appRole="play" />);
   await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   return { user, view };
 }
 async function saved() {
@@ -216,6 +219,9 @@ it("actual music settings accumulate through reload and finalization while filed
   view.unmount();
   render(<App appRole="play" />);
   await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   expect((await saved()).drafts.music?.presentation).toEqual(
     before.presentation,
   );
@@ -240,6 +246,9 @@ it("enabling history mid-puzzle records partial context and disabling it removes
   );
   await user.click(screen.getByRole("button", { name: "Back to games" }));
   await user.click(screen.getByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   expect((await saved()).drafts.music?.presentation?.coverage).toBe("partial");
   await user.click(screen.getByRole("button", { name: "Settings" }));
   await user.click(

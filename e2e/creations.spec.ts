@@ -42,13 +42,11 @@ test("notebook collections filter paginate and revisit legacy entries offline", 
     await navigator.serviceWorker.ready;
   });
   await page.getByRole("button", { name: "Settings", exact: true }).click();
-  await page
-    .getByLabel("Restore this app’s JSON backup")
-    .setInputFiles({
-      name: "fictional-notebook-backup.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(state)),
-    });
+  await page.getByLabel("Restore this app’s JSON backup").setInputFiles({
+    name: "fictional-notebook-backup.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(state)),
+  });
   await expect(
     page.getByRole("region", { name: "Restore preview" }),
   ).toBeVisible();
@@ -138,14 +136,19 @@ test("notebook collections filter paginate and revisit legacy entries offline", 
     [recent.getByRole("heading"), "Fictional"],
     [recent.getByRole("button", { name: "Revisit specimen" }), "specimen"],
   ] as const) {
-    expect(await element.evaluate((node, longestWord) => {
-      const style = getComputedStyle(node);
-      const canvas = document.createElement("canvas");
-      const drawing = canvas.getContext("2d")!;
-      drawing.font = style.font;
-      const available = node.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-      return available >= drawing.measureText(longestWord).width;
-    }, word)).toBe(true);
+    expect(
+      await element.evaluate((node, longestWord) => {
+        const style = getComputedStyle(node);
+        const canvas = document.createElement("canvas");
+        const drawing = canvas.getContext("2d")!;
+        drawing.font = style.font;
+        const available =
+          node.clientWidth -
+          parseFloat(style.paddingLeft) -
+          parseFloat(style.paddingRight);
+        return available >= drawing.measureText(longestWord).width;
+      }, word),
+    ).toBe(true);
   }
   await page.screenshot({
     path: info.outputPath("notebook-large-text.png"),

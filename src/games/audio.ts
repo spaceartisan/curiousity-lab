@@ -1,3 +1,10 @@
+import {
+  pianoContext,
+  pianoReady,
+  setPianoVolume,
+  silencePiano,
+  strike,
+} from "./piano";
 let context: AudioContext | undefined;
 let master: GainNode | undefined;
 let audioEpoch = 0;
@@ -5,6 +12,7 @@ const voices = new Set<OscillatorNode>();
 export const notes = ["C", "D", "E", "F", "G", "A", "B", "C"];
 export const midi = [60, 62, 64, 65, 67, 69, 71, 72];
 export function setAudioVolume(volume: number) {
+  setPianoVolume(volume);
   if (!context || !master) return;
   master.gain.cancelScheduledValues(context.currentTime);
   master.gain.setTargetAtTime(
@@ -24,6 +32,14 @@ export async function tone(
     return;
   }
   const currentEpoch = audioEpoch;
+  if (pianoReady()) {
+    setPianoVolume(volume);
+    const piano = pianoContext().context;
+    await piano.resume();
+    if (currentEpoch !== audioEpoch) return;
+    strike(midi[note], piano.currentTime + delay, duration, 80);
+    return;
+  }
   context ??= new AudioContext();
   if (!master) {
     master = context.createGain();
@@ -57,6 +73,7 @@ export async function tone(
 }
 export function stopAudio() {
   audioEpoch++;
+  silencePiano();
   for (const voice of voices) {
     try {
       voice.stop();

@@ -113,6 +113,9 @@ describe("player flow", () => {
     const user = userEvent.setup();
     render(<App appRole="play" />);
     await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+    fireEvent.click(
+      await screen.findByRole("tab", { name: "Earlier exercises" }),
+    );
     await user.click(screen.getByRole("button", { name: "Play C" }));
     await user.click(screen.getByRole("button", { name: "Play E" }));
     await user.click(screen.getByRole("button", { name: "Save melody" }));
