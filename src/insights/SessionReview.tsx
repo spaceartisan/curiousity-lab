@@ -1,3 +1,4 @@
+import { presentationLabel } from "../storage/presentation";
 import { useMemo, useState } from "react";
 import type { LocalState } from "../storage/contracts";
 import { download, sessionsCsv } from "../storage/local";
@@ -60,8 +61,9 @@ export function SessionReview({
         establish enjoyment.
       </p>
       <p className="notice">
-        This backup does not record audio/notation settings, input method,
-        pauses or clock quality. Matching puzzle and version does not establish
+        Setting observations may be unrecorded, partial or mixed. A sound-on
+        setting does not prove audible playback. Input method, pauses and clock
+        quality are unrecorded. Matching puzzle and version does not establish
         equivalent presentation. Play without activity history is absent, not
         zero activity.
       </p>
@@ -160,10 +162,11 @@ export function SessionReview({
       <h3>Separate context summaries</h3>
       <p>
         Each summary keeps the same puzzle, activity, mode, content version, app
-        version, source and first/repeat exposure together. Counts describe
-        saved sessions; days are UTC dates. Repeat practice can affect results.
-        Sessions within a day or puzzle may be related; they are not independent
-        participants. No trend is estimated.
+        version, source, first/repeat exposure and observed presentation
+        settings together. Counts describe saved sessions; days are UTC dates.
+        Repeat practice can affect results. Sessions within a day or puzzle may
+        be related; they are not independent participants. No trend is
+        estimated.
       </p>
       {contexts.length > 200 ? (
         <p>
@@ -280,6 +283,7 @@ export function SessionReview({
                     "Active time",
                     "Hints / undo",
                     "Outcome / source",
+                    "Presentation settings",
                   ].map((x) => (
                     <th scope="col" key={x}>
                       {x}
@@ -323,6 +327,7 @@ export function SessionReview({
                       <br />
                       {s.source}
                     </td>
+                    <td>{presentationLabel(s.presentation)}</td>
                   </tr>
                 ))}
               </tbody>

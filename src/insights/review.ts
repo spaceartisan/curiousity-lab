@@ -1,5 +1,6 @@
+import { presentationKey, presentationLabel } from "../storage/presentation";
 import type { GameKind, Session } from "../storage/contracts";
-export const ANALYSIS_VERSION = "local-context-review-1";
+export const ANALYSIS_VERSION = "local-context-review-2";
 export const activityNames: Record<GameKind, string> = {
   sudoku: "Sudoku",
   connections: "Word Connections",
@@ -30,10 +31,11 @@ export function contextKey(s: Session) {
     s.appVersion,
     s.source,
     s.attempt === 1 ? "first" : "repeat",
+    presentationKey(s.presentation),
   ]);
 }
 export function contextLabel(s: Session) {
-  return `${activityNames[s.game]} · ${s.mode} · ${s.puzzleId} · ${s.contentVersion} · app ${s.appVersion} · ${s.attempt === 1 ? "first attempt" : "repeat attempts"}`;
+  return `${activityNames[s.game]} · ${s.mode} · ${s.puzzleId} · ${s.contentVersion} · app ${s.appVersion} · ${s.attempt === 1 ? "first attempt" : "repeat attempts"} · ${presentationLabel(s.presentation)}`;
 }
 export function filterSessions(
   sessions: Session[],
@@ -141,7 +143,7 @@ export function reviewSummary(sessions: Session[], filters: ReviewFilters) {
     contexts: summarizeContexts(selected),
     limitations: [
       "Only records present in this selected backup; unrecorded play is unknown.",
-      "Audio, notation, input method, pauses, clock quality and reference-set equivalence were not recorded in schema-v1 sessions.",
+      "Older presentation settings were not recorded. New setting observations can be partial or mixed; sound settings do not establish audible playback. Input method, pauses, clock quality and reference-set equivalence remain unrecorded.",
       "Same puzzle/mode/version is a grouping rule, not proof of comparable presentation or human difficulty.",
       "No trend estimate, clinical inference or enjoyment inference.",
     ],

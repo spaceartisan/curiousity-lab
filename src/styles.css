@@ -1448,11 +1448,20 @@ summary {
   max-width: 100%;
 }
 .review-table table {
-  min-width: 900px;
+  min-width: 75rem;
 }
+.review-table th,
 .review-table td {
   vertical-align: top;
-  min-width: 110px;
+  min-width: 8rem;
+}
+.review-table th:first-child,
+.review-table td:first-child {
+  min-width: 16rem;
+}
+.review-table th:last-child,
+.review-table td:last-child {
+  min-width: 18rem;
 }
 .sudoku-replay button {
   max-width: 100%;

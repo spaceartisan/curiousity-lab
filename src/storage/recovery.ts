@@ -1,3 +1,4 @@
+import { withoutRecordedHistory } from "./presentation";
 import { openDB } from "idb";
 import { validateState, type LocalState, type Role } from "./contracts";
 import { loadState, saveState } from "./local";
@@ -74,7 +75,10 @@ export function clearRecoveryHistory(role: Role): Promise<void> {
       const tx = db.transaction("copies", "readwrite");
       const copies = await tx.store.getAll();
       for (const copy of copies)
-        await tx.store.put({ ...copy, state: { ...copy.state, sessions: [] } });
+        await tx.store.put({
+          ...copy,
+          state: withoutRecordedHistory(copy.state),
+        });
       await tx.done;
     } finally {
       db.close();

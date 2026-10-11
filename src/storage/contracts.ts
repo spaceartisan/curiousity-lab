@@ -1,8 +1,10 @@
+import { validPresentation, type Presentation } from "./presentation";
 import { validateGame } from "./validate-game";
-export const APP_VERSION = "0.12.0";
+export const APP_VERSION = "0.13.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {
+  presentation?: Presentation;
   id: string;
   schemaVersion: 1;
   appVersion: string;
@@ -20,6 +22,7 @@ export interface Session {
   source: "local-guest";
 }
 export interface Draft {
+  presentation?: Presentation;
   id: string;
   game: GameKind;
   puzzleId: string;
@@ -128,6 +131,8 @@ export function validateState(
       !Number.isFinite(Date.parse(s.endedAt)) ||
       !["completed", "explored", "unfinished"].includes(s.outcome) ||
       s.source !== "local-guest" ||
+      (s.presentation !== undefined &&
+        !validPresentation(s.presentation, s.game)) ||
       typeof s.puzzleId !== "string" ||
       typeof s.mode !== "string" ||
       !Number.isInteger(s.hints) ||
@@ -184,6 +189,8 @@ export function validateState(
       typeof d.puzzleId !== "string" ||
       typeof d.mode !== "string" ||
       !Number.isFinite(Date.parse(d.startedAt)) ||
+      (d.presentation !== undefined &&
+        !validPresentation(d.presentation, kind)) ||
       !validateGame(kind, d.data)
     )
       throw Error("Invalid draft");

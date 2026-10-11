@@ -67,7 +67,7 @@ test("Insights reviews fictional exports offline with separated contexts and sou
       expect(text).toContain("fictional-lab");
     else {
       const summary = JSON.parse(text);
-      expect(summary.analysisVersion).toBe("local-context-review-1");
+      expect(summary.analysisVersion).toBe("local-context-review-2");
       expect(summary.selectedSessions).toBe(3);
       expect(summary.contexts[0].completedHints).toMatchObject({
         n: 2,

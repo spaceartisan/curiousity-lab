@@ -132,6 +132,49 @@ describe("local preparation privacy", () => {
     ).not.toHaveProperty("text");
     expect(records.every((r) => scopeKey(r.scope) === scopeKey(a))).toBe(true);
   });
+  it("keeps validated settings in Insights preparations, excludes them from Companion and strips unknown context fields", async () => {
+    await saveChoices(a, choices);
+    const presentation = {
+      version: 1 as const,
+      coverage: "from-start" as const,
+      themes: ["light" as const],
+      textSizes: ["normal" as const],
+    };
+    await prepareSessions(
+      a,
+      [{ ...session("context-good"), presentation }],
+      "future",
+    );
+    const original = structuredClone(presentation);
+    presentation.themes.push("light");
+    const good = (await readPreparation(a)).records;
+    expect(good.find((r) => r.channel === "insights")?.payload).toHaveProperty(
+      "presentation",
+      original,
+    );
+    expect(
+      good.find((r) => r.channel === "companion")?.payload,
+    ).not.toHaveProperty("presentation");
+    await prepareSessions(
+      a,
+      [
+        {
+          ...session("context-bad"),
+          presentation: { ...original, privateNote: "private" },
+        } as any,
+      ],
+      "future",
+    );
+    expect(
+      (await readPreparation(a)).records.find(
+        (r) =>
+          r.channel === "insights" &&
+          r.payload &&
+          "id" in r.payload &&
+          r.payload.id === "context-bad",
+      )?.payload,
+    ).not.toHaveProperty("presentation");
+  });
   it("keeps accounts isolated and purges a disabled recipient immediately", async () => {
     await saveChoices(a, choices);
     await prepareSessions(a, [session("one")], "future");

@@ -74,9 +74,20 @@ export function sessionsCsv(state: LocalState): string {
     "appVersion",
     "contentVersion",
     "source",
+    "presentation",
   ] as const;
   return [
     keys.join(","),
-    ...state.sessions.map((s) => keys.map((k) => csvSafe(s[k])).join(",")),
+    ...state.sessions.map((s) =>
+      keys
+        .map((k) =>
+          csvSafe(
+            k === "presentation" && s.presentation
+              ? JSON.stringify(s.presentation)
+              : s[k],
+          ),
+        )
+        .join(","),
+    ),
   ].join("\r\n");
 }

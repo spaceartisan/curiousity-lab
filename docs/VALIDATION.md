@@ -1,3 +1,13 @@
+# v0.13.0 validation
+
+Locally: 131 unit/component tests cover bounded immutable preference unions, exact volume ranges, genuine rhythm presentation, partial/history-off/finalized behavior, canonical grouping independent of set order, all structural validation boundaries, legacy compatibility, quoted CSV context, actual UI changes/reload/mode boundaries, consent withdrawal, non-music minimization, and clearing optional draft context from recovery copies. Local archive/remote checks omit only the age-specific case because age is unavailable locally. TypeScript, production build and PWA/provenance checks are required.
+
+CI gates deployment on 131 unit/component tests, fourteen archive/remote checks with age, twenty-two Firestore security cases plus encrypted emulator recovery, and forty-four desktop/phone browser scenarios (212 total). The new scenario completes a real original phrase with deliberately changed settings, verifies immutable completed context and fresh replay, resumes offline, withdraws/re-enables collection, downloads actual backup JSON, and reviews known/mixed versus a clearly fictional legacy copy in Insights at phone and 320-pixel/200% text sizes. Check this commit's workflow and screenshots for actual completion.
+
+No real family fixture, raw input/tap trace, audio recording, fingerprint, new Firestore permission or activity upload is introduced. Settings describe observations, not verified delivery or audibility; collection can be partial. Changed-setting groups are descriptive contexts, not matched tasks or trends. Full architecture/device/content/production gates remain unfinished.
+
+---
+
 # v0.12.0 validation
 
 Locally: 120 unit/component tests passed, including eight new review cases for context boundaries, repeat exposure, UTC offset boundaries, outcome/hint denominators, exploration exclusion, clock inconsistencies, source immutability, filters, pagination, all-context access beyond the first 200 options and versioned/source-preserving exports. Thirteen archive/remote checks passed; age is unavailable locally and its encryption case is skipped. TypeScript, production build and scoped PWA/provenance checks passed.

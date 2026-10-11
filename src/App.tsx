@@ -29,6 +29,11 @@ import { Connections, WordSearch } from "./games/Words";
 import { Music, type MusicData } from "./games/Music";
 import { exerciseCount, musicPuzzle } from "./content/music";
 import { Laboratory } from "./games/Laboratory";
+import {
+  observePresentation,
+  withoutRecordedHistory,
+} from "./storage/presentation";
+import type { Preferences } from "./storage/contracts";
 import { ActivityClock } from "./games/activity-clock";
 import { stopAudio, playNotes } from "./games/audio";
 import { specimens } from "./content/specimens";
@@ -69,7 +74,12 @@ export function relativeTime(utc: string, now = Date.now()) {
   if (delta < 86400000) return `${Math.floor(delta / 3600000)} hours ago`;
   return "on " + new Date(utc).toLocaleDateString();
 }
-function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
+function newDraft(
+  game: GameKind,
+  previous?: Draft,
+  samePuzzle = false,
+  preferences?: Preferences,
+): Draft {
   const seed = crypto.getRandomValues(new Uint32Array(1))[0];
   const oldSudoku =
     previous?.game === "sudoku" ? (previous.data as SudokuData) : undefined;
@@ -126,7 +136,7 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
                 workflowRevision: 1,
                 pages: oldLab?.pages ?? [],
               };
-  return {
+  const draft: Draft = {
     id: crypto.randomUUID(),
     game,
     puzzleId:
@@ -153,6 +163,7 @@ function newDraft(game: GameKind, previous?: Draft, samePuzzle = false): Draft {
             : "explore",
     data,
   };
+  return preferences ? observePresentation(draft, preferences, true) : draft;
 }
 function archive(
   state: LocalState,
@@ -197,6 +208,7 @@ function archive(
               (s) => s.puzzleId === draft.puzzleId && s.mode === draft.mode,
             ).length + 1,
           source: "local-guest" as const,
+          ...(draft.presentation ? { presentation: draft.presentation } : {}),
         },
       ]
     : state.sessions;
@@ -422,7 +434,14 @@ export function App({ appRole }: { appRole: Role }) {
       s
         ? {
             ...s,
-            drafts: { ...s.drafts, [game]: s.drafts[game] ?? newDraft(game) },
+            drafts: {
+              ...s.drafts,
+              [game]: observePresentation(
+                s.drafts[game] ??
+                  newDraft(game, undefined, false, s.preferences),
+                s.preferences,
+              ),
+            },
           }
         : s,
     );
@@ -437,7 +456,10 @@ export function App({ appRole }: { appRole: Role }) {
       const archived = old ? archive(s, old, "unfinished") : s;
       return {
         ...archived,
-        drafts: { ...archived.drafts, [game]: newDraft(game, old, samePuzzle) },
+        drafts: {
+          ...archived.drafts,
+          [game]: newDraft(game, old, samePuzzle, s.preferences),
+        },
       };
     });
   }
@@ -479,21 +501,25 @@ export function App({ appRole }: { appRole: Role }) {
                   : old.puzzleId,
           mode: metrics?.mode || old.mode,
         };
+        d = observePresentation(d, s.preferences, true);
       }
       return {
         ...next,
         drafts: {
           ...next.drafts,
-          [game]: {
-            ...d,
-            data,
-            hints: s.preferences.history
-              ? d.hints + (metrics?.hint ? 1 : 0)
-              : 0,
-            undos: s.preferences.history
-              ? d.undos + (metrics?.undo ? 1 : 0)
-              : 0,
-          },
+          [game]: observePresentation(
+            {
+              ...d,
+              data,
+              hints: s.preferences.history
+                ? d.hints + (metrics?.hint ? 1 : 0)
+                : 0,
+              undos: s.preferences.history
+                ? d.undos + (metrics?.undo ? 1 : 0)
+                : 0,
+            },
+            s.preferences,
+          ),
         },
       };
     });
@@ -501,7 +527,13 @@ export function App({ appRole }: { appRole: Role }) {
   function finish(outcome: "completed" | "explored" | "unfinished") {
     const game = screen as GameKind;
     setState((s) =>
-      s && s.drafts[game] ? archive(s, s.drafts[game]!, outcome) : s,
+      s && s.drafts[game]
+        ? archive(
+            s,
+            observePresentation(s.drafts[game]!, s.preferences),
+            outcome,
+          )
+        : s,
     );
   }
   function create(item: Omit<Creation, "id" | "savedAt">) {
@@ -565,7 +597,7 @@ export function App({ appRole }: { appRole: Role }) {
         drafts: {
           ...next.drafts,
           lab: {
-            ...newDraft("lab"),
+            ...newDraft("lab", undefined, false, s.preferences),
             data,
             puzzleId: labPuzzle(data),
             mode: labMode(data),
@@ -628,6 +660,7 @@ export function App({ appRole }: { appRole: Role }) {
                 key,
                 {
                   ...d,
+                  presentation: undefined,
                   id: crypto.randomUUID(),
                   startedAt: new Date().toISOString(),
                   activeMs: 0,
@@ -637,7 +670,15 @@ export function App({ appRole }: { appRole: Role }) {
               ]),
             )
           : s.drafts;
-      return { ...s, drafts, preferences: { ...s.preferences, ...p } };
+      const preferences = { ...s.preferences, ...p };
+      const active = screenRef.current;
+      const nextDrafts = { ...drafts };
+      if (active in titles && nextDrafts[active as GameKind])
+        nextDrafts[active as GameKind] = observePresentation(
+          nextDrafts[active as GameKind]!,
+          preferences,
+        );
+      return { ...s, drafts: nextDrafts, preferences };
     });
   const game = screen in titles ? (screen as GameKind) : null;
   const draft = game ? state.drafts[game] : null;
@@ -1095,7 +1136,10 @@ export function App({ appRole }: { appRole: Role }) {
                 <p>
                   Puzzle progress and things you save stay on this device.
                   Optional history records active time, puzzle version, hints,
-                  and undo counts. Nothing is sent to a server.
+                  undo counts and observed theme/text settings. Music also
+                  records sound, volume, notation, pace and rhythm-flexibility
+                  settings, including changes. No keystrokes or audio recordings
+                  are collected. Nothing is sent to a server.
                 </p>
                 <label className="check-label">
                   <input
@@ -1121,7 +1165,7 @@ export function App({ appRole }: { appRole: Role }) {
                       try {
                         if (appRole === "play") await clearAllPreparations();
                         await clearRecoveryHistory(appRole);
-                        setState((s) => (s ? { ...s, sessions: [] } : s));
+                        setState((s) => (s ? withoutRecordedHistory(s) : s));
                       } catch {
                         setError(
                           "Prepared copies could not be cleared. Please try again; your history has not been removed.",

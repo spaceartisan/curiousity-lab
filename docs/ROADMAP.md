@@ -69,3 +69,7 @@ Independent encrypted automatic backup, tested decryption and restore, account r
 ## v0.12.0 — Local context review foundation
 
 Insights reviews an explicitly selected backup in memory, separates recorded contexts and first/repeat exposure, filters UTC end dates, paginates summaries and raw records, and exports source-preserving CSV plus a versioned derived summary. Completed-session hint denominators exclude unfinished attempts; piano/laboratory exploration has no performance score. Missing history/context and correlated same-player/day records remain explicit limitations, with no trend or clinical inference. This is partial Phase 3 work: consented private cloud sync, matched presentation forms, shared reports/plots and production recovery remain unfinished.
+
+## v0.13.0 — Consented presentation provenance
+
+New local attempts record bounded theme/text and music presentation-setting observations only with activity history enabled. Changes survive offline resume and remain distinct from missing/partial settings; completed source sessions stay immutable. JSON/CSV, validated local Insights preparation and context-separated review retain this provenance. Clear-history also purges optional draft context from durable undo copies. The remaining normalized identity/input/pause/clock fields, reference challenges, private sync, shared reporting and production/device gates are unfinished.

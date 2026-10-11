@@ -1,4 +1,5 @@
 import { openDB, deleteDB } from "idb";
+import { validPresentation } from "../storage/presentation";
 import type { Session } from "../storage/contracts";
 import type { FamilyContext } from "../family/useFamilyConnection";
 export interface SharingScope {
@@ -106,6 +107,7 @@ function sessionPayload(session: Session): Session {
     mode,
     attempt,
     source,
+    presentation,
   } = session;
   return {
     id,
@@ -123,6 +125,9 @@ function sessionPayload(session: Session): Session {
     mode,
     attempt,
     source,
+    ...(presentation && validPresentation(presentation, game)
+      ? { presentation: structuredClone(presentation) }
+      : {}),
   };
 }
 export async function readPreparation(

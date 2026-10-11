@@ -8,7 +8,7 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.12.0
+## Current release · v0.13.0
 
 This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. Owner Google sign-in and code-only parent invitations are available after enabling Anonymous Auth and publishing the included Firebase rules. Activity sharing remains disabled. No personal records, emails, service credentials, or private design document are published here.
 
@@ -22,7 +22,7 @@ Play includes:
 - A laboratory workbench with two original fictional specimen cards, direct microscope exploration, skippable stages and optional side-by-side comparison of the two licensed CDC source images. Notes, observations and digital view settings are kept separately for each slide across switching and reload. Notebook saves are filed once per attempt, with unlimited separate repeat explorations and correct source IDs on revisit. Existing notebook entries and drafts remain valid. Hematology, the larger image pack and independent specialist review are pending.
 - Searchable My Creations with separate Lab Notebook/Melodies views, local name/note/observation search, saved-date ordering and twelve-entry pages. Notebook cards preview known source images and keep unavailable-source notes readable. A laboratory shortcut opens the notebook directly; explicit reopens record a local last-viewed cue while preserving original save dates. Melody playback has in-page sound/volume/Stop controls and no autoplay.
 - Light/dark themes, larger text, JSON backup/restore with a review step and three durable undo copies, CSV session export, and explicit deletion controls.
-- IndexedDB progress saves separated by app role. Optional activity history starts off; it stays on this device. With it off, active-time/hint/undo summaries are not accumulated. Game state necessary for save/resume is still stored.
+- IndexedDB progress saves separated by app role. Optional activity history starts off; it stays on this device. New consented attempts preserve observed theme/text settings and music sound/volume/view/pace/flexibility settings, including changes. Legacy and mid-puzzle collection starts are explicitly partial; sound settings never prove audibility. See [presentation context](docs/PRESENTATION_CONTEXT.md). With it off, active-time/hint/undo summaries are not accumulated. Game state necessary for save/resume is still stored.
 
 Companion and Insights open directly to their own views. Fictional examples are clearly labeled and only appear when requested. Neither app reads Play's browser database. Insights can explicitly inspect a selected Play backup **in memory**, without uploading or persisting it. Its review separates activity, mode, puzzle, app/content versions and first/repeated exposure; offers UTC date filters, paginated source records, completed-session hint denominators, and full-source/filtered CSV plus a versioned summary JSON. Missing history remains unknown and no clinical or enjoyment inference is made. See [local review](docs/LOCAL_REVIEW.md).
 

@@ -1,0 +1,160 @@
+import type { Draft, Preferences, LocalState } from "./contracts";
+import type { MusicData } from "../games/Music";
+
+export interface Presentation {
+  version: 1;
+  coverage: "from-start" | "partial";
+  themes: Preferences["theme"][];
+  textSizes: Preferences["textSize"][];
+  music?: {
+    soundSettings: boolean[];
+    volumeRange: [number, number];
+    views: (NonNullable<MusicData["presentation"]> | "rhythm-pattern")[];
+    tempos: NonNullable<MusicData["tempo"]>[];
+    flexibility: NonNullable<MusicData["flexibility"]>[];
+  };
+}
+const union = <T extends string | boolean>(values: T[], value: T): T[] =>
+  [...new Set([...values, value])].sort();
+
+export function observePresentation(
+  draft: Draft,
+  prefs: Preferences,
+  fromStart = false,
+): Draft {
+  if (draft.finalized) return draft;
+  if (!prefs.history) {
+    const { presentation: _ignored, ...necessary } = draft;
+    return necessary;
+  }
+  const old = draft.presentation;
+  const presentation: Presentation = {
+    version: 1,
+    coverage: old?.coverage ?? (fromStart ? "from-start" : "partial"),
+    themes: union(old?.themes ?? [], prefs.theme),
+    textSizes: union(old?.textSizes ?? [], prefs.textSize),
+  };
+  if (draft.game === "music") {
+    const data = draft.data as MusicData;
+    const prior = old?.music;
+    presentation.music = {
+      soundSettings: union(prior?.soundSettings ?? [], prefs.sound),
+      volumeRange: [
+        Math.min(prior?.volumeRange[0] ?? prefs.volume, prefs.volume),
+        Math.max(prior?.volumeRange[1] ?? prefs.volume, prefs.volume),
+      ],
+      views: union(
+        prior?.views ?? [],
+        data.mode === "rhythm"
+          ? "rhythm-pattern"
+          : (data.presentation ?? "staff"),
+      ),
+      tempos: union(prior?.tempos ?? [], data.tempo ?? "comfortable"),
+      flexibility:
+        data.mode === "rhythm"
+          ? union(prior?.flexibility ?? [], data.flexibility ?? "gentle")
+          : [],
+    };
+  }
+  return { ...draft, presentation };
+}
+
+function choices(value: unknown, allowed: readonly unknown[], empty = false) {
+  return (
+    Array.isArray(value) &&
+    (empty || value.length > 0) &&
+    value.length <= allowed.length &&
+    new Set(value).size === value.length &&
+    value.every((v) => allowed.includes(v))
+  );
+}
+export function validPresentation(
+  value: unknown,
+  game: string,
+): value is Presentation {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const p = value as Presentation;
+  if (
+    Object.keys(p).some(
+      (k) =>
+        !["version", "coverage", "themes", "textSizes", "music"].includes(k),
+    ) ||
+    p.version !== 1 ||
+    !["from-start", "partial"].includes(p.coverage) ||
+    !choices(p.themes, ["light", "dark"]) ||
+    !choices(p.textSizes, ["normal", "large"])
+  )
+    return false;
+  if (game !== "music") return p.music === undefined;
+  const m = p.music;
+  return (
+    !!m &&
+    typeof m === "object" &&
+    !Array.isArray(m) &&
+    !Object.keys(m).some(
+      (k) =>
+        ![
+          "soundSettings",
+          "volumeRange",
+          "views",
+          "tempos",
+          "flexibility",
+        ].includes(k),
+    ) &&
+    choices(m.soundSettings, [false, true]) &&
+    choices(m.views, ["staff", "pattern", "ear", "rhythm-pattern"]) &&
+    choices(m.tempos, ["comfortable", "slow"]) &&
+    choices(m.flexibility, ["gentle", "extra"], true) &&
+    Array.isArray(m.volumeRange) &&
+    m.volumeRange.length === 2 &&
+    m.volumeRange.every((n) => Number.isFinite(n) && n >= 0 && n <= 1) &&
+    m.volumeRange[0] <= m.volumeRange[1]
+  );
+}
+
+export function presentationKey(p?: Presentation) {
+  if (!p) return "unrecorded";
+  return JSON.stringify([
+    p.version,
+    p.coverage,
+    [...p.themes].sort(),
+    [...p.textSizes].sort(),
+    p.music
+      ? [
+          [...p.music.soundSettings].sort(),
+          p.music.volumeRange,
+          [...p.music.views].sort(),
+          [...p.music.tempos].sort(),
+          [...p.music.flexibility].sort(),
+        ]
+      : null,
+  ]);
+}
+export function presentationLabel(p?: Presentation) {
+  if (!p) return "Presentation settings unrecorded";
+  const names = {
+    staff: "staff notation",
+    pattern: "note pattern",
+    ear: "by ear",
+    "rhythm-pattern": "rhythm pattern",
+  };
+  return (
+    `${p.coverage === "from-start" ? "Settings observed from start" : "Partial setting observations"}: ${p.themes.join(" / ")} theme, ${p.textSizes.join(" / ")} text` +
+    (p.music
+      ? `; sound setting ${p.music.soundSettings.map((v) => (v ? "on" : "off")).join(" / ")}, volume ${p.music.volumeRange.map((v) => Math.round(v * 100)).join("–")}%${p.music.volumeRange[1] === 0 ? " (muted)" : ""}, ${p.music.views.map((v) => names[v]).join(" / ")}, ${p.music.tempos.join(" / ")} pace${p.music.flexibility.length ? `, ${p.music.flexibility.join(" / ")} rhythm flexibility` : ""}`
+      : "")
+  );
+}
+
+export function withoutRecordedHistory(state: LocalState): LocalState {
+  return {
+    ...state,
+    sessions: [],
+    drafts: Object.fromEntries(
+      Object.entries(state.drafts).map(([game, draft]) => {
+        const { presentation: _ignored, ...progress } = draft;
+        return [game, { ...progress, activeMs: 0, hints: 0, undos: 0 }];
+      }),
+    ),
+  };
+}

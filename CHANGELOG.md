@@ -1,3 +1,10 @@
+# v0.13.0
+
+- Added bounded, optional presentation observations to consented local attempts: theme/text sets and music sound setting, volume range, actual staff/pattern/by-ear/rhythm view, playback pace and rhythm flexibility. Changes accumulate rather than replacing earlier context.
+- Preserve finalized session context; new attempts start fresh, resumed legacy and mid-puzzle collection starts are partial. History-off collects no optional context. Clearing history removes context/metrics from drafts and durable recovery copies while keeping game progress.
+- Validate the additive schema-v1 fields; old backups remain valid. JSON preserves exact observations and CSV appends a quoted context column. Only validated context enters local Insights preparations; Companion receives no presentation or raw metrics.
+- Insights separates missing, partial and mixed presentation contexts under `local-context-review-2`, retains raw settings and explicitly distinguishes a sound-on setting from audible playback. Input/pauses/clock/reference equivalence remain unrecorded. No cloud permissions or uploads change.
+
 # v0.12.0
 
 - Added local, memory-only Insights backup review with separate activity/mode/puzzle/app/content/source/exposure groups, inclusive UTC end-date filters and bounded summary/record pages.
