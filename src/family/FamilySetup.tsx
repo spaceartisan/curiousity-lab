@@ -267,8 +267,8 @@ export function FamilySetup({
         <button onClick={() => location.reload()}>Check again</button>
       )}
       <p className="muted">
-        Activity sharing is coming next. For now, puzzles, notes, melodies, and
-        activity history stay on this device.
+        Connecting shares nothing by itself. Play asks once before any
+        activity is shared, and it can be turned off in Settings.
       </p>
       {owner && (
         <p>

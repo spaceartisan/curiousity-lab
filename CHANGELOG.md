@@ -1,3 +1,12 @@
+# v0.34.0 — A new look, with light and dark themes
+
+- **Themes:** Light, Dark, or Match this device (the new default). A sun/moon button in the header switches instantly; Settings → Theme has all three. Every text colour pair meets WCAG AA (most exceed 6:1) and control borders meet 3:1, in both themes.
+- **Type:** body text in Atkinson Hyperlegible Next, designed by the Braille Institute for low-vision readers; headings in Newsreader. Both are self-hosted (SIL OFL) and work offline. Puzzle numerals use the device's own font so zeros have no slash.
+- **Rooms have colours:** Music plum, Laboratory teal, Numbers indigo, Words terracotta, Creations ochre. The colour carries through the room's badge, tabs, chips and buttons.
+- **Play home** greets her with the time of day and today's date, and the room cards describe what's actually inside.
+- Section tabs are now a distinct tab track, separate from option chips; panels, cards, notices, forms and tables are restyled throughout; puzzle boards (Sudoku, Killer, Countdown, Cryptogram, Letter Hive) use theme colours.
+- Layouts hold at 320px wide with text doubled.
+
 # v0.33.0 — Companion and Insights, with family sharing
 
 - **Sharing:** Play asks Mom once whether to share. If she says yes, every finished activity (music, lab, numbers, words) is shared with the family automatically as a small record. She can turn it off in Settings. Firestore rules are extended and emulator-tested. **Paste the new rules into the Firebase console.**

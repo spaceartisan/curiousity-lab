@@ -63,8 +63,8 @@ for (const role of ["play", "companion", "insights"]) {
         start_url: scope,
         scope,
         display: "standalone",
-        background_color: "#f7f5ee",
-        theme_color: "#164f48",
+        background_color: "#f6f1e7",
+        theme_color: "#f6f1e7",
         description: "A calm place for puzzles, music, and discovery.",
         icons: [
           {

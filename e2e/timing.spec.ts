@@ -34,7 +34,7 @@ test("foreground pause survives offline finish and export while legacy timing st
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await page.getByRole("button", { name: "Pause", exact: true }).click();
   await expect(

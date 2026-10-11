@@ -148,7 +148,7 @@ it("actual game controls record keyboard without logging settings, pause control
   await saveState(state);
   const user = userEvent.setup(),
     view = render(<App appRole="play" />);
-  await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  await user.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );
@@ -177,7 +177,7 @@ it("actual game controls record keyboard without logging settings, pause control
   );
   const filed = (await loadState("play")).sessions[0];
   expect(filed.presentation?.input?.methods).toEqual(["keyboard"]);
-  await user.click(screen.getByRole("button", { name: /Music Hear/ }));
+  await user.click(screen.getByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );

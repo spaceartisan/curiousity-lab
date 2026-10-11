@@ -29,7 +29,7 @@ async function openSearch(history = false, data?: unknown) {
   const view = render(<App appRole="play" />);
   const user = userEvent.setup();
   await user.click(
-    await screen.findByRole("button", { name: "Open Word Search →" }),
+    await screen.findByRole("button", { name: /^Word Search/ }),
   );
   return { user, view };
 }
@@ -91,7 +91,7 @@ it("resumes an original garden save and highlights its found letters after reloa
   view.unmount();
   render(<App appRole="play" />);
   await user.click(
-    await screen.findByRole("button", { name: "Open Word Search →" }),
+    await screen.findByRole("button", { name: /^Word Search/ }),
   );
   expect(
     screen.getByRole("button", { name: "Row 2, column 1: C, found" }),
@@ -186,7 +186,7 @@ it("undo survives legacy reload, preserves earlier discoveries and does not coll
   view.unmount();
   render(<App appRole="play" />);
   await user.click(
-    await screen.findByRole("button", { name: "Open Word Search →" }),
+    await screen.findByRole("button", { name: /^Word Search/ }),
   );
   expect(screen.getByText(/1 of 8 words found/)).toBeInTheDocument();
   await user.click(screen.getByRole("button", { name: "Undo last word" }));

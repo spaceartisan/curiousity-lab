@@ -62,7 +62,7 @@ it("collects bounded preference sets and exact volume range without mutating pre
   expect(next.presentation).toEqual({
     version: 1,
     coverage: "from-start",
-    themes: ["dark", "light"],
+    themes: ["dark", "system"],
     textSizes: ["large", "normal"],
     input: { version: 1, coverage: "from-start", methods: [] },
     music: {
@@ -192,7 +192,7 @@ async function open(draft?: Draft, history = true) {
   await saveState(s);
   const user = userEvent.setup(),
     view = render(<App appRole="play" />);
-  await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  await user.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );
@@ -218,7 +218,7 @@ it("actual music settings accumulate through reload and finalization while filed
   expect(before.presentation?.music?.soundSettings).toEqual([false, true]);
   view.unmount();
   render(<App appRole="play" />);
-  await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  await user.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );
@@ -245,7 +245,7 @@ it("enabling history mid-puzzle records partial context and disabling it removes
     }),
   );
   await user.click(screen.getByRole("button", { name: "Back to games" }));
-  await user.click(screen.getByRole("button", { name: /Music Hear/ }));
+  await user.click(screen.getByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );

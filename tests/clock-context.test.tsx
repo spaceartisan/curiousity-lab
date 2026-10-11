@@ -257,7 +257,7 @@ it("actual app saves clock shifts, reloads partial drafts, and never rewrites a 
   s.preferences.welcomeDone = true;
   await saveState(s);
   const mounted = render(<App appRole="play" />);
-  fireEvent.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );
@@ -272,7 +272,7 @@ it("actual app saves clock shifts, reloads partial drafts, and never rewrites a 
   );
   mounted.unmount();
   render(<App appRole="play" />);
-  fireEvent.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );

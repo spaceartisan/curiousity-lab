@@ -11,7 +11,7 @@ test("large Sudoku squares retain the board and selected-square visibility offli
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   const board = page.getByRole("group", { name: "9 by 9 Sudoku", exact: true });
   const original = await board
     .locator("button")
@@ -103,7 +103,7 @@ test("large Sudoku squares retain the board and selected-square visibility offli
     .toBe(true);
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   await expect(option).toBeChecked();
   expect(
     await board

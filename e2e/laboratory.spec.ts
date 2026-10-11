@@ -16,7 +16,7 @@ test("optional laboratory journey keeps separate notes offline and permits repea
   ).toBeVisible();
   await page.reload();
   await context.setOffline(true);
-  await page.getByRole("button", { name: /My Laboratory Take/ }).click();
+  await page.getByRole("button", { name: /^My Laboratory Bench/ }).click();
   await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await page.getByRole("button", { name: "Start a Lab Session" }).click();
   await expect(
@@ -81,7 +81,7 @@ test("optional laboratory journey keeps separate notes offline and permits repea
     page.getByText("Saved on this device", { exact: true }),
   ).toBeVisible();
   await page.reload();
-  await page.getByRole("button", { name: /My Laboratory Take/ }).click();
+  await page.getByRole("button", { name: /^My Laboratory Bench/ }).click();
   await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await expect(
     page.getByRole("region", { name: "Optional image comparison" }),

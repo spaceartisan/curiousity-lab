@@ -51,7 +51,7 @@ async function open(
   const view = render(<App appRole="play" />);
   const user = userEvent.setup();
   await user.click(
-    await screen.findByRole("button", { name: /Numbers Settle/ }),
+    await screen.findByRole("button", { name: /^Numbers Sudoku/ }),
   );
   return { user, view };
 }
@@ -321,7 +321,7 @@ it("legacy remount, canceled challenge changes and history-off assistance preser
   view.unmount();
   render(<App appRole="play" />);
   await user.click(
-    await screen.findByRole("button", { name: /Numbers Settle/ }),
+    await screen.findByRole("button", { name: /^Numbers Sudoku/ }),
   );
   expect(
     screen.getByRole("group", { name: "6 by 6 Sudoku" }),
@@ -425,7 +425,7 @@ it("large-square choice changes no puzzle move or hint and survives reload and s
   view.unmount();
   render(<App appRole="play" />);
   await user.click(
-    await screen.findByRole("button", { name: /Numbers Settle/ }),
+    await screen.findByRole("button", { name: /^Numbers Sudoku/ }),
   );
   expect(
     screen.getByRole("checkbox", { name: "Larger Sudoku squares" }),

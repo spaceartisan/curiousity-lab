@@ -143,7 +143,7 @@ export function validPresentation(
     ) ||
     p.version !== 1 ||
     !["from-start", "partial"].includes(p.coverage) ||
-    !choices(p.themes, ["light", "dark"]) ||
+    !choices(p.themes, ["system", "light", "dark"]) ||
     !choices(p.textSizes, ["normal", "large"])
   )
     return false;

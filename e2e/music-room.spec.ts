@@ -7,7 +7,7 @@ test("name a piece by ear, see its score, then play it yourself", async ({
   await page
     .getByRole("button", { name: "Play without activity history" })
     .click();
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("button", { name: "Turn sound on" }).click();
   await page.getByRole("button", { name: "Play the excerpt" }).click();
   const choices = page.locator(".ntp-choices button");

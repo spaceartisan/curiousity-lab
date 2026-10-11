@@ -51,7 +51,7 @@ test("local clock shifts survive offline resume/export, stay distinct from unkno
     .poll(async () => (await saved(page))?.preferences.welcomeDone)
     .toBe(true);
   await page.reload();
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect
     .poll(async () => (await saved(page))?.drafts.music?.clock?.coverage)
@@ -70,7 +70,7 @@ test("local clock shifts survive offline resume/export, stay distinct from unkno
     .toBe(true);
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await page
     .getByRole("button", { name: "Finish for now", exact: true })

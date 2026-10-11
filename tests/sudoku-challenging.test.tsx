@@ -163,7 +163,7 @@ async function open(history = false) {
   const view = render(<App appRole="play" />);
   const user = userEvent.setup();
   await user.click(
-    await screen.findByRole("button", { name: /Numbers Settle/ }),
+    await screen.findByRole("button", { name: /^Numbers Sudoku/ }),
   );
   return { d, user, view };
 }
@@ -210,7 +210,7 @@ it("history-off advanced progress reloads, replay keeps the challenge, and grid 
   view.unmount();
   render(<App appRole="play" />);
   await user.click(
-    await screen.findByRole("button", { name: /Numbers Settle/ }),
+    await screen.findByRole("button", { name: /^Numbers Sudoku/ }),
   );
   expect(screen.getByRole("combobox", { name: "Challenge" })).toHaveValue(
     "Challenging",
@@ -261,7 +261,7 @@ it("an unassisted challenge files its own content and mode once; completed contr
   render(<App appRole="play" />);
   const user = userEvent.setup();
   await user.click(
-    await screen.findByRole("button", { name: /Numbers Settle/ }),
+    await screen.findByRole("button", { name: /^Numbers Sudoku/ }),
   );
   const cell = document.getElementById(`cell-${last}`)!;
   await user.click(cell);

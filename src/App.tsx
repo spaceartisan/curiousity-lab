@@ -86,6 +86,7 @@ import {
   clearRecoveryHistory,
 } from "./storage/recovery";
 import { useFamilyData } from "./activity/useFamilyData";
+import { useEffectiveTheme } from "./ui/theme";
 import { clearRecords } from "./activity/store";
 import { CompanionHome } from "./companion/CompanionHome";
 import { InsightsHome } from "./insights/InsightsHome";
@@ -344,6 +345,33 @@ export function InstallPage() {
     </main>
   );
 }
+const ROOM_ICON: Partial<Record<string, string>> = {
+  sudoku: "numbers",
+  connections: "words",
+  search: "search",
+  music: "music",
+  lab: "lab",
+};
+const ROOM_LINE: Partial<Record<string, string>> = {
+  sudoku: "Puzzles with numbers",
+  connections: "Puzzles with words",
+  search: "Puzzles with words",
+  music: "Listen, read and play",
+  lab: "Bench, smear and slide",
+};
+function greeting(now = new Date()) {
+  const h = now.getHours();
+  return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+}
+/** Each Play room has its own colour; see [data-room] in styles.css. */
+const ROOM_OF: Partial<Record<string, string>> = {
+  sudoku: "numbers",
+  connections: "words",
+  search: "words",
+  music: "music",
+  lab: "lab",
+  creations: "creations",
+};
 export function App({ appRole }: { appRole: Role }) {
   const family = useFamilyConnection(appRole);
   const connected = family.connection.status === "approved";
@@ -367,6 +395,7 @@ export function App({ appRole }: { appRole: Role }) {
     appRole === "play" ? (state?.sessions ?? NO_SESSIONS) : NO_SESSIONS,
   );
   const shared = useFamilyData(family, appRole !== "play" && demo);
+  const theme = useEffectiveTheme(state?.preferences.theme ?? "system");
   const stateRef = useRef(state),
     screenRef = useRef(screen),
     clock = useRef(
@@ -817,7 +846,10 @@ export function App({ appRole }: { appRole: Role }) {
     : null;
   return (
     <ActivityRecorder enabled={appRole === "play" && prefs.history}>
-      <div className={`app theme-${prefs.theme} text-${prefs.textSize}`}>
+      <div
+        className={`app theme-${theme} text-${prefs.textSize}`}
+        data-room={ROOM_OF[screen] ?? (screen === "home" ? "home" : undefined)}
+      >
         <a className="skip-link" href="#content">
           Skip to content
         </a>
@@ -840,14 +872,30 @@ export function App({ appRole }: { appRole: Role }) {
               </small>
             </span>
           </button>
-          <button
-            className="settings-button"
-            disabled={restoreBusy}
-            onClick={() => setScreen("settings")}
-          >
-            <Icon name="settings" small />
-            Settings
-          </button>
+          <div className="topbar-actions">
+            <button
+              className="icon-button"
+              onClick={() =>
+                changePrefs({ theme: theme === "dark" ? "light" : "dark" })
+              }
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light theme"
+                  : "Switch to dark theme"
+              }
+              title={theme === "dark" ? "Light theme" : "Dark theme"}
+            >
+              <Icon name={theme === "dark" ? "sun" : "moon"} small />
+            </button>
+            <button
+              className="settings-button"
+              disabled={restoreBusy}
+              onClick={() => setScreen("settings")}
+            >
+              <Icon name="settings" small />
+              Settings
+            </button>
+          </div>
         </header>
         <main id="content">
           {error && (
@@ -891,27 +939,42 @@ export function App({ appRole }: { appRole: Role }) {
           )}
           {screen === "home" && appRole === "play" ? (
             <>
-              <section className="welcome">
-                <p className="eyebrow">Your curiosity belongs here</p>
-                <h1 ref={heading} tabIndex={-1}>
-                  What would you like
-                  <br />
-                  to explore?
-                </h1>
-                <p>
-                  A puzzle, a melody, a closer look.
-                  <br />
-                  There is always time to come back.
-                </p>
-                <div className="welcome-mark" aria-hidden="true">
-                  <Icon name="lab" />
+              <section className="welcome play-welcome">
+                <div>
+                  <p className="today">
+                    <span>{greeting()}</span>
+                    {new Date().toLocaleDateString(undefined, {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                  <h1 ref={heading} tabIndex={-1}>
+                    What would you like
+                    <br />
+                    to explore?
+                  </h1>
+                  <p>
+                    A puzzle, a melody, a closer look.
+                    <br />
+                    There is always time to come back.
+                  </p>
+                </div>
+                <div className="hero-art" aria-hidden="true">
+                  {["music", "lab", "numbers", "words"].map((r) => (
+                    <span key={r} data-room={r}>
+                      <Icon name={r} />
+                    </span>
+                  ))}
                 </div>
               </section>
               {preparationError && <p role="alert">{preparationError}</p>}
               {connected && (
                 <div className="connection-note" role="status">
-                  Connected to your family. Your games stay on this device.
-                  Optional sharing choices are in Settings.
+                  Connected to your family.{" "}
+                  {sync.sharing
+                    ? "What you finish is shared with them."
+                    : "Nothing is shared unless you choose to."}
                 </div>
               )}
               {sync.needsDecision && (
@@ -959,30 +1022,35 @@ export function App({ appRole }: { appRole: Role }) {
                   {
                     title: "Numbers",
                     icon: "numbers",
-                    text: "Settle into a Sudoku.",
+                    room: "numbers",
+                    text: "Sudoku, Killer Sudoku and Countdown.",
                     game: "sudoku",
                   },
                   {
                     title: "Words",
                     icon: "words",
-                    text: "Find a familiar connection.",
+                    room: "words",
+                    text: "Cryptograms, Letter Hive and word ladders.",
                     game: "connections",
                   },
                   {
                     title: "Music",
                     icon: "music",
-                    text: "Hear, play, and make a melody.",
+                    room: "music",
+                    text: "Name the piece, then play it yourself.",
                     game: "music",
                   },
                   {
                     title: "My Laboratory",
                     icon: "lab",
-                    text: "Take a closer look at your desk.",
+                    room: "lab",
+                    text: "Bench unknowns and blood differentials.",
                     game: "lab",
                   },
                   {
                     title: "My Creations",
                     icon: "creations",
+                    room: "creations",
                     text: "Your melodies and lab notebook.",
                     game: "creations",
                   },
@@ -994,6 +1062,7 @@ export function App({ appRole }: { appRole: Role }) {
                     <button
                       key={card.title}
                       className={`library-card card-${i}`}
+                      data-room={card.room}
                       onClick={() =>
                         card.game === "creations"
                           ? openCreations()
@@ -1001,8 +1070,12 @@ export function App({ appRole }: { appRole: Role }) {
                       }
                     >
                       <span className="card-top">
-                        <Icon name={card.icon} />
-                        <span aria-hidden="true">↗</span>
+                        <span className="room-badge">
+                          <Icon name={card.icon} />
+                        </span>
+                        <span className="card-go">
+                          <Icon name="arrow" small />
+                        </span>
                       </span>
                       <h2>{card.title}</h2>
                       <p>{card.text}</p>
@@ -1020,12 +1093,20 @@ export function App({ appRole }: { appRole: Role }) {
                   );
                 })}
               </div>
-              <div className="word-choice">
-                <span>Another way to enjoy words</span>
-                <button onClick={() => open("search")}>
-                  Open Word Search →
-                </button>
-              </div>
+              <button
+                className="word-choice"
+                data-room="words"
+                onClick={() => open("search")}
+              >
+                <span className="room-badge">
+                  <Icon name="search" small />
+                </span>
+                <span>
+                  <strong>Word Search</strong>
+                  <small>Another way to enjoy words</small>
+                </span>
+                <Icon name="arrow" small />
+              </button>
             </>
           ) : screen === "home" ? (
             <>
@@ -1181,12 +1262,13 @@ export function App({ appRole }: { appRole: Role }) {
                       value={prefs.theme}
                       onChange={(e) =>
                         changePrefs({
-                          theme: e.target.value as "light" | "dark",
+                          theme: e.target.value as typeof prefs.theme,
                         })
                       }
                     >
-                      <option value="light">Warm light</option>
-                      <option value="dark">Quiet dark</option>
+                      <option value="system">Match this device</option>
+                      <option value="light">Light</option>
+                      <option value="dark">Dark</option>
                     </select>
                   </label>
                   <label>
@@ -1428,13 +1510,18 @@ export function App({ appRole }: { appRole: Role }) {
           {game && props && (
             <>
               <div className="game-heading">
-                <div>
-                  <p className="eyebrow">A little discovery, at your pace</p>
-                  <h1 ref={heading} tabIndex={-1}>
-                    {titles[game]}
-                  </h1>
+                <div className="room-title">
+                  <span className="room-badge large">
+                    <Icon name={ROOM_ICON[game] ?? "lab"} />
+                  </span>
+                  <div>
+                    <p className="eyebrow">{ROOM_LINE[game]}</p>
+                    <h1 ref={heading} tabIndex={-1}>
+                      {titles[game]}
+                    </h1>
+                  </div>
                 </div>
-                <div className="actions">
+                <div className="actions session-actions">
                   <button onClick={() => setPaused(!paused)}>
                     {paused ? "Resume" : "Pause"}
                   </button>

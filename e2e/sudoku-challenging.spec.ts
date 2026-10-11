@@ -49,7 +49,7 @@ test("challenging Sudoku offers optional pair deductions, offline progress and d
   await page
     .getByRole("button", { name: "Back to games", exact: true })
     .click();
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   const challenge = page.getByRole("combobox", {
     name: "Challenge",
     exact: true,
@@ -80,7 +80,7 @@ test("challenging Sudoku offers optional pair deductions, offline progress and d
   ).toBeVisible();
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   await expect(challenge).toHaveValue("Challenging");
   await expect(cell).toHaveText(String(step.value));
   await expect(help).not.toHaveAttribute("open");
