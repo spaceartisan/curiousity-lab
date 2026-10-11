@@ -7,6 +7,8 @@ import {
   rhythmFeedback,
   melodyTier,
   melodyPool,
+  phraseTier,
+  phrasePool,
   musicTaskMode,
   type MelodyTier,
   type MusicMode,
@@ -302,10 +304,16 @@ export function Music({
         update({ ...d, solved: true });
         finish("completed");
         setMessage(
-          `${noteName(n)} continues this pattern. Try it again or explore another phrase.`,
+          phraseTier(index) === "Challenging"
+            ? `${noteName(n)} completes the stated pattern.`
+            : `${noteName(n)} continues this pattern. Try it again or explore another phrase.`,
         );
       } else
-        setMessage("Try the pattern again, or use Hint to see the next note.");
+        setMessage(
+          phraseTier(index) === "Challenging"
+            ? "That note doesn't continue the stated pattern."
+            : "Try the pattern again, or use Hint to see the next note.",
+        );
     }
   }
   function mode(next: MusicMode) {
@@ -319,14 +327,18 @@ export function Music({
   }
   function changeMelodyTier(tier: MelodyTier) {
     if (
-      tier === melodyTier(index) ||
+      tier === (d.mode === "phrase" ? phraseTier(index) : melodyTier(index)) ||
       !window.confirm(
-        "Start a fresh melody? Your current exercise will be replaced.",
+        d.mode === "phrase"
+          ? "Start a fresh phrase? Your current exercise will be replaced."
+          : "Start a fresh melody? Your current exercise will be replaced.",
       )
     )
       return;
     cancelPlayback();
-    const exercise = melodyPool(tier)[0];
+    const exercise = (
+      d.mode === "phrase" ? phrasePool(tier) : melodyPool(tier)
+    )[0];
     const data = { ...d, exercise, solved: false, taps: 0 };
     update(data, { mode: musicTaskMode(data) });
     setMessage("");
@@ -384,12 +396,16 @@ export function Music({
           </button>
         ))}
       </div>
-      {d.mode === "match" && (
+      {(d.mode === "match" || d.mode === "phrase") && (
         <label className="melody-challenge">
           Challenge{" "}
           <select
-            aria-label="Melody matching challenge"
-            value={melodyTier(index)}
+            aria-label={
+              d.mode === "phrase"
+                ? "Phrase challenge"
+                : "Melody matching challenge"
+            }
+            value={d.mode === "phrase" ? phraseTier(index) : melodyTier(index)}
             onChange={(e) => changeMelodyTier(e.target.value as MelodyTier)}
           >
             <option>Classic</option>
@@ -415,6 +431,26 @@ export function Music({
               ? "Play the target phrase, then choose its matching pattern. You can hear either choice before selecting it."
               : `${rhythm.description} Listen or watch, then tap four beats at your own pace. There is no timing score.`}
       </p>
+      {d.mode === "phrase" && (
+        <>
+          <p>
+            Phrase {phrasePool(phraseTier(index)).indexOf(index) + 1} of{" "}
+            {phrasePool(phraseTier(index)).length}
+          </p>
+          <details>
+            <summary>Phrase controls & help</summary>
+            <p>
+              A keyboard step means one adjacent white key in C4–C5, rather than
+              a semitone. Interleaved lines alternate notes from two sequences.
+              Choose the next note on the keyboard. Staff and Note pattern show
+              the phrase; By ear hides the visual sequence. Playback and hints
+              are available on request. On small screens, scroll the keyboard
+              sideways to reach all keys. Another phrase stays in the chosen
+              collection; Try this exercise again repeats the same phrase.
+            </p>
+          </details>
+        </>
+      )}
       {d.mode === "match" && (
         <>
           <p>
@@ -536,10 +572,12 @@ export function Music({
       </div>
       {(d.mode === "piano" || d.mode === "phrase") && (
         <>
-          <p className="muted">
-            The keyboard runs from middle C to the next C. On a small screen,
-            slide it sideways to reach all keys.
-          </p>
+          {d.mode === "piano" && (
+            <p className="muted">
+              The keyboard runs from middle C to the next C. On a small screen,
+              slide it sideways to reach all keys.
+            </p>
+          )}
           <div className="piano-scroll">
             <div className="piano" role="group" aria-label="Piano keyboard">
               {notes.map((n, i) => (

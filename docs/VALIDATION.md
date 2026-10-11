@@ -1,3 +1,11 @@
+# v0.22.0 validation
+
+Four additional engine/component regressions verify legacy phrase content, independent alternating-step/interleaved-line rule checks, bounded notes and indices, independent collection cycling, canceled/confirmed replacement, preserved recordings, explicit by-ear playback of the actual target, truthful requested hints, all four completed source records, unassisted counts, immutable replay/mode changes and history-off reload. A new desktop/phone scenario verifies stated rules, closed help, no unsolicited solutions, real Web Audio controls, offline recovery, canceled choices, completion/replay, collection boundaries and 320-pixel/200% text including keyboard scrolling and selector fit.
+
+Deployment requires full component/build, archive, security/recovery and browser gates plus screenshot review. Rule verification does not establish perceived difficulty or actual family-device audibility; independent music review and full architecture implementation remain unfinished.
+
+---
+
 # v0.21.0 validation
 
 Six additional regressions verify exact legacy melody content, five-note same-contour/same-endpoint pairs with one interior difference, collection boundaries, validated save indices, canceled/confirmed replacement, preserved free-piano notes, explicit actual audio sequences, hidden by-ear visuals, truthful requested hints, unassisted immutable completion, replay, mode changes and history-off reload. A new desktop/phone scenario exercises visual and Web Audio playback, optional hints, offline chosen-content/presentation recovery, canceled choices, completion/replay and 320-pixel/200% text including the selector and action targets.

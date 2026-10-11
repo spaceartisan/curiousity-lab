@@ -1,5 +1,5 @@
 // Original short exercises; no song recordings or copyrighted tune assets.
-export const phraseExercises = [
+export const classicPhrases = [
   {
     id: "ascending-steps-v1",
     title: "Up one step",
@@ -33,6 +33,48 @@ export const phraseExercises = [
     hint: "C, E, G, E… return to C.",
   },
 ];
+// Original, explicitly specified patterns using the existing diatonic keyboard.
+export const challengingPhrases = [
+  {
+    id: "alternating-steps-v1",
+    title: "Alternating steps",
+    heard: [0, 2, 1, 3, 2],
+    next: 4,
+    rule: "Continue the alternating up-two, down-one keyboard-step pattern.",
+    hint: "The moves are up two, down one, up two, down one. From E4, move up two keyboard steps to G4.",
+  },
+  {
+    id: "opposing-lines-v1",
+    title: "Opposing lines",
+    heard: [0, 6, 1, 5, 2],
+    next: 4,
+    rule: "Two interleaved lines: one rises a keyboard step, the other falls a step. Continue the line due next.",
+    hint: "The first line is C4, D4, E4. The second is B4, A4; continue the second line down one step to G4.",
+  },
+  {
+    id: "changing-stride-v1",
+    title: "Changing stride",
+    heard: [0, 1, 3, 6, 4],
+    next: 3,
+    rule: "Move up one, two, then three keyboard steps; then move down two, then one. Finish the pattern.",
+    hint: "C4 to D4 is up one, D4 to F4 up two, F4 to B4 up three, B4 to G4 down two. Move down one more step to F4.",
+  },
+  {
+    id: "parallel-lines-v1",
+    title: "Parallel lines",
+    heard: [0, 3, 1, 4, 2],
+    next: 5,
+    rule: "Two interleaved lines each rise by one keyboard step. Continue the line due next.",
+    hint: "The first line is C4, D4, E4. The second is F4, G4; continue the second line up one step to A4.",
+  },
+];
+export const phraseExercises = [...classicPhrases, ...challengingPhrases];
+export function phraseTier(exercise = 0): MelodyTier {
+  return exercise < classicPhrases.length ? "Classic" : "Challenging";
+}
+export function phrasePool(tier: MelodyTier) {
+  return phraseExercises.map((_, i) => i).filter((i) => phraseTier(i) === tier);
+}
 export const classicMelodies = [
   {
     id: "small-arch-v1",
@@ -112,9 +154,15 @@ export function nextMusicExercise(
     const pool = melodyPool(melodyTier(index));
     return pool[(pool.indexOf(index) + 1) % pool.length];
   }
+  if (data.mode === "phrase") {
+    const pool = phrasePool(phraseTier(index));
+    return pool[(pool.indexOf(index) + 1) % pool.length];
+  }
   return (index + 1) % exerciseCount(data.mode);
 }
 export function musicTaskMode(data: { mode: MusicMode; exercise?: number }) {
+  if (data.mode === "phrase" && phraseTier(data.exercise) === "Challenging")
+    return "phrase:challenging";
   return data.mode === "match" && melodyTier(data.exercise) === "Challenging"
     ? "match:challenging"
     : data.mode;
@@ -125,9 +173,11 @@ export function musicContentVersion(
 ) {
   return musicTaskMode(data) === "match:challenging"
     ? "music-melodies-2"
-    : puzzleId === "music-studio-v1"
-      ? "starter-1"
-      : "music-exercises-1";
+    : musicTaskMode(data) === "phrase:challenging"
+      ? "music-phrases-2"
+      : puzzleId === "music-studio-v1"
+        ? "starter-1"
+        : "music-exercises-1";
 }
 export const rhythmExercises = [
   {

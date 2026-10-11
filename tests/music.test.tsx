@@ -13,6 +13,7 @@ import { emptyState } from "../src/storage/contracts";
 import { clearState, saveState, loadState } from "../src/storage/local";
 import {
   phraseExercises,
+  classicPhrases,
   melodyExercises,
   rhythmExercises,
   rhythmFeedback,
@@ -60,7 +61,7 @@ it("music content has distinct bounded exercises and alternating matching positi
   const ids = [...phraseExercises, ...melodyExercises, ...rhythmExercises].map(
     (x) => x.id,
   );
-  expect(new Set(ids).size).toBe(15);
+  expect(new Set(ids).size).toBe(19);
   for (const p of phraseExercises) {
     expect(p.heard.length).toBeGreaterThanOrEqual(3);
     expect(p.heard.length).toBeLessThanOrEqual(5);
@@ -162,18 +163,18 @@ it("rhythm completion persists and Try again starts separate attempts while view
     expect((s.drafts.music?.data as MusicData).taps).toBe(4);
   });
 });
-it("all phrase exercises can be completed with stable versioned IDs and no duplicate completion", async () => {
+it("all Classic phrase exercises can be completed with stable versioned IDs and no duplicate completion", async () => {
   const { user } = await openMusic(true);
   await user.click(screen.getByRole("button", { name: "Complete the phrase" }));
-  for (let i = 0; i < phraseExercises.length; i++) {
+  for (let i = 0; i < classicPhrases.length; i++) {
     const note = ["C", "D", "E", "F", "G", "A", "B", "C high"][
-      phraseExercises[i].next
+      classicPhrases[i].next
     ];
     await user.click(screen.getByRole("button", { name: "Hint" }));
     await user.click(screen.getByRole("button", { name: `Play ${note}` }));
     await user.click(screen.getByRole("button", { name: `Play ${note}` }));
     await user.click(screen.getByRole("button", { name: "Note pattern" }));
-    if (i < phraseExercises.length - 1)
+    if (i < classicPhrases.length - 1)
       await user.click(screen.getByRole("button", { name: "Another phrase" }));
   }
   await user.click(screen.getByRole("button", { name: "Back to games" }));
@@ -181,7 +182,7 @@ it("all phrase exercises can be completed with stable versioned IDs and no dupli
     const s = await loadState("play"),
       phrases = s.sessions.filter((x) => x.mode === "phrase");
     expect(phrases.map((x) => x.puzzleId)).toEqual(
-      phraseExercises.map((x) => x.id),
+      classicPhrases.map((x) => x.id),
     );
     expect(
       phrases.every(

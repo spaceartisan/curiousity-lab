@@ -105,3 +105,7 @@ Four original Challenging boards add compound words, phrases, homophones and ove
 ## v0.21.0 — Chosen melody matching challenge
 
 Four original five-note Challenging comparisons retain the same contour and endpoints across both choices while changing one interior note. Separate chosen collections cycle independently, preserve original content/IDs and free-piano recordings, and retain staff, note-pattern and by-ear presentation. Optional hints identify the actual difference; longer controls help stays closed. New versioned task mode separates difficulty in local history without changing previously filed records. Broader phrase/rhythm and lab content, human calibration, independent media/device review, normalized context, private sync/shared reports and production recovery remain unfinished. The full document is not complete.
+
+## v0.22.0 — Chosen phrase reasoning
+
+Four original five-note Challenging phrases specify alternating-step, changing-stride and interleaved-line rules. Rules avoid ambiguous guesswork; explanations and answers appear only on request. Separate collections cycle independently, preserve existing phrase IDs/content, recordings and presentation, and identify challenging task/content versions without rewriting filed sessions. Longer controls help stays closed. Broader rhythm/lab content, human calibration, independent media/device review, normalized context, private sync/shared reports and production recovery remain unfinished. The full document is not complete.

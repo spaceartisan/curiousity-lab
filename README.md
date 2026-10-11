@@ -8,7 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.21.0
+## Current release · v0.22.0
+
+Complete the Phrase now offers four chosen **Challenging** five-note patterns with alternating steps and interleaved melodic lines. Each rule is stated clearly; solution explanations appear only on request, and new phrases/replay keep the chosen collection. See [phrase challenges](docs/PHRASE_CHALLENGES.md).
 
 Music Studio now offers four original **Challenging** five-note melody comparisons whose choices share contour and endpoints but differ at one interior note. Choose the collection explicitly; replay and another melody retain it. Staff, Note pattern and By ear remain available, with requested note-specific hints. See [melody challenges](docs/MELODY_CHALLENGES.md).
 
