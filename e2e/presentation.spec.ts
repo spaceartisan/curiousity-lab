@@ -131,8 +131,14 @@ test("consented presentation settings survive offline replay, exports and review
     .getByRole("combobox", { name: "Review activity", exact: true })
     .selectOption({ value: "music" });
   await expect(review.getByRole("article")).toHaveCount(3);
+  const legacyContext = review
+    .getByRole("article")
+    .filter({ hasText: "Presentation settings unrecorded" });
+  await legacyContext.locator("details.context-details summary").click();
   await expect(
-    review.getByRole("heading", { name: /Presentation settings unrecorded/ }),
+    legacyContext
+      .locator("details.context-details")
+      .getByText("Presentation settings unrecorded", { exact: true }),
   ).toBeVisible();
   await review
     .getByRole("combobox", { name: "Puzzle context", exact: true })

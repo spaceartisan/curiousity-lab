@@ -96,17 +96,21 @@ test("game input categories survive offline use and retain unknown legacy contex
   });
   await context.setOffline(false);
   await page.goto("/curiousity-lab/insights/");
-  await page
-    .getByLabel("Open Play JSON backup")
-    .setInputFiles({
-      name: "fictional-input-review.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(backup)),
-    });
+  await page.getByLabel("Open Play JSON backup").setInputFiles({
+    name: "fictional-input-review.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(backup)),
+  });
   const review = page.getByRole("region", { name: "Imported activity review" });
   await expect(review.getByRole("article")).toHaveCount(2);
+  const legacyContext = review
+    .getByRole("article")
+    .filter({ hasText: "input methods unrecorded" });
+  await legacyContext.locator("details.context-details summary").click();
   await expect(
-    review.getByRole("heading", { name: /input methods unrecorded/ }),
+    legacyContext
+      .locator("details.context-details")
+      .getByText(/input methods unrecorded/),
   ).toBeVisible();
   await review
     .getByRole("combobox", { name: "Puzzle context", exact: true })
