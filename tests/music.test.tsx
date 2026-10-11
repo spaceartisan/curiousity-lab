@@ -60,7 +60,7 @@ it("music content has distinct bounded exercises and alternating matching positi
   const ids = [...phraseExercises, ...melodyExercises, ...rhythmExercises].map(
     (x) => x.id,
   );
-  expect(new Set(ids).size).toBe(11);
+  expect(new Set(ids).size).toBe(15);
   for (const p of phraseExercises) {
     expect(p.heard.length).toBeGreaterThanOrEqual(3);
     expect(p.heard.length).toBeLessThanOrEqual(5);

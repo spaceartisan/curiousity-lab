@@ -1,0 +1,9 @@
+# Chosen melody comparisons
+
+The four original Classic melodies remain unchanged, with their original indices, IDs, matching positions and `music-exercises-1` content version. Four original Challenging comparisons add five-note sequences. Each target and alternative has identical endpoints and rise/fall/repeat contour, differing at exactly one interior note. Notes stay within C4–C5, the existing staff and synthesized keyboard range. Correct choice positions alternate. This is a provisional chosen game difficulty, not a cognitive or auditory assessment; family feedback and perceived-difficulty calibration are pending.
+
+The player explicitly selects Classic or Challenging. Confirming replacement starts a new attempt and preserves the free-piano recording. Canceling leaves the current attempt intact. Another melody cycles within the chosen collection; Try this exercise again repeats the same board with a fresh attempt. Changing music activity starts that activity's original first exercise. Necessary progress and presentation persist with history off.
+
+Staff and Note pattern provide visual comparisons; By ear hides visual note sequences and permits unlimited target/choice playback. Sound is off by default and never starts automatically from a difficulty or presentation choice. Playback stays subject to the existing gesture, volume, stop, visibility and reduced-motion handling. Hearing equivalence on actual family devices remains unverified. A requested Hint names the first differing note and its actual target pitch; no hint appears on a mismatch, reload or fresh attempt. Help is closed initially.
+
+New attempts use `match:challenging` task mode and `music-melodies-2` content version with stable authored puzzle IDs. Optional history counts actual hint requests; completed source records remain immutable across view changes and replay. No new data field, raw audio capture, cloud permission or upload path is introduced.

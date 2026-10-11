@@ -1292,19 +1292,22 @@ summary {
   background: var(--hover);
   border-radius: 10px;
 }
-.connections-challenge {
+.connections-challenge,
+.melody-challenge {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
 }
-.connections-challenge select {
+.connections-challenge select,
+.melody-challenge select {
   min-width: 0;
   max-width: 100%;
   padding-inline: min(0.7rem, 2vw);
 }
 @media (max-width: 420px) {
-  .connections-challenge select {
+  .connections-challenge select,
+  .melody-challenge select {
     width: 100%;
     padding-inline: min(0.4rem, 1vw);
   }

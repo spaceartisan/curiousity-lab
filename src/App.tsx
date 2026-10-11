@@ -32,7 +32,12 @@ import {
 } from "./games/connections-engine";
 import { Connections, WordSearch } from "./games/Words";
 import { Music, type MusicData } from "./games/Music";
-import { exerciseCount, musicPuzzle } from "./content/music";
+import {
+  nextMusicExercise,
+  musicPuzzle,
+  musicTaskMode,
+  musicContentVersion,
+} from "./content/music";
 import { Laboratory } from "./games/Laboratory";
 import {
   observePresentation,
@@ -130,8 +135,7 @@ function newDraft(
             ? {
                 mode: oldMusic?.mode ?? "piano",
                 exercise: oldMusic
-                  ? ((oldMusic.exercise ?? 0) + (samePuzzle ? 0 : 1)) %
-                    exerciseCount(oldMusic.mode)
+                  ? nextMusicExercise(oldMusic, samePuzzle)
                   : 0,
                 notes:
                   oldMusic?.mode !== "piano" ? (oldMusic?.notes ?? []) : [],
@@ -172,7 +176,7 @@ function newDraft(
         : game === "connections"
           ? connectionsMode((data as { pack: number }).pack)
           : game === "music"
-            ? (data as MusicData).mode
+            ? musicTaskMode(data as MusicData)
             : game === "lab"
               ? labMode(data as LabData)
               : "explore",
@@ -209,9 +213,11 @@ function archive(
                 : draft.game === "search" &&
                     draft.puzzleId !== "quiet-garden-v1"
                   ? "word-search-2"
-                  : draft.game === "music" &&
-                      draft.puzzleId !== "music-studio-v1"
-                    ? "music-exercises-1"
+                  : draft.game === "music"
+                    ? musicContentVersion(
+                        draft.data as MusicData,
+                        draft.puzzleId,
+                      )
                     : draft.game === "lab" &&
                         (draft.data as LabData).workflowRevision === 1
                       ? "lab-workflow-1"
@@ -518,7 +524,9 @@ export function App({ appRole }: { appRole: Role }) {
             (old.data as { seed: number }).seed) ||
         (game === "connections" &&
           (data as { pack: number }).pack !==
-            (old.data as { pack: number }).pack);
+            (old.data as { pack: number }).pack) ||
+        (game === "music" &&
+          (data as MusicData).exercise !== (old.data as MusicData).exercise);
       const newSpecimen =
         game === "lab" &&
         (data as { specimen: number }).specimen !==

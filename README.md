@@ -8,7 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.20.0
+## Current release · v0.21.0
+
+Music Studio now offers four original **Challenging** five-note melody comparisons whose choices share contour and endpoints but differ at one interior note. Choose the collection explicitly; replay and another melody retain it. Staff, Note pattern and By ear remain available, with requested note-specific hints. See [melody challenges](docs/MELODY_CHALLENGES.md).
 
 Word Connections now offers four original **Challenging** wordplay boards alongside the eight Classic boards. Compound words, phrases, homophones and overlapping meanings require considering the whole board. Help stays closed; new puzzles and replay retain the chosen collection. See [wordplay content](docs/CONNECTIONS_CONTENT.md).
 

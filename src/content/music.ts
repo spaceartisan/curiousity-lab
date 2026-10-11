@@ -33,7 +33,7 @@ export const phraseExercises = [
     hint: "C, E, G, E… return to C.",
   },
 ];
-export const melodyExercises = [
+export const classicMelodies = [
   {
     id: "small-arch-v1",
     title: "A little arch",
@@ -63,6 +63,72 @@ export const melodyExercises = [
     correct: 1,
   },
 ];
+// Original five-note comparisons with the same contour and endpoints.
+export const challengingMelodies = [
+  {
+    id: "inner-turn-v1",
+    title: "Inner turn",
+    target: [0, 2, 4, 3, 5],
+    other: [0, 2, 5, 3, 5],
+    correct: 0,
+  },
+  {
+    id: "returning-line-v1",
+    title: "Returning line",
+    target: [6, 4, 2, 3, 1],
+    other: [6, 4, 1, 3, 1],
+    correct: 1,
+  },
+  {
+    id: "repeated-centre-v1",
+    title: "Repeated centre",
+    target: [1, 3, 3, 5, 2],
+    other: [1, 3, 3, 6, 2],
+    correct: 0,
+  },
+  {
+    id: "turn-and-return-v1",
+    title: "Turn and return",
+    target: [5, 2, 4, 1, 3],
+    other: [5, 2, 3, 1, 3],
+    correct: 1,
+  },
+];
+export const melodyExercises = [...classicMelodies, ...challengingMelodies];
+export type MelodyTier = "Classic" | "Challenging";
+export function melodyTier(exercise = 0): MelodyTier {
+  return exercise < classicMelodies.length ? "Classic" : "Challenging";
+}
+export function melodyPool(tier: MelodyTier) {
+  return melodyExercises.map((_, i) => i).filter((i) => melodyTier(i) === tier);
+}
+export function nextMusicExercise(
+  data: { mode: MusicMode; exercise?: number },
+  repeat = false,
+) {
+  const index = data.exercise ?? 0;
+  if (repeat) return index;
+  if (data.mode === "match") {
+    const pool = melodyPool(melodyTier(index));
+    return pool[(pool.indexOf(index) + 1) % pool.length];
+  }
+  return (index + 1) % exerciseCount(data.mode);
+}
+export function musicTaskMode(data: { mode: MusicMode; exercise?: number }) {
+  return data.mode === "match" && melodyTier(data.exercise) === "Challenging"
+    ? "match:challenging"
+    : data.mode;
+}
+export function musicContentVersion(
+  data: { mode: MusicMode; exercise?: number },
+  puzzleId: string,
+) {
+  return musicTaskMode(data) === "match:challenging"
+    ? "music-melodies-2"
+    : puzzleId === "music-studio-v1"
+      ? "starter-1"
+      : "music-exercises-1";
+}
 export const rhythmExercises = [
   {
     id: "steady-four-v1",

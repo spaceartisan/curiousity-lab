@@ -5,6 +5,10 @@ import {
   melodyExercises,
   rhythmExercises,
   rhythmFeedback,
+  melodyTier,
+  melodyPool,
+  musicTaskMode,
+  type MelodyTier,
   type MusicMode,
 } from "../content/music";
 import type { GameProps } from "./types";
@@ -310,8 +314,22 @@ export function Music({
     // Keep the free-piano recording when exploring another mode.
     update(
       { ...d, mode: next, exercise: 0, solved: false, taps: 0 },
-      { mode: next },
+      { mode: musicTaskMode({ mode: next, exercise: 0 }) },
     );
+  }
+  function changeMelodyTier(tier: MelodyTier) {
+    if (
+      tier === melodyTier(index) ||
+      !window.confirm(
+        "Start a fresh melody? Your current exercise will be replaced.",
+      )
+    )
+      return;
+    cancelPlayback();
+    const exercise = melodyPool(tier)[0];
+    const data = { ...d, exercise, solved: false, taps: 0 };
+    update(data, { mode: musicTaskMode(data) });
+    setMessage("");
   }
   function view(next: MusicData["presentation"]) {
     cancelPlayback();
@@ -366,6 +384,19 @@ export function Music({
           </button>
         ))}
       </div>
+      {d.mode === "match" && (
+        <label className="melody-challenge">
+          Challenge{" "}
+          <select
+            aria-label="Melody matching challenge"
+            value={melodyTier(index)}
+            onChange={(e) => changeMelodyTier(e.target.value as MelodyTier)}
+          >
+            <option>Classic</option>
+            <option>Challenging</option>
+          </select>
+        </label>
+      )}
       <h2>
         {d.mode === "piano"
           ? "Your piano"
@@ -384,6 +415,24 @@ export function Music({
               ? "Play the target phrase, then choose its matching pattern. You can hear either choice before selecting it."
               : `${rhythm.description} Listen or watch, then tap four beats at your own pace. There is no timing score.`}
       </p>
+      {d.mode === "match" && (
+        <>
+          <p>
+            Melody {melodyPool(melodyTier(index)).indexOf(index) + 1} of{" "}
+            {melodyPool(melodyTier(index)).length}
+          </p>
+          <details>
+            <summary>Matching controls & help</summary>
+            <p>
+              Play the target and either choice as often as you like. Staff and
+              Note pattern show the notes; By ear hides them. Sound starts only
+              when you choose playback. Hint reveals a difference only when
+              requested. Try this exercise again repeats the same melody;
+              Another melody stays in the chosen collection.
+            </p>
+          </details>
+        </>
+      )}
       {d.mode !== "rhythm" && (
         <div className="actions" aria-label="Music presentation">
           {(["staff", "pattern", "ear"] as const).map((p) => (
@@ -462,6 +511,22 @@ export function Music({
             disabled={d.solved}
             onClick={() => {
               setMessage(phrase.hint);
+              update(d, { hint: true });
+            }}
+          >
+            Hint
+          </button>
+        )}
+        {d.mode === "match" && (
+          <button
+            disabled={d.solved}
+            onClick={() => {
+              const different = melody.target.findIndex(
+                (n, i) => n !== melody.other[i],
+              );
+              setMessage(
+                `Compare note ${different + 1}. The target has ${noteName(melody.target[different])} at that position.`,
+              );
               update(d, { hint: true });
             }}
           >

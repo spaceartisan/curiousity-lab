@@ -1,3 +1,11 @@
+# v0.21.0 validation
+
+Six additional regressions verify exact legacy melody content, five-note same-contour/same-endpoint pairs with one interior difference, collection boundaries, validated save indices, canceled/confirmed replacement, preserved free-piano notes, explicit actual audio sequences, hidden by-ear visuals, truthful requested hints, unassisted immutable completion, replay, mode changes and history-off reload. A new desktop/phone scenario exercises visual and Web Audio playback, optional hints, offline chosen-content/presentation recovery, canceled choices, completion/replay and 320-pixel/200% text including the selector and action targets.
+
+Deployment requires full component/build, archive, security/recovery and desktop/phone gates followed by screenshot review. Automated contour checks do not establish perceived musical difficulty, actual-device audibility or player preference. Full architecture implementation remains in progress.
+
+---
+
 # v0.20.0 validation
 
 Six additional engine/component regressions cover independent collection cycling and legacy versions, canceled and confirmed choices, honest alternate-group feedback, requested hints/undo, immutable completion and separate replay, and history-off shuffled-selection reload. Structural matching and import validation cover all twelve authored boards. A new desktop/phone scenario checks actual challenge selection, closed help, offline progress, canceled replacement, requested hints/undo, completion, replay, collection boundaries, and 320-pixel/200% text including the visible select value.
