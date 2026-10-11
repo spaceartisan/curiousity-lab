@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useEffect, useRef, useState } from "react";
 import {
   APP_VERSION,
   emptyState,
@@ -34,7 +34,8 @@ import {
   withoutRecordedHistory,
 } from "./storage/presentation";
 import type { Preferences } from "./storage/contracts";
-import { ActivityClock } from "./games/activity-clock";
+import { withTiming, applyClock } from "./storage/timing";
+import { ActivityClock, type ClockSlice } from "./games/activity-clock";
 import { stopAudio, playNotes } from "./games/audio";
 import { specimens } from "./content/specimens";
 import {
@@ -163,7 +164,13 @@ function newDraft(
             : "explore",
     data,
   };
-  return preferences ? observePresentation(draft, preferences, true) : draft;
+  return preferences
+    ? withTiming(
+        observePresentation(draft, preferences, true),
+        preferences,
+        true,
+      )
+    : draft;
 }
 function archive(
   state: LocalState,
@@ -209,6 +216,14 @@ function archive(
             ).length + 1,
           source: "local-guest" as const,
           ...(draft.presentation ? { presentation: draft.presentation } : {}),
+          ...(draft.timing
+            ? {
+                timing: {
+                  ...draft.timing,
+                  pausedMs: Math.round(draft.timing.pausedMs),
+                },
+              }
+            : {}),
         },
       ]
     : state.sessions;
@@ -303,7 +318,7 @@ export function App({ appRole }: { appRole: Role }) {
   const preparationError = usePreparation(family, state, restoreEpoch);
   const stateRef = useRef(state),
     screenRef = useRef(screen),
-    clock = useRef(new ActivityClock(performance.now())),
+    clock = useRef(new ActivityClock(performance.now(), !document.hidden)),
     heading = useRef<HTMLHeadingElement>(null);
   stateRef.current = state;
   screenRef.current = screen;
@@ -347,44 +362,57 @@ export function App({ appRole }: { appRole: Role }) {
     stopAudio();
     setPaused(false);
   }, [screen]);
+  function addTime(slice: ClockSlice | null) {
+    if (slice) setState((s) => (s ? applyClock(s, slice) : s));
+  }
+  function flushClock(detach = false) {
+    addTime(
+      detach
+        ? clock.current.bind(performance.now(), null)
+        : clock.current.drain(performance.now()),
+    );
+  }
+  const clockGame = screen in titles ? (screen as GameKind) : null;
+  const clockDraft = clockGame ? state?.drafts[clockGame] : undefined;
+  useLayoutEffect(() => {
+    const target =
+      clockGame &&
+      clockDraft &&
+      !clockDraft.finalized &&
+      state?.preferences.history
+        ? { game: clockGame, id: clockDraft.id }
+        : null;
+    addTime(clock.current.bind(performance.now(), target, paused));
+  }, [
+    clockGame,
+    clockDraft?.id,
+    clockDraft?.finalized,
+    state?.preferences.history,
+    paused,
+    restoreEpoch,
+  ]);
   useEffect(() => {
-    const add = (delta: number) => {
-      const activeScreen = screenRef.current;
-      if (
-        delta > 0 &&
-        activeScreen !== "home" &&
-        activeScreen !== "settings" &&
-        activeScreen !== "connect" &&
-        activeScreen !== "creations"
-      )
-        setState((s) => {
-          if (!s) return s;
-          const d = s.drafts[activeScreen];
-          if (!d || d.finalized || !s.preferences.history) return s;
-          return {
-            ...s,
-            drafts: {
-              ...s.drafts,
-              [activeScreen]: { ...d, activeMs: d.activeMs + delta },
-            },
-          };
-        });
-    };
-    const interacted = () => clock.current.interact(performance.now());
+    const interacted = () => addTime(clock.current.onInput(performance.now()));
     const visibility = () => {
-      add(clock.current.visibility(performance.now(), !document.hidden));
+      addTime(clock.current.onVisibility(performance.now(), !document.hidden));
       if (document.hidden) stopAudio();
     };
     const flush = () => {
-      const current = stateRef.current;
-      if (current) void saveState(current).catch(() => undefined);
+      const slice = clock.current.drain(performance.now());
+      setState((current) => {
+        if (!current) return current;
+        const next = applyClock(current, slice);
+        stateRef.current = next;
+        void saveState(next).catch(() => undefined);
+        return next;
+      });
     };
     document.addEventListener("visibilitychange", visibility);
     window.addEventListener("pagehide", flush);
     for (const event of ["pointerdown", "keydown"] as const)
       document.addEventListener(event, interacted);
     const timer = setInterval(
-      () => add(clock.current.sample(performance.now())),
+      () => addTime(clock.current.drain(performance.now())),
       1000,
     );
     return () => {
@@ -395,17 +423,6 @@ export function App({ appRole }: { appRole: Role }) {
         document.removeEventListener(event, interacted);
     };
   }, []);
-  useEffect(() => {
-    clock.current.pause(
-      performance.now(),
-      paused ||
-        screen === "home" ||
-        screen === "settings" ||
-        screen === "connect" ||
-        screen === "creations",
-    );
-    clock.current.interact(performance.now());
-  }, [screen, paused]);
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
     navigator.serviceWorker
@@ -430,15 +447,19 @@ export function App({ appRole }: { appRole: Role }) {
       );
   }, [appRole]);
   function open(game: GameKind) {
+    flushClock();
     setState((s) =>
       s
         ? {
             ...s,
             drafts: {
               ...s.drafts,
-              [game]: observePresentation(
-                s.drafts[game] ??
-                  newDraft(game, undefined, false, s.preferences),
+              [game]: withTiming(
+                observePresentation(
+                  s.drafts[game] ??
+                    newDraft(game, undefined, false, s.preferences),
+                  s.preferences,
+                ),
                 s.preferences,
               ),
             },
@@ -448,6 +469,7 @@ export function App({ appRole }: { appRole: Role }) {
     setScreen(game);
   }
   function replay(samePuzzle = false) {
+    flushClock(true);
     if (!state || !(screen in titles)) return;
     const game = screen as GameKind;
     setState((s) => {
@@ -467,6 +489,7 @@ export function App({ appRole }: { appRole: Role }) {
     data: unknown,
     metrics?: { hint?: boolean; undo?: boolean; mode?: string; view?: boolean },
   ) {
+    flushClock();
     const game = screen as GameKind;
     setState((s) => {
       if (!s) return s;
@@ -501,7 +524,11 @@ export function App({ appRole }: { appRole: Role }) {
                   : old.puzzleId,
           mode: metrics?.mode || old.mode,
         };
-        d = observePresentation(d, s.preferences, true);
+        d = withTiming(
+          observePresentation(d, s.preferences, true),
+          s.preferences,
+          true,
+        );
       }
       return {
         ...next,
@@ -525,12 +552,16 @@ export function App({ appRole }: { appRole: Role }) {
     });
   }
   function finish(outcome: "completed" | "explored" | "unfinished") {
+    flushClock(true);
     const game = screen as GameKind;
     setState((s) =>
       s && s.drafts[game]
         ? archive(
             s,
-            observePresentation(s.drafts[game]!, s.preferences),
+            withTiming(
+              observePresentation(s.drafts[game]!, s.preferences),
+              s.preferences,
+            ),
             outcome,
           )
         : s,
@@ -650,7 +681,8 @@ export function App({ appRole }: { appRole: Role }) {
       </main>
     );
   const prefs = state.preferences;
-  const changePrefs = (p: Partial<typeof prefs>) =>
+  const changePrefs = (p: Partial<typeof prefs>) => {
+    flushClock(p.history !== undefined);
     setState((s) => {
       if (!s) return s;
       const drafts =
@@ -661,6 +693,7 @@ export function App({ appRole }: { appRole: Role }) {
                 {
                   ...d,
                   presentation: undefined,
+                  timing: undefined,
                   id: crypto.randomUUID(),
                   startedAt: new Date().toISOString(),
                   activeMs: 0,
@@ -674,12 +707,13 @@ export function App({ appRole }: { appRole: Role }) {
       const active = screenRef.current;
       const nextDrafts = { ...drafts };
       if (active in titles && nextDrafts[active as GameKind])
-        nextDrafts[active as GameKind] = observePresentation(
-          nextDrafts[active as GameKind]!,
+        nextDrafts[active as GameKind] = withTiming(
+          observePresentation(nextDrafts[active as GameKind]!, preferences),
           preferences,
         );
       return { ...s, drafts: nextDrafts, preferences };
     });
+  };
   const game = screen in titles ? (screen as GameKind) : null;
   const draft = game ? state.drafts[game] : null;
   const props = draft

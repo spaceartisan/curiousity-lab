@@ -1,3 +1,4 @@
+import { timingLabel } from "../storage/timing";
 import { presentationLabel } from "../storage/presentation";
 import { useMemo, useState } from "react";
 import type { LocalState } from "../storage/contracts";
@@ -62,10 +63,12 @@ export function SessionReview({
       </p>
       <p className="notice">
         Setting observations may be unrecorded, partial or mixed. A sound-on
-        setting does not prove audible playback. Input method, pauses and clock
-        quality are unrecorded. Matching puzzle and version does not establish
-        equivalent presentation. Play without activity history is absent, not
-        zero activity.
+        setting does not prove audible playback. Explicit pause time is observed
+        only while the activity is visible; background, idle and closed time are
+        excluded. Older pause time, input method and clock quality are
+        unrecorded. Matching puzzle and version does not establish equivalent
+        presentation. Play without activity history is absent, not zero
+        activity.
       </p>
       <div className="review-filters">
         <label>
@@ -163,10 +166,10 @@ export function SessionReview({
       <p>
         Each summary keeps the same puzzle, activity, mode, content version, app
         version, source, first/repeat exposure and observed presentation
-        settings together. Counts describe saved sessions; days are UTC dates.
-        Repeat practice can affect results. Sessions within a day or puzzle may
-        be related; they are not independent participants. No trend is
-        estimated.
+        settings and timing observation coverage together. Counts describe saved
+        sessions; days are UTC dates. Repeat practice can affect results.
+        Sessions within a day or puzzle may be related; they are not independent
+        participants. No trend is estimated.
       </p>
       {contexts.length > 200 ? (
         <p>
@@ -204,8 +207,12 @@ export function SessionReview({
                   </p>
                   <p>
                     Observed active time: {s.activeMinutesRange[0].toFixed(1)}–
-                    {s.activeMinutesRange[1].toFixed(1)} minutes. Paused time is
-                    unavailable.
+                    {s.activeMinutesRange[1].toFixed(1)} minutes.
+                  </p>
+                  <p>
+                    {s.pausedMinutesRange
+                      ? `Observed foreground pause: ${s.pausedMinutesRange[0].toFixed(1)}–${s.pausedMinutesRange[1].toFixed(1)} minutes (${s.pauseRecords} recorded sessions).`
+                      : "Paused time is unavailable."}
                   </p>
                   {s.exploration ? (
                     <p>
@@ -235,8 +242,8 @@ export function SessionReview({
                   {s.timeIssues ? (
                     <p>
                       Time consistency warning: {s.timeIssues} records have
-                      active time exceeding elapsed time or an end before the
-                      start. Source values are preserved.
+                      active plus recorded pause time exceeding elapsed time or
+                      an end before the start. Source values are preserved.
                     </p>
                   ) : null}
                 </article>
@@ -280,7 +287,7 @@ export function SessionReview({
                     "Activity / versions",
                     "Puzzle / mode",
                     "Attempt",
-                    "Active time",
+                    "Active / foreground pause",
                     "Hints / undo",
                     "Outcome / source",
                     "Presentation settings",
@@ -317,7 +324,13 @@ export function SessionReview({
                     <td>
                       {(s.activeMs / 60000).toFixed(1)} min
                       <br />
-                      {s.activeMs} ms
+                      {s.activeMs} ms active
+                      <br />
+                      {s.timing
+                        ? `${s.timing.pausedMs} ms foreground pause`
+                        : "Pause unrecorded"}
+                      <br />
+                      {timingLabel(s.timing)}
                     </td>
                     <td>
                       {s.hints} / {s.undos}

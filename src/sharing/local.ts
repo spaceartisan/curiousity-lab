@@ -1,3 +1,4 @@
+import { validTiming } from "../storage/timing";
 import { openDB, deleteDB } from "idb";
 import { validPresentation } from "../storage/presentation";
 import type { Session } from "../storage/contracts";
@@ -108,6 +109,7 @@ function sessionPayload(session: Session): Session {
     attempt,
     source,
     presentation,
+    timing,
   } = session;
   return {
     id,
@@ -125,6 +127,9 @@ function sessionPayload(session: Session): Session {
     mode,
     attempt,
     source,
+    ...(timing && validTiming(timing)
+      ? { timing: structuredClone(timing) }
+      : {}),
     ...(presentation && validPresentation(presentation, game)
       ? { presentation: structuredClone(presentation) }
       : {}),

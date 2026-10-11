@@ -1,6 +1,7 @@
+import { timingKey, timingLabel } from "../storage/timing";
 import { presentationKey, presentationLabel } from "../storage/presentation";
 import type { GameKind, Session } from "../storage/contracts";
-export const ANALYSIS_VERSION = "local-context-review-2";
+export const ANALYSIS_VERSION = "local-context-review-3";
 export const activityNames: Record<GameKind, string> = {
   sudoku: "Sudoku",
   connections: "Word Connections",
@@ -32,10 +33,11 @@ export function contextKey(s: Session) {
     s.source,
     s.attempt === 1 ? "first" : "repeat",
     presentationKey(s.presentation),
+    timingKey(s.timing),
   ]);
 }
 export function contextLabel(s: Session) {
-  return `${activityNames[s.game]} · ${s.mode} · ${s.puzzleId} · ${s.contentVersion} · app ${s.appVersion} · ${s.attempt === 1 ? "first attempt" : "repeat attempts"} · ${presentationLabel(s.presentation)}`;
+  return `${activityNames[s.game]} · ${s.mode} · ${s.puzzleId} · ${s.contentVersion} · app ${s.appVersion} · ${s.attempt === 1 ? "first attempt" : "repeat attempts"} · ${presentationLabel(s.presentation)} · ${timingLabel(s.timing)}`;
 }
 export function filterSessions(
   sessions: Session[],
@@ -68,6 +70,8 @@ export interface ContextSummary {
   days: number;
   counts: Record<Session["outcome"], number>;
   activeMinutesRange: [number, number];
+  pauseRecords: number;
+  pausedMinutesRange: [number, number] | null;
   completedHints: {
     n: number;
     total: number;
@@ -92,7 +96,10 @@ export function summarizeContexts(sessions: Session[]): ContextSummary[] {
         first.game === "lab" ||
         (first.game === "music" && first.mode === "piano");
       const hints = completed.map((s) => s.hints),
-        active = records.map((s) => s.activeMs / 60000);
+        active = records.map((s) => s.activeMs / 60000),
+        pauses = records
+          .filter((s) => s.timing)
+          .map((s) => s.timing!.pausedMs / 60000);
       return {
         key,
         label: contextLabel(first),
@@ -110,6 +117,10 @@ export function summarizeContexts(sessions: Session[]): ContextSummary[] {
           number,
           number,
         ],
+        pauseRecords: pauses.length,
+        pausedMinutesRange: pauses.length
+          ? ([Math.min(...pauses), Math.max(...pauses)] as [number, number])
+          : null,
         completedHints:
           !exploration && completed.length
             ? {
@@ -126,7 +137,8 @@ export function summarizeContexts(sessions: Session[]): ContextSummary[] {
         timeIssues: records.filter(
           (s) =>
             Date.parse(s.endedAt) < Date.parse(s.startedAt) ||
-            s.activeMs > Date.parse(s.endedAt) - Date.parse(s.startedAt),
+            s.activeMs + (s.timing?.pausedMs ?? 0) >
+              Date.parse(s.endedAt) - Date.parse(s.startedAt) + 1,
         ).length,
       };
     })
@@ -143,7 +155,7 @@ export function reviewSummary(sessions: Session[], filters: ReviewFilters) {
     contexts: summarizeContexts(selected),
     limitations: [
       "Only records present in this selected backup; unrecorded play is unknown.",
-      "Older presentation settings were not recorded. New setting observations can be partial or mixed; sound settings do not establish audible playback. Input method, pauses, clock quality and reference-set equivalence remain unrecorded.",
+      "Older presentation settings were not recorded. New setting observations can be partial or mixed; sound settings do not establish audible playback. Explicit foreground pauses are observed only where timing metadata is present; hidden, idle and closed time remain excluded. Input method, clock quality and reference-set equivalence remain unrecorded.",
       "Same puzzle/mode/version is a grouping rule, not proof of comparable presentation or human difficulty.",
       "No trend estimate, clinical inference or enjoyment inference.",
     ],

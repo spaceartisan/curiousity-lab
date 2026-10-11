@@ -1,9 +1,11 @@
+import { validTiming, type Timing } from "./timing";
 import { validPresentation, type Presentation } from "./presentation";
 import { validateGame } from "./validate-game";
-export const APP_VERSION = "0.13.0";
+export const APP_VERSION = "0.14.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {
+  timing?: Timing;
   presentation?: Presentation;
   id: string;
   schemaVersion: 1;
@@ -22,6 +24,7 @@ export interface Session {
   source: "local-guest";
 }
 export interface Draft {
+  timing?: Timing;
   presentation?: Presentation;
   id: string;
   game: GameKind;
@@ -131,6 +134,7 @@ export function validateState(
       !Number.isFinite(Date.parse(s.endedAt)) ||
       !["completed", "explored", "unfinished"].includes(s.outcome) ||
       s.source !== "local-guest" ||
+      (s.timing !== undefined && !validTiming(s.timing)) ||
       (s.presentation !== undefined &&
         !validPresentation(s.presentation, s.game)) ||
       typeof s.puzzleId !== "string" ||
@@ -189,6 +193,7 @@ export function validateState(
       typeof d.puzzleId !== "string" ||
       typeof d.mode !== "string" ||
       !Number.isFinite(Date.parse(d.startedAt)) ||
+      (d.timing !== undefined && !validTiming(d.timing)) ||
       (d.presentation !== undefined &&
         !validPresentation(d.presentation, kind)) ||
       !validateGame(kind, d.data)

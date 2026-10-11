@@ -73,3 +73,7 @@ Insights reviews an explicitly selected backup in memory, separates recorded con
 ## v0.13.0 — Consented presentation provenance
 
 New local attempts record bounded theme/text and music presentation-setting observations only with activity history enabled. Changes survive offline resume and remain distinct from missing/partial settings; completed source sessions stay immutable. JSON/CSV, validated local Insights preparation and context-separated review retain this provenance. Clear-history also purges optional draft context from durable undo copies. The remaining normalized identity/input/pause/clock fields, reference challenges, private sync, shared reporting and production/device gates are unfinished.
+
+## v0.14.0 — Accurate local timing boundaries
+
+Close active intervals before idle-window extension, pause/visibility transitions, navigation, attempt changes and filing. Fractional final intervals survive fast completion; explicit pauses count only visible selected activity with history enabled. Optional timing algorithm/coverage and pause values survive schema-v1 backups, CSV and validated local Insights preparation; legacy/partial collection stays distinct in review. History clearing removes optional timing from current and recovery drafts. Hidden, idle and closed time are not inferred as pauses. Clock verification, normalized identities/input, private sync, shared reports and all production/device gates remain unfinished.

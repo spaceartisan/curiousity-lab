@@ -1,3 +1,5 @@
+import type { Timing } from "../src/storage/timing";
+import { TIME_ALGORITHM } from "../src/storage/timing";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   renderHook,
@@ -140,9 +142,15 @@ describe("local preparation privacy", () => {
       themes: ["light" as const],
       textSizes: ["normal" as const],
     };
+    const timing: Timing = {
+      version: 1 as const,
+      algorithm: TIME_ALGORITHM,
+      coverage: "from-start" as const,
+      pausedMs: 123,
+    };
     await prepareSessions(
       a,
-      [{ ...session("context-good"), presentation }],
+      [{ ...session("context-good"), presentation, timing }],
       "future",
     );
     const original = structuredClone(presentation);
@@ -155,11 +163,19 @@ describe("local preparation privacy", () => {
     expect(
       good.find((r) => r.channel === "companion")?.payload,
     ).not.toHaveProperty("presentation");
+    expect(good.find((r) => r.channel === "insights")?.payload).toHaveProperty(
+      "timing",
+      timing,
+    );
+    expect(
+      good.find((r) => r.channel === "companion")?.payload,
+    ).not.toHaveProperty("timing");
     await prepareSessions(
       a,
       [
         {
           ...session("context-bad"),
+          timing: { ...timing, privateNote: "private" },
           presentation: { ...original, privateNote: "private" },
         } as any,
       ],
@@ -174,6 +190,14 @@ describe("local preparation privacy", () => {
           r.payload.id === "context-bad",
       )?.payload,
     ).not.toHaveProperty("presentation");
+    expect(
+      (await readPreparation(a)).records.find(
+        (r) =>
+          r.channel === "insights" &&
+          "id" in r.payload &&
+          r.payload.id === "context-bad",
+      )?.payload,
+    ).not.toHaveProperty("timing");
   });
   it("keeps accounts isolated and purges a disabled recipient immediately", async () => {
     await saveChoices(a, choices);

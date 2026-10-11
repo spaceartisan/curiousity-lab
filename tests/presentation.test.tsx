@@ -1,3 +1,4 @@
+import { withTiming } from "../src/storage/timing";
 import {
   clearRecovery,
   preserveRecovery,
@@ -176,7 +177,7 @@ it("CSV keeps its existing source fields and appends a quoted exact context JSON
   ];
   const lines = sessionsCsv(state).split("\r\n");
   expect(lines[0]).toBe(
-    "id,game,puzzleId,mode,attempt,startedAt,endedAt,activeMs,hints,undos,outcome,appVersion,contentVersion,source,presentation",
+    "id,game,puzzleId,mode,attempt,startedAt,endedAt,activeMs,hints,undos,outcome,appVersion,contentVersion,source,presentation,timing",
   );
   expect(lines[1]).toContain(
     '"' + JSON.stringify(p).replaceAll('"', '""') + '"',
@@ -262,8 +263,12 @@ it("legacy music starts partial and non-music context excludes every sound setti
 it("clearing history also purges optional context/metrics in drafts and durable undo copies while retaining necessary progress", async () => {
   await clearRecovery("play");
   const state = fictionalReview();
-  state.drafts.music = observePresentation(
-    { ...music(), activeMs: 100, hints: 2, undos: 3 },
+  state.drafts.music = withTiming(
+    observePresentation(
+      { ...music(), activeMs: 100, hints: 2, undos: 3 },
+      prefs(),
+      true,
+    ),
     prefs(),
     true,
   );
@@ -279,6 +284,7 @@ it("clearing history also purges optional context/metrics in drafts and durable 
     undos: 0,
   });
   expect(cleared.drafts.music).not.toHaveProperty("presentation");
+  expect(cleared.drafts.music).not.toHaveProperty("timing");
   await preserveRecovery(state);
   await clearRecoveryHistory("play");
   expect((await recoveryCopies("play"))[0].state).toEqual(cleared);

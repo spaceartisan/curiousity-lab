@@ -75,6 +75,7 @@ export function sessionsCsv(state: LocalState): string {
     "contentVersion",
     "source",
     "presentation",
+    "timing",
   ] as const;
   return [
     keys.join(","),
@@ -82,8 +83,8 @@ export function sessionsCsv(state: LocalState): string {
       keys
         .map((k) =>
           csvSafe(
-            k === "presentation" && s.presentation
-              ? JSON.stringify(s.presentation)
+            (k === "presentation" || k === "timing") && s[k]
+              ? JSON.stringify(s[k])
               : s[k],
           ),
         )

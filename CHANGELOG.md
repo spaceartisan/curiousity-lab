@@ -1,3 +1,10 @@
+# v0.14.0
+
+- Correct active-time boundaries: drain before extending idle recency and before filing, changing attempts, navigation or visibility/pause transitions. Preserve final fractions instead of losing time between one-second samples. Clock slices carry the original attempt ID.
+- With activity history enabled, record explicitly paused foreground time and optional versioned algorithm/coverage metadata. Hidden, idle and closed time remain excluded. Legacy resumes and mid-puzzle collection are partial; finalized sessions remain immutable.
+- Preserve bounded timing in JSON, appended CSV and validated local Insights preparations; Companion receives no timing/raw metrics. Clear-history removes optional timing from current and recovery drafts. Existing schema-v1 backups remain valid.
+- Local Insights separates unknown/partial/from-start timing contexts, shows known pause ranges and exact source values, and flags active-plus-pause inconsistencies without rewriting records. Derived exports use `local-context-review-3`. No upload permissions change.
+
 # v0.13.0
 
 - Added bounded, optional presentation observations to consented local attempts: theme/text sets and music sound setting, volume range, actual staff/pattern/by-ear/rhythm view, playback pace and rhythm flexibility. Changes accumulate rather than replacing earlier context.

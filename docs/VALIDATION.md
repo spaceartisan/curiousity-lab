@@ -1,3 +1,13 @@
+# v0.14.0 validation
+
+Deployment gates: 142 unit/component checks, fourteen archive/remote checks with age, twenty-two Firestore security cases plus encrypted emulator recovery, and forty-six desktop/phone browser scenarios (225 total). New deterministic checks cover final fractions, idle cutoff before input, original-ID isolation, foreground-only pause, hidden/backward samples, history/finalized guards, strict additive validation, legacy compatibility, context separation/ranges, exact CSV/purge, real pause/resume/finish controls, legacy partial collection and pagehide update ordering. Existing preparation checks also verify valid timing inclusion and Companion/unknown-field exclusion.
+
+The new real-browser scenario pauses and resumes a consented local activity, finishes offline, checks persisted active/pause values through offline reload and an actual downloaded JSON backup, and reviews a known record beside a clearly fictional legacy copy at desktop, phone and 320 pixels/200% text. Final release requires this commit's full workflow and visual evidence review. Local age-specific encryption is unavailable; CI runs it with age.
+
+No real family fixture, raw input trace, new Firestore permission or activity upload is introduced. Explicit pauses are observed only in the visible activity; hidden/idle/closed gaps remain excluded. Legacy/mid-attempt coverage is partial. Pagehide saves are best effort and abrupt termination can lose an uncommitted tail. Clock quality, actual device/content review and full architecture/production gates remain unfinished.
+
+---
+
 # v0.13.0 validation
 
 Locally: 131 unit/component tests cover bounded immutable preference unions, exact volume ranges, genuine rhythm presentation, partial/history-off/finalized behavior, canonical grouping independent of set order, all structural validation boundaries, legacy compatibility, quoted CSV context, actual UI changes/reload/mode boundaries, consent withdrawal, non-music minimization, and clearing optional draft context from recovery copies. Local archive/remote checks omit only the age-specific case because age is unavailable locally. TypeScript, production build and PWA/provenance checks are required.

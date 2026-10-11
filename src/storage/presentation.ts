@@ -152,7 +152,11 @@ export function withoutRecordedHistory(state: LocalState): LocalState {
     sessions: [],
     drafts: Object.fromEntries(
       Object.entries(state.drafts).map(([game, draft]) => {
-        const { presentation: _ignored, ...progress } = draft;
+        const {
+          presentation: _ignored,
+          timing: _timingIgnored,
+          ...progress
+        } = draft;
         return [game, { ...progress, activeMs: 0, hints: 0, undos: 0 }];
       }),
     ),
