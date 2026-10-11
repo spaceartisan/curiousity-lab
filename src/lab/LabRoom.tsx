@@ -1,3 +1,4 @@
+import { takeOpen } from "../activity/open-request";
 import { useState, type ReactNode } from "react";
 import { BenchUnknowns } from "./BenchUnknowns";
 import { Differential } from "./Differential";
@@ -15,7 +16,10 @@ export function LabRoom({
   /** Open on the microscope when a slide is already in progress. */
   atMicroscope?: boolean;
 }) {
-  const [room, setRoom] = useState<Room>(atMicroscope ? "microscope" : "bench");
+  const [gifted] = useState(() => takeOpen("bench"));
+  const [room, setRoom] = useState<Room>(
+    atMicroscope && !gifted ? "microscope" : "bench",
+  );
   const [progress, setProgress] = useState<LabProgress>(readLab);
   const update = (p: LabProgress) => {
     setProgress(p);
@@ -43,7 +47,11 @@ export function LabRoom({
         ))}
       </div>
       {room === "bench" && (
-        <BenchUnknowns progress={progress} onProgress={update} />
+        <BenchUnknowns
+          progress={progress}
+          onProgress={update}
+          initialCase={gifted}
+        />
       )}
       {room === "heme" && (
         <Differential progress={progress} onProgress={update} sound={sound} />

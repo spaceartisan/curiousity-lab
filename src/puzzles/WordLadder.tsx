@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { keep, remember } from "./util";
+import { useRecord } from "../activity/recorder";
 
 export interface Ladder {
   id: string;
@@ -38,6 +39,9 @@ export function WordLadder({
   const path = saved.paths[ladder.id] ?? [ladder.from];
   const last = path[path.length - 1];
   const done = last === ladder.to;
+  const record = useRecord();
+  const opened = useRef({ id: ladder.id, at: Date.now(), peeked: false });
+  if (opened.current.id !== ladder.id) opened.current = { id: ladder.id, at: Date.now(), peeked: false };
   const [entry, setEntry] = useState("");
   const [message, setMessage] = useState("");
   const [showAnswer, setShowAnswer] = useState(false);
@@ -62,6 +66,15 @@ export function WordLadder({
       return setMessage("That word is already on the ladder.");
     setMessage("");
     setPath([...path, w]);
+    if (w === ladder.to)
+      record({
+        activity: "ladder",
+        item: ladder.id,
+        title: ladder.title,
+        outcome: "solved",
+        seconds: (Date.now() - opened.current.at) / 1000,
+        detail: { steps: path.length, par: ladder.par, carroll: !!ladder.carroll, answerSeen: opened.current.peeked, letters: ladder.length },
+      });
   }
 
   const reference = ladder.carroll ?? ladder.example ?? [];
@@ -135,7 +148,12 @@ export function WordLadder({
         >
           Undo last rung
         </button>
-        <button onClick={() => setShowAnswer(!showAnswer)}>
+        <button
+          onClick={() => {
+            if (!showAnswer) opened.current.peeked = true;
+            setShowAnswer(!showAnswer);
+          }}
+        >
           {showAnswer
             ? "Hide the answer"
             : ladder.carroll

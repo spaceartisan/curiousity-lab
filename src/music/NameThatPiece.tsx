@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Score } from "./Score";
+import { useRecord, since } from "../activity/recorder";
 import {
   FAMILIES,
   choicesFor,
@@ -46,6 +47,29 @@ export function NameThatPiece({
   const [hint, setHint] = useState(0);
   const [slower, setSlower] = useState(false);
   const [melodyOnly, setMelodyOnly] = useState(false);
+  const record = useRecord();
+  const [roundStart, setRoundStart] = useState(() => Date.now());
+  function file(outcome: "correct" | "incorrect" | "revealed", guess?: Excerpt) {
+    record({
+      activity: "name-that-piece",
+      item: piece.id,
+      title: `${piece.title} — ${piece.composer}`,
+      outcome,
+      seconds: since(roundStart),
+      startedAt: new Date(roundStart).toISOString(),
+      detail: {
+        family: piece.family,
+        known: piece.known,
+        meet: progress.mode,
+        answer: progress.answer,
+        clues: hint,
+        slower,
+        tuneOnly: melodyOnly,
+        heard: (progress.heard[piece.id] ?? 0),
+        ...(guess && guess.id !== piece.id ? { guessed: guess.id } : {}),
+      },
+    });
+  }
 
   // Start a fresh round whenever the collection changes.
   useEffect(() => {
@@ -68,6 +92,7 @@ export function NameThatPiece({
     setPicked(null);
     setRevealed(false);
     setHint(0);
+    setRoundStart(Date.now());
   }
 
   function listen() {
@@ -90,6 +115,7 @@ export function NameThatPiece({
     if (revealed) return;
     setPicked(choice.id);
     setRevealed(true);
+    file(choice.id === piece.id ? "correct" : "incorrect", choice);
     if (choice.id === piece.id)
       onProgress({
         ...progress,
@@ -221,7 +247,10 @@ export function NameThatPiece({
                 ))}
               </div>
             ) : (
-              <button className="big" onClick={() => setRevealed(true)}>
+              <button className="big" onClick={() => {
+                  setRevealed(true);
+                  file("revealed");
+                }}>
                 Reveal the piece
               </button>
             )}

@@ -10,6 +10,7 @@ import {
   type TestId,
 } from "./bench-cases";
 import type { LabProgress } from "./lab-progress";
+import { useRecord, since } from "../activity/recorder";
 
 const credits = new Map(
   (
@@ -77,12 +78,14 @@ function Result({
 export function BenchUnknowns({
   progress,
   onProgress,
+  initialCase,
 }: {
+  initialCase?: string | null;
   progress: LabProgress;
   onProgress: (p: LabProgress) => void;
 }) {
   const [caseId, setCaseId] = useState<string | null>(
-    progress.benchDraft?.caseId ?? null,
+    initialCase ?? progress.benchDraft?.caseId ?? null,
   );
   const current = BENCH_CASES.find((c) => c.id === caseId);
   if (!current)
@@ -162,6 +165,8 @@ function Workup({
       ? progress.benchDraft
       : { caseId: c.id, seen: [], ordered: [] };
   const [answer, setAnswer] = useState("");
+  const record = useRecord();
+  const [opened] = useState(() => Date.now());
   const [comment, setComment] = useState("");
   const [signed, setSigned] = useState<null | {
     answer: string;
@@ -185,6 +190,20 @@ function Workup({
   function signOut() {
     const correct = answer === c.answer;
     setSigned({ answer, correct });
+    record({
+      activity: "bench",
+      item: c.id,
+      title: `${c.title} (${c.from})`,
+      outcome: correct ? "correct" : "incorrect",
+      seconds: since(opened),
+      detail: {
+        organism: c.answer,
+        called: answer,
+        tests: draft.ordered.length,
+        testList: draft.ordered.join(" ").slice(0, 200),
+        commented: comment.trim().length > 0,
+      },
+    });
     onProgress({
       ...progress,
       benchDraft: undefined,

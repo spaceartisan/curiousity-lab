@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRecord } from "../activity/recorder";
 import { keep, remember, shuffledCopy } from "./util";
 
 export interface Hive {
@@ -35,6 +36,14 @@ export function LetterHive({ hives }: { hives: Hive[] }) {
   const [word, setWord] = useState("");
   const [message, setMessage] = useState("");
   const [reveal, setReveal] = useState(false);
+  const record = useRecord();
+  const opened = useRef({ id: hive.id, at: Date.now() });
+  if (opened.current.id !== hive.id) opened.current = { id: hive.id, at: Date.now() };
+  // File progress when she leaves the hive too, not only via "Another hive".
+  const latest = useRef<() => void>(() => {});
+  // Survives remounts so the same words are never filed twice.
+  const filedCount = useRef<Record<string, number>>(remember("hive:filed", {}));
+  useEffect(() => () => latest.current(), []);
   if (outer.join("").split("").sort().join("") !== hive.letters)
     setOuter(hive.letters.split(""));
 
@@ -70,6 +79,26 @@ export function LetterHive({ hives }: { hives: Hive[] }) {
     );
   }
 
+  latest.current = () => {
+    if (found.length <= (filedCount.current[hive.id] ?? 0)) return;
+    filedCount.current[hive.id] = found.length;
+    keep("hive:filed", filedCount.current);
+    record({
+      activity: "hive",
+      item: hive.id,
+      title: `Letter Hive · ${hive.center.toUpperCase()} with ${hive.letters.toUpperCase()}`,
+      outcome: reveal ? "revealed" : "finished",
+      seconds: (Date.now() - opened.current.at) / 1000,
+      detail: {
+        found: common.length,
+        total: hive.answers.length,
+        share: Math.round(share * 100),
+        bonus: found.length - common.length,
+        pangram: found.some((w) => hive.pangrams.includes(w)),
+        longest: Math.max(0, ...found.map((w) => w.length)),
+      },
+    });
+  };
   const letters = [hive.center, ...outer];
   return (
     <div className="hive">
@@ -141,6 +170,24 @@ export function LetterHive({ hives }: { hives: Hive[] }) {
         </button>
         <button
           onClick={() => {
+            if (found.length > (filedCount.current[hive.id] ?? 0))
+              record({
+                activity: "hive",
+                item: hive.id,
+                title: `Letter Hive · ${hive.center.toUpperCase()} with ${hive.letters.toUpperCase()}`,
+                outcome: reveal ? "revealed" : "finished",
+                seconds: (Date.now() - opened.current.at) / 1000,
+                detail: {
+                  found: common.length,
+                  total: hive.answers.length,
+                  share: Math.round(share * 100),
+                  bonus: found.length - common.length,
+                  pangram: found.some((w) => hive.pangrams.includes(w)),
+                  longest: Math.max(0, ...found.map((w) => w.length)),
+                },
+              });
+            filedCount.current[hive.id] = found.length;
+            keep("hive:filed", filedCount.current);
             setMessage("");
             setReveal(false);
             persist({ ...saved, index: saved.index + 1 });

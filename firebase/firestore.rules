@@ -101,7 +101,78 @@ service cloud.firestore {
             == getAfter(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data));
       allow delete: if owner(resource.data.familyId);
     }
-    // Pairing authorizes the connection only. Activity remains local until consent/sync ships.
+    // ---- Family sharing ----
+    // Mom's Play device adds finished-activity records after she agrees to share. Dad's Companion and the
+    // Insights owner read them, write notes, and send gifts that Play can open. Nothing else is writable.
+    function member(familyId, role) {
+      let g = get(/databases/$(database)/documents/accountDirectory/$(request.auth.uid)).data;
+      return (anonymous() || verified()) && g.familyId == familyId && g.status == 'active' && g.role == role;
+    }
+    function reader(familyId) { return owner(familyId) || member(familyId, 'companion'); }
+    function str(v, max) { return v is string && v.size() > 0 && v.size() <= max; }
+    function validActivity(id, d) {
+      return d.keys().hasAll(['v', 'id', 'at', 'tz', 'app', 'activity', 'item', 'title', 'outcome', 'detail', 'uid'])
+        && d.keys().hasOnly(['v', 'id', 'at', 'startedAt', 'seconds', 'tz', 'app', 'activity', 'item', 'title', 'outcome', 'detail', 'uid'])
+        && d.v == 1 && d.id == id && id.matches('^[A-Za-z0-9_-]{8,64}$')
+        && str(d.at, 40) && (!('startedAt' in d) || str(d.startedAt, 40))
+        && (!('seconds' in d) || (d.seconds is number && d.seconds >= 0 && d.seconds < 86400))
+        && (d.tz == null || str(d.tz, 64)) && str(d.app, 20)
+        && d.activity in ['name-that-piece', 'play-it-yourself', 'bench', 'differential', 'killer', 'countdown',
+          'cryptogram', 'hive', 'ladder', 'sudoku', 'connections', 'word-search', 'music-exercise', 'microscope']
+        && str(d.item, 120) && str(d.title, 160)
+        && d.outcome in ['solved', 'correct', 'incorrect', 'revealed', 'finished', 'stopped']
+        && d.detail is map && d.detail.size() <= 16
+        && d.uid == request.auth.uid;
+    }
+    match /families/{familyId}/activity/{id} {
+      allow get, list: if reader(familyId);
+      allow create: if member(familyId, 'play') && validActivity(id, request.resource.data);
+      // A retry of an identical record is harmless; records can never be changed.
+      allow update: if member(familyId, 'play') && resource.data.uid == request.auth.uid
+        && request.resource.data == resource.data;
+      allow delete: if owner(familyId);
+    }
+    function validNote(id, d, role) {
+      return d.keys().hasAll(['v', 'id', 'at', 'author', 'name', 'text', 'uid'])
+        && d.keys().hasOnly(['v', 'id', 'at', 'author', 'name', 'text', 'uid'])
+        && d.v == 1 && d.id == id && id.matches('^[A-Za-z0-9_-]{8,64}$') && str(d.at, 40)
+        && d.author == role && d.name is string && d.name.size() <= 40 && str(d.text, 2000)
+        && d.uid == request.auth.uid;
+    }
+    match /families/{familyId}/notes/{id} {
+      allow get, list: if reader(familyId);
+      allow create: if (member(familyId, 'companion') && validNote(id, request.resource.data, 'companion'))
+        || (owner(familyId) && validNote(id, request.resource.data, 'insights'));
+      allow update: if false;
+      allow delete: if owner(familyId) || (reader(familyId) && resource.data.uid == request.auth.uid);
+    }
+    function validGift(id, d, role) {
+      return d.keys().hasAll(['v', 'id', 'at', 'from', 'fromName', 'kind', 'item', 'title', 'message', 'status', 'uid'])
+        && d.keys().hasOnly(['v', 'id', 'at', 'from', 'fromName', 'kind', 'item', 'title', 'message', 'status', 'uid'])
+        && d.v == 1 && d.id == id && id.matches('^[A-Za-z0-9_-]{8,64}$') && str(d.at, 40)
+        && d.from == role && str(d.fromName, 40) && d.kind in ['piece', 'bench', 'quote', 'message']
+        && d.item is string && d.item.size() <= 120 && d.title is string && d.title.size() <= 160
+        && d.message is string && d.message.size() <= 500 && d.status == 'sent'
+        && d.uid == request.auth.uid;
+    }
+    match /families/{familyId}/gifts/{id} {
+      allow get, list: if reader(familyId) || member(familyId, 'play');
+      allow create: if (member(familyId, 'companion') && validGift(id, request.resource.data, 'companion'))
+        || (owner(familyId) && validGift(id, request.resource.data, 'insights'));
+      allow update: if member(familyId, 'play') && resource.data.status == 'sent'
+        && request.resource.data.status == 'opened' && str(request.resource.data.openedAt, 40)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'openedAt']);
+      allow delete: if owner(familyId) || (reader(familyId) && resource.data.uid == request.auth.uid);
+    }
+    match /families/{familyId}/sharing/{name} {
+      allow get: if reader(familyId) || member(familyId, 'play');
+      allow create, update: if name == 'state' && member(familyId, 'play')
+        && request.resource.data.keys().hasAll(['v', 'on', 'at', 'uid'])
+        && request.resource.data.keys().hasOnly(['v', 'on', 'at', 'uid'])
+        && request.resource.data.v == 1 && request.resource.data.on is bool
+        && str(request.resource.data.at, 40) && request.resource.data.uid == request.auth.uid;
+    }
+    // Everything else (subjects, legacy sessions, summaries, consent and creations) stays closed.
     match /{document=**} { allow read, write: if false; }
   }
 }
