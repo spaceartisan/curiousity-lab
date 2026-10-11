@@ -223,6 +223,9 @@ it.each([false, true])(
     await user.click(
       await screen.findByRole("button", { name: /My Laboratory/ }),
     );
+    fireEvent.click(
+      await screen.findByRole("tab", { name: "Microscope & notebook" }),
+    );
     await user.click(
       screen.getByRole("button", { name: "Explore Microscope" }),
     );
@@ -246,6 +249,9 @@ it.each([false, true])(
     render(<App appRole="play" />);
     await user.click(
       await screen.findByRole("button", { name: /My Laboratory/ }),
+    );
+    fireEvent.click(
+      await screen.findByRole("tab", { name: "Microscope & notebook" }),
     );
     node = screen.getByRole("region", { name: /Microscope image/ });
     prepare(node);

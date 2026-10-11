@@ -129,6 +129,9 @@ it("laboratory opens the dedicated notebook directly, and home creations resets 
   const { user } = await open([page("page"), melody]);
   await user.click(screen.getByRole("button", { name: "Back to games" }));
   await user.click(screen.getByRole("button", { name: /My Laboratory/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Microscope & notebook" }),
+  );
   await user.click(screen.getByRole("button", { name: "Open Lab Notebook" }));
   expect(
     screen.getByRole("heading", { name: "My Lab Notebook" }),
@@ -192,6 +195,9 @@ it("revisit records only its last-opened time, preserves original saved data and
   render(<App appRole="play" />);
   await user.click(
     await screen.findByRole("button", { name: /My Laboratory/ }),
+  );
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Microscope & notebook" }),
   );
   expect(
     screen.getByText(/You reopened a notebook page for this slide/),

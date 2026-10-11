@@ -1867,3 +1867,212 @@ button.big {
 .piy-head select {
   width: 100%;
 }
+/* Lab room */
+.bench-list,
+.bench,
+.diff {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+.bench-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: 0.75rem;
+}
+.bench-card {
+  text-align: left;
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem;
+  align-content: start;
+}
+.bench-card strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  font-size: 1.15em;
+}
+.bench-card span,
+.bench-card small {
+  color: var(--muted);
+}
+.requisition,
+.bench-step {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.requisition h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  margin: 0;
+}
+.requisition dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+.requisition dt {
+  color: var(--muted);
+}
+.requisition dd {
+  margin: 0;
+}
+.bench-step h3,
+.bench-step h4 {
+  margin: 0;
+}
+.bench-result {
+  display: grid;
+  gap: 0.5rem;
+}
+.bench-result p {
+  margin: 0;
+}
+.bench-photo {
+  margin: 0;
+  max-width: 560px;
+}
+.bench-photo.big {
+  max-width: none;
+}
+.bench-photo-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  display: block;
+  width: 100%;
+  min-height: 0;
+  cursor: zoom-in;
+}
+.bench-photo.big .bench-photo-button {
+  cursor: zoom-out;
+}
+.bench-photo img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+}
+.bench-photo figcaption {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+.bench-plate {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+}
+.bench-tests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.bench-test-group {
+  display: grid;
+  gap: 0.4rem;
+}
+.bench-test-group h4 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.worksheet {
+  margin: 0;
+  padding-left: 1.4rem;
+  display: grid;
+  gap: 0.8rem;
+}
+.signout label {
+  display: grid;
+  gap: 0.3rem;
+}
+.signout select,
+.signout textarea {
+  min-height: 48px;
+  max-width: 100%;
+}
+.bench-answer {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+.bench-verdict {
+  display: grid;
+  gap: 0.6rem;
+}
+.bench-verdict p,
+.bench-verdict ul {
+  margin: 0;
+}
+.diff-scope {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+.diff-cell {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+}
+.diff-cell img {
+  width: min(78vw, 320px);
+  height: auto;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 6px #1d1d1d,
+    0 0 0 9px var(--line);
+}
+.diff-progress {
+  font-weight: 600;
+  margin: 0;
+}
+.diff-keys {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.45rem;
+  width: min(100%, 620px);
+}
+.diff-keys button {
+  display: grid;
+  gap: 0.1rem;
+  min-height: 64px;
+  padding: 0.4rem 0.2rem;
+}
+.diff-keys small {
+  color: var(--muted);
+}
+.diff-results {
+  display: grid;
+  gap: 0.8rem;
+}
+.diff-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+.diff-gallery figure {
+  margin: 0;
+  font-size: 0.8rem;
+}
+.diff-gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.diff-review summary {
+  cursor: pointer;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}

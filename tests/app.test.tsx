@@ -75,6 +75,9 @@ describe("player flow", () => {
     await user.click(
       await screen.findByRole("button", { name: /My Laboratory/ }),
     );
+    fireEvent.click(
+      await screen.findByRole("tab", { name: "Microscope & notebook" }),
+    );
     await user.click(screen.getByRole("button", { name: "Observations" }));
     await user.click(screen.getByRole("button", { name: "Filaments" }));
     await user.type(

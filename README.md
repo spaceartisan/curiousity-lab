@@ -8,7 +8,11 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.30.0
+## Current release · v0.31.0
+
+**Laboratory bench.** My Laboratory now opens on real bench work. There are 19 microbiology unknowns, mostly veterinary and agricultural: mastitis, fowl cholera, swine erysipelas, foal pneumonia, circling sheep, calf scours and more. Each is worked from requisition to sign-out with CDC photographs of real stains, plates and test reactions. There are also seven 100-cell hematology differentials on real labeled blood cells. See [laboratory bench](docs/LAB_BENCH.md).
+
+### Earlier · v0.30.0
 
 **Music room.** Music Studio now opens on real music: 65 public-domain excerpts (Beethoven, Mozart, Chopin, Bach, Debussy, Scott Joplin's rags, and familiar hymns and carols) played on a sampled grand piano. Name the piece by ear or from the score, see the engraved score highlighted as it plays, then play the melody yourself on a full keyboard while the piano accompanies you. See [music room](docs/MUSIC_ROOM.md).
 
@@ -93,6 +97,8 @@ See [backup and recovery](docs/BACKUP_RECOVERY.md) for device-local undo, the en
 The opt-in weekly private-release workflow, retention and daily freshness checks are prepared. Follow the [owner-only connection guide](docs/BACKUP_SETUP.md) to activate them; parents have no backup setup steps.
 
 ## Image credits
+
+Laboratory bench photographs are from the CDC Public Health Image Library (public domain), credited individually. Hematology cell images are from Acevedo A, Merino A, et al., _A dataset of microscopic peripheral blood cell images for development of automatic recognition systems_, Data in Brief 30 (2020) 105474, Mendeley Data doi:10.17632/snkd93bnjr.1, licensed CC BY 4.0, resized. Piano sound: Salamander Grand Piano by Alexander Holm, CC BY 3.0.
 
 The first pack uses individual public-domain CDC PHIL records, credited in the viewer and [image provenance](public/media/provenance.json). The source images are bundled, not hotlinked. CDC does not endorse this app.
 

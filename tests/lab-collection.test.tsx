@@ -1,7 +1,7 @@
 import { beforeEach, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { specimens } from "../src/content/specimens";
 import {
@@ -112,6 +112,9 @@ it("chosen comparison preserves current notes/source; new notebook source/versio
   render(<App appRole="play" />);
   await user.click(
     await screen.findByRole("button", { name: /My Laboratory/ }),
+  );
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Microscope & notebook" }),
   );
   expect(
     screen.getAllByRole("button", { name: /Explore specimen/ }),

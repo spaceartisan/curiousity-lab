@@ -1,3 +1,10 @@
+# v0.31.0 — Laboratory bench and hematology
+
+- My Laboratory opens on a **microbiology bench**: 19 unknowns, mostly veterinary and agricultural. Read the requisition, the Gram stain and the plates, run any of 22 bench tests, and sign out an ID. Then see the reference ID, the key findings, and a note. Photos are CDC PHIL (public domain); labels that gave away the answer were cropped or masked.
+- **Hematology**: seven 100-cell manual differentials on real, expert-labeled cells (PBC dataset, CC BY 4.0), with a counter, a bell at 100, a comparison with the reference, absolute counts, an interpretation, and a review of each disagreement.
+- The existing microscope and notebook are kept on their own tab.
+- Lab media (4 MB) is cached offline in Play only, and every file is hash-checked at build.
+
 # v0.30.0 — Music room with real repertoire
 
 - Music Studio opens on **Name that piece**: two-phrase excerpts of 65 public-domain works (classical, Scott Joplin, hymns and carols), played on a sampled grand piano. Answer from four titles or reveal; listen by ear or read the score first; optional clues, slower playback and tune-only playback.

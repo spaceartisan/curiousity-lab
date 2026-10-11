@@ -88,6 +88,51 @@ for (const image of provenance) {
     ),
   );
 }
+// Laboratory bench photographs (CDC PHIL) and hematology cell images (PBC dataset).
+const playAssets = JSON.parse(
+  (await readFile("dist/play/sw.js", "utf8")).match(/const ASSETS=(.*);/)[1],
+);
+const companionAssets = JSON.parse(
+  (await readFile("dist/companion/sw.js", "utf8")).match(
+    /const ASSETS=(.*);/,
+  )[1],
+);
+const labManifest = JSON.parse(
+  await readFile("public/media/lab/manifest.json", "utf8"),
+);
+const cellManifest = JSON.parse(
+  await readFile("public/media/cells/manifest.json", "utf8"),
+);
+assert.equal(cellManifest.license, "CC BY 4.0");
+const labImages = [
+  ...labManifest.map((m) => {
+    assert.match(m.license, /Public domain/);
+    assert.match(
+      m.sourceUrl,
+      /^https:\/\/wwwn.cdc.gov\/phil\/Details.aspx\?pid=\d+$/,
+    );
+    assert.ok(m.credit.startsWith("CDC"));
+    return { path: "media/lab/" + m.file, ...m };
+  }),
+  ...cellManifest.cells.map((m) => ({ path: "media/cells/" + m.file, ...m })),
+];
+assert.deepEqual(
+  [...(await readdir("dist/media/lab")), ...(await readdir("dist/media/cells"))]
+    .filter((f) => f.endsWith(".jpg"))
+    .sort(),
+  labImages.map((m) => m.path.split("/").pop()).sort(),
+);
+for (const image of labImages) {
+  const bytes = await readFile("dist/" + image.path);
+  assert.equal(
+    createHash("sha256").update(bytes).digest("hex"),
+    image.sha256,
+    image.path,
+  );
+  assert.deepEqual(jpegDimensions(bytes), image.pixelDimensions, image.path);
+  assert.ok(playAssets.includes(base + image.path), image.path);
+  assert.ok(!companionAssets.includes(base + image.path), image.path);
+}
 console.log(
   "Validated entry points, distinct PWA identities, isolated static caches, precache files, and image provenance.",
 );

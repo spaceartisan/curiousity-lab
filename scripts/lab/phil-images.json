@@ -1,0 +1,392 @@
+[
+ {
+  "pid": "10853",
+  "file": "phil-10853-camp.jpg",
+  "crop": [
+   35,
+   24,
+   315,
+   289
+  ],
+  "kind": "test",
+  "reading": "CAMP test: an arrowhead of enhanced hemolysis where the isolate’s streak meets the Staphylococcus aureus β-lysin streak.",
+  "sourceCaption": "Group B streptococcus, CAMP-positive (CDC teaching plate).",
+  "credit": "CDC / Dr. Richard Facklam",
+  "year": "2008"
+ },
+ {
+  "pid": "3621",
+  "file": "phil-3621.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: numerous very small Gram-negative coccobacilli.",
+  "sourceCaption": "Pasteurella multocida, Gram stain, 1125×.",
+  "credit": "CDC / Dr. R. Weaver",
+  "year": "1971"
+ },
+ {
+  "pid": "20145",
+  "file": "phil-20145.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: slender Gram-positive rods, singly and in short chains, some longer filaments.",
+  "sourceCaption": "Erysipelothrix rhusiopathiae, Gram stain, 1150×.",
+  "credit": "CDC / R. E. Weaver, MD, PhD",
+  "year": "1966"
+ },
+ {
+  "pid": "1603",
+  "file": "phil-1603.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Blood agar, 48 h: tiny, translucent, pinpoint colonies.",
+  "sourceCaption": "Erysipelothrix rhusiopathiae on blood agar.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977"
+ },
+ {
+  "pid": "15190",
+  "file": "phil-15190.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: Gram-positive coccobacilli and short rods (coryneform).",
+  "sourceCaption": "Rhodococcus equi, Gram stain.",
+  "credit": "CDC / Regina Linder: Hunter College, New York, New York, USA",
+  "year": "1977"
+ },
+ {
+  "pid": "1553",
+  "file": "phil-1553.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Blood agar: moist, glistening colonies along the streak; no hemolysis.",
+  "sourceCaption": "Rhodococcus equi on blood agar.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977"
+ },
+ {
+  "pid": "28021",
+  "file": "phil-28021.jpg",
+  "crop": null,
+  "kind": "scene",
+  "reading": "The pen at the farm.",
+  "sourceCaption": "Sheep with listeriosis (CDC).",
+  "credit": "CDC",
+  "year": ""
+ },
+ {
+  "pid": "28051",
+  "file": "phil-28051.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: short Gram-positive rods, singly and in short chains.",
+  "sourceCaption": "Listeria monocytogenes, Gram stain of a slant culture.",
+  "credit": "CDC / George Hermann",
+  "year": "1960"
+ },
+ {
+  "pid": "18990",
+  "file": "phil-18990.jpg",
+  "crop": null,
+  "kind": "test",
+  "reading": "Motility medium: growth spreading out from the stab line (right) compared with a non-motile control (left).",
+  "sourceCaption": "Motility medium, non-motile and motile reactions (CDC teaching tubes).",
+  "credit": "CDC / Dr. Theo Hawkins",
+  "year": "1979"
+ },
+ {
+  "pid": "12053",
+  "file": "phil-12053.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: large, blunt-ended, boxcar-shaped Gram-positive rods; no spores seen.",
+  "sourceCaption": "Clostridium perfringens type A, Gram stain, 956×.",
+  "credit": "CDC / Dr. Holdeman",
+  "year": "1965"
+ },
+ {
+  "pid": "3873",
+  "file": "phil-3873.jpg",
+  "crop": null,
+  "kind": "test",
+  "reading": "Egg-yolk half-antitoxin plate: opacity around colonies on the untreated half, suppressed where antitoxin was spread.",
+  "sourceCaption": "Clostridium perfringens, Nagler (lecithinase) reaction.",
+  "credit": "CDC / Dr. Stuart E. Starr",
+  "year": "1971"
+ },
+ {
+  "pid": "3874",
+  "file": "phil-3874.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Sulfite-polymyxin-sulfadiazine (SPS) agar, anaerobic: dark colonies.",
+  "sourceCaption": "Clostridium perfringens on SPS agar.",
+  "credit": "CDC / Wallis DeWitt",
+  "year": "1973"
+ },
+ {
+  "pid": "19255",
+  "file": "phil-19255.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: very small, faintly staining Gram-negative coccobacilli.",
+  "sourceCaption": "Brucella suis, Gram stain.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977"
+ },
+ {
+  "pid": "17135",
+  "file": "phil-17135.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Sheep blood agar, close view: tiny, smooth, non-hemolytic colonies.",
+  "sourceCaption": "Brucella suis on sheep blood agar, 24 h, 5×.",
+  "credit": "CDC / Todd Parker, Ph.D., Assoc Director for Laboratory Science, Div of Preparedness and Emerging Infections at CDC",
+  "year": "2014"
+ },
+ {
+  "pid": "29246",
+  "file": "phil-29246.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: slender, curved Gram-negative rods — commas, S-shapes and “gull wings.”",
+  "sourceCaption": "Campylobacter jejuni, Gram stain.",
+  "credit": "CDC / Dr. Martin Blaser",
+  "year": "1980"
+ },
+ {
+  "pid": "15984",
+  "file": "phil-15984-plate.jpg",
+  "crop": [
+   15,
+   20,
+   445,
+   445
+  ],
+  "kind": "plate",
+  "reading": "Skirrow selective blood agar, 42 °C microaerobic: small, round, grey colonies.",
+  "sourceCaption": "Campylobacter jejuni on Skirrow/Butzler medium.",
+  "credit": "CDC / Sheila W. Mitchell",
+  "year": "1979",
+  "circle": [
+   230,
+   232,
+   214
+  ]
+ },
+ {
+  "pid": "1046",
+  "file": "phil-1046.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Trypticase soy agar: concentric waves of swarming growth, with a line where two strains meet (Dienes reaction).",
+  "sourceCaption": "Proteus mirabilis, swarming and Dienes reaction.",
+  "credit": "CDC / Dr. John J. Farmer",
+  "year": "1975"
+ },
+ {
+  "pid": "15213",
+  "file": "phil-15213-h2s.jpg",
+  "crop": [
+   0,
+   80,
+   190,
+   460
+  ],
+  "kind": "test",
+  "reading": "TSI: alkaline (red) slant, acid butt, heavy blackening from H₂S.",
+  "sourceCaption": "TSI reaction of Proteus sp., H₂S-positive.",
+  "credit": "CDC / Dr. M. M. Galton",
+  "year": "1966"
+ },
+ {
+  "pid": "15213",
+  "file": "phil-15213-gas.jpg",
+  "crop": [
+   330,
+   88,
+   545,
+   460
+  ],
+  "kind": "test",
+  "reading": "TSI: acid (yellow) slant and butt, with gas splitting the agar; no H₂S.",
+  "sourceCaption": "TSI reaction of Escherichia coli with gas.",
+  "credit": "CDC / Dr. M. M. Galton",
+  "year": "1966"
+ },
+ {
+  "pid": "17370",
+  "file": "phil-17370.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: straight, slender Gram-negative rods.",
+  "sourceCaption": "Pseudomonas aeruginosa, Gram stain.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977"
+ },
+ {
+  "pid": "6688",
+  "file": "phil-6688.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Blood agar: spreading, irregular colonies.",
+  "sourceCaption": "Pseudomonas aeruginosa on blood agar.",
+  "credit": "CDC / Dr. Theo. Hawkins",
+  "year": "1976"
+ },
+ {
+  "pid": "21340",
+  "file": "phil-21340.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: lancet-shaped Gram-positive diplococci.",
+  "sourceCaption": "Streptococcus pneumoniae, Gram stain, 1700×.",
+  "credit": "CDC / Arnold Kaufman",
+  "year": ""
+ },
+ {
+  "pid": "10863",
+  "file": "phil-10863.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Blood agar with gentamicin, CO₂: small alpha-hemolytic colonies, several with collapsed “draughtsman” centers.",
+  "sourceCaption": "Streptococcus pneumoniae colonies on blood agar.",
+  "credit": "CDC / Dr. Richard Facklam",
+  "year": "2008"
+ },
+ {
+  "pid": "19332",
+  "file": "phil-19332.jpg",
+  "crop": null,
+  "kind": "test",
+  "reading": "Optochin disks: a clear zone around the disk for your isolate (left); growth up to the disk for the control (right).",
+  "sourceCaption": "Optochin test: S. pneumoniae sensitive (left), viridans streptococcus resistant (right).",
+  "credit": "CDC / Dr. Richard Facklam",
+  "year": "1981"
+ },
+ {
+  "pid": "1060",
+  "file": "phil-1060.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: large Gram-positive rods in short chains.",
+  "sourceCaption": "Bacillus cereus, Gram stain.",
+  "credit": "CDC / Dr. William A. Clark",
+  "year": "1977"
+ },
+ {
+  "pid": "12377",
+  "file": "phil-12377.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Sheep blood agar, 24 h: large, flat, grey, slightly granular colonies with wide hemolysis.",
+  "sourceCaption": "Bacillus cereus on sheep blood agar.",
+  "credit": "CDC / Amanda Moore, MT; Todd Parker, PhD; Audra Marsh (photo: Pete Seidel)",
+  "year": "2010"
+ },
+ {
+  "pid": "6707",
+  "file": "phil-6707.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Hektoen enteric agar: small colonies on a blue-green background.",
+  "sourceCaption": "Yersinia enterocolitica on Hektoen enteric agar.",
+  "credit": "CDC / Dr. Theo. Hawkins",
+  "year": "1976"
+ },
+ {
+  "pid": "26757",
+  "file": "phil-26757.jpg",
+  "crop": null,
+  "kind": "test",
+  "reading": "Serum, about 2 hours at 37 °C: yeast cells sending out slender germ tubes without constriction at the origin.",
+  "sourceCaption": "Candida albicans germ tubes (Gram-stained).",
+  "credit": "CDC",
+  "year": ""
+ },
+ {
+  "pid": "24997",
+  "file": "phil-24997.jpg",
+  "crop": null,
+  "kind": "mount",
+  "reading": "Cornmeal agar, 48 h: pseudohyphae bearing round, thick-walled chlamydospores.",
+  "sourceCaption": "Candida albicans chlamydospores on cornmeal agar.",
+  "credit": "CDC / Dr. Robertstad",
+  "year": "1963"
+ },
+ {
+  "pid": "25080",
+  "file": "phil-25080.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "Colonies on fungal medium: velvety to powdery, grey-green, with paler margins.",
+  "sourceCaption": "Aspergillus fumigatus colonies.",
+  "credit": "CDC / Merle J. Selin",
+  "year": "1963"
+ },
+ {
+  "pid": "24963",
+  "file": "phil-24963.jpg",
+  "crop": null,
+  "kind": "mount",
+  "reading": "Tease mount, lactophenol cotton blue: a conidial head — a flask-shaped vesicle with phialides on its upper part, and columns of conidia.",
+  "sourceCaption": "Aspergillus fumigatus conidial head, 970×.",
+  "credit": "CDC / Dr. Lucille K. Georg",
+  "year": "1963"
+ },
+ {
+  "pid": "24801",
+  "file": "phil-24801.jpg",
+  "crop": null,
+  "kind": "tissue",
+  "reading": "Lung, PAS stain: hyphae and fruiting heads growing within an air space.",
+  "sourceCaption": "Pulmonary aspergillosis in a sulphur-crested cockatoo, PAS, 600×.",
+  "credit": "CDC / Dr. William Kaplan",
+  "year": "1963"
+ },
+ {
+  "pid": "24572",
+  "file": "phil-24572.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: Gram-negative rods.",
+  "sourceCaption": "Escherichia coli, Gram stain, 1125×.",
+  "credit": "CDC / K. Skogstad",
+  "year": "1965"
+ },
+ {
+  "pid": "5158",
+  "file": "phil-5158-h2s.jpg",
+  "crop": [
+   0,
+   95,
+   220,
+   455
+  ],
+  "kind": "test",
+  "reading": "TSI: alkaline (red) slant, acid butt, blackened by H₂S.",
+  "sourceCaption": "TSI reaction of an H₂S-positive Salmonella.",
+  "credit": "CDC / M. M. Galton",
+  "year": "1966"
+ },
+ {
+  "pid": "16674",
+  "file": "phil-16674.jpg",
+  "crop": null,
+  "kind": "plate",
+  "reading": "TCBS agar: green colonies (sucrose not fermented).",
+  "sourceCaption": "Vibrio parahaemolyticus on TCBS agar.",
+  "credit": "CDC / Willis DeWitt",
+  "year": "1973"
+ },
+ {
+  "pid": "16101",
+  "file": "phil-16101.jpg",
+  "crop": null,
+  "kind": "gram",
+  "reading": "Gram stain: small Gram-negative rods and coccobacilli.",
+  "sourceCaption": "Mannheimia haemolytica, Gram stain.",
+  "credit": "CDC / Dr. W.A. Clark",
+  "year": "1977"
+ }
+]

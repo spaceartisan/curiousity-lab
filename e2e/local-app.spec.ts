@@ -320,6 +320,7 @@ test("player save/resume, scoped offline shell, and screenshots", async ({
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: /My Laboratory Take/ }).click();
+  await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await page.getByRole("button", { name: /Fungal forms Explore/ }).click();
   await expect(
     page.getByRole("region", { name: /Microscope image/ }),

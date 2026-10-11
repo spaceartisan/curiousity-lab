@@ -1,5 +1,5 @@
 import { beforeEach, expect, it } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../src/App";
 import { specimens } from "../src/content/specimens";
@@ -27,6 +27,9 @@ async function open(history = false) {
     view = render(<App appRole="play" />);
   await user.click(
     await screen.findByRole("button", { name: /My Laboratory/ }),
+  );
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Microscope & notebook" }),
   );
   await user.click(screen.getByRole("button", { name: "Explore Microscope" }));
   await user.click(screen.getByText(/^Saved microscope views/));
@@ -153,6 +156,9 @@ it("actual zoom/pan presets reopen across history-off reload, slide switching an
   render(<App appRole="play" />);
   await user.click(
     await screen.findByRole("button", { name: /My Laboratory/ }),
+  );
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Microscope & notebook" }),
   );
   await user.click(screen.getByText(/^Saved microscope views/));
   expect(
