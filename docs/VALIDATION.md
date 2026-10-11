@@ -1,3 +1,11 @@
+# v0.20.0 validation
+
+Six additional engine/component regressions cover independent collection cycling and legacy versions, canceled and confirmed choices, honest alternate-group feedback, requested hints/undo, immutable completion and separate replay, and history-off shuffled-selection reload. Structural matching and import validation cover all twelve authored boards. A new desktop/phone scenario checks actual challenge selection, closed help, offline progress, canceled replacement, requested hints/undo, completion, replay, collection boundaries, and 320-pixel/200% text including the visible select value.
+
+Deployment requires full component/build, archive, security/recovery and desktop/phone browser checks, followed by screenshot review. Word arrangements are original; dictionary checks are limited spot checks, not independent ambiguity review or player difficulty calibration. Actual family-device usability and the full architecture remain unfinished.
+
+---
+
 # v0.19.0 validation
 
 Six new component/engine regressions check all three frozen boards' independent uniqueness and naked-pair necessity, full deduction traces with separately constructed unit membership and candidate premises, 38 deterministic variations, canonical import boundaries, blank/inconsistent-grid behavior, optional explanation versus filling/undo, history-off reload, canceled choices, grid constraints, unassisted completed content/mode and separate replay.
@@ -20,11 +28,9 @@ Deployment requires all unit/component, archive, emulator and browser checks plu
 
 Six Sudoku regressions cover optional/invalid display imports, presentation coverage/validation/grouping, unchanged moves and hint counts, offline reload/replay, chosen-grid preservation, immutable completed records, and history-off/clear-history continuity. A new desktop/phone scenario checks actual square dimensions, bounded document width, selected-cell visibility in both scroll axes, row/column navigation, cached offline reload/replay and 200% text at 320 pixels. CI remains the deployment gate; browser screenshots/results must be reviewed before release completion. Automated browser evidence does not certify actual-family-device accessibility.
 
-
 ## v0.16.0 checks
 
 Six input-context regressions cover bounded categories, unknown/partial/empty distinctions, canonical grouping, private/invalid payload rejection, consent and finalized-record boundaries, JSON/CSV compatibility, and real component game/paused-control behavior. An additional desktop/phone browser scenario uses actual mouse/touch and keyboard input, verifies offline resume, immutable filed records, history-off collection, export and separate legacy Insights grouping, and checks 200% text at 320 pixels. CI remains the deployment gate; browser results must be verified before reporting completion. Automated checks do not certify actual family-device accessibility or production readiness.
-
 
 Deployment gates: 152 unit/component checks, fourteen archive/remote checks with age, twenty-two Firestore security cases plus encrypted emulator recovery, and forty-eight desktop/phone browser scenarios (237 total). Ten new tests cover explicit context gating, UTC ordering/ties/source immutability, completed-hint and exploration exclusions, observed-zero versus unknown pause, zero/single/extreme domains and source clock warnings, exact versioned exports and all inclusion IDs, overlapping-point keyboard selection, fixed axes/paging/metric reset, missing pause/exploration controls, actual filtered review exports and source immutability.
 

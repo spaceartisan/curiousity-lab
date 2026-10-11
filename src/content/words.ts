@@ -1,4 +1,4 @@
-export const connections = [
+export const classicConnections = [
   {
     id: "garden-and-craft-v1",
     title: "Garden and craft",
@@ -125,6 +125,71 @@ export const connections = [
     ],
   },
 ];
+// Original wordplay arrangements. Preserve Classic indices and frozen IDs.
+export const challengingConnections = [
+  {
+    id: "crossed-meanings-v1",
+    title: "Crossed meanings",
+    groups: [
+      {
+        title: "Words after PAPER",
+        words: ["CLIP", "TRAIL", "TIGER", "WEIGHT"],
+      },
+      { title: "Words before LINE", words: ["BASE", "DEAD", "PUNCH", "TAG"] },
+      {
+        title: "Words before JACKET",
+        words: ["DINNER", "DUST", "LIFE", "SPORTS"],
+      },
+      { title: "Move quickly", words: ["BOLT", "DASH", "RACE", "SPRINT"] },
+    ],
+  },
+  {
+    id: "different-angles-v1",
+    title: "Different angles",
+    groups: [
+      { title: "Words after BOOK", words: ["CLUB", "MARK", "WORM", "END"] },
+      {
+        title: "Words after SEA",
+        words: ["HORSE", "LION", "CUCUMBER", "URCHIN"],
+      },
+      { title: "Poker actions", words: ["CALL", "CHECK", "FOLD", "RAISE"] },
+      {
+        title: "Words before LIGHT",
+        words: ["FLASH", "SPOT", "TRAFFIC", "GREEN"],
+      },
+    ],
+  },
+  {
+    id: "links-and-layers-v1",
+    title: "Links and layers",
+    groups: [
+      { title: "Secure in place", words: ["FASTEN", "ANCHOR", "LOCK", "TIE"] },
+      { title: "Words before ROOM", words: ["ELBOW", "LEG", "CHAT", "DARK"] },
+      {
+        title: "Words before SHIP",
+        words: ["FRIEND", "LEADER", "PARTNER", "SCHOLAR"],
+      },
+      { title: "Sound like numbers", words: ["ATE", "FOR", "TOO", "WON"] },
+    ],
+  },
+  {
+    id: "unusual-company-v1",
+    title: "Unusual company",
+    groups: [
+      {
+        title: "Words after COLD",
+        words: ["CASE", "SHOULDER", "SNAP", "TURKEY"],
+      },
+      { title: "Words before BOARD", words: ["CHESS", "CLIP", "DASH", "KEY"] },
+      { title: "River features", words: ["BANK", "BED", "CURRENT", "MOUTH"] },
+      {
+        title: "Words before WORK",
+        words: ["FIELD", "FRAME", "GROUND", "NET"],
+      },
+    ],
+  },
+];
+export const connections = [...classicConnections, ...challengingConnections];
 export const searchPack = {
   id: "quiet-garden-v1",
   title: "Quiet garden",

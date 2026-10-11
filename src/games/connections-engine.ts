@@ -1,4 +1,28 @@
-import { connections } from "../content/words";
+import { connections, classicConnections } from "../content/words";
+export type ConnectionsTier = "Classic" | "Challenging";
+export function connectionsTier(pack: number): ConnectionsTier {
+  return pack < classicConnections.length ? "Classic" : "Challenging";
+}
+export function connectionsPool(tier: ConnectionsTier) {
+  return Array.from({ length: connections.length }, (_, i) => i).filter(
+    (i) => connectionsTier(i) === tier,
+  );
+}
+export function nextConnectionsPack(pack: number, samePuzzle = false) {
+  if (samePuzzle) return pack;
+  const pool = connectionsPool(connectionsTier(pack));
+  return pool[(pool.indexOf(pack) + 1) % pool.length];
+}
+export function connectionsMode(pack: number) {
+  return connectionsTier(pack) === "Challenging" ? "wordplay" : "explore";
+}
+export function connectionsContentVersion(pack: number) {
+  return connectionsTier(pack) === "Challenging"
+    ? "connections-wordplay-1"
+    : pack < 2
+      ? "starter-1"
+      : "connections-2";
+}
 export interface ConnectionsData {
   pack: number;
   solved: string[];

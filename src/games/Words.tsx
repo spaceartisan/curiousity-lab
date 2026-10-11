@@ -9,6 +9,10 @@ import type { GameProps } from "./types";
 import {
   matchingConnection,
   connectionWords,
+  connectionsTier,
+  connectionsPool,
+  connectionsMode,
+  type ConnectionsTier,
   type ConnectionsData,
 } from "./connections-engine";
 export type { ConnectionsData } from "./connections-engine";
@@ -30,12 +34,29 @@ export function Connections({
   const left = pack.groups.filter((g) => !d.solved.includes(g.title));
   const words = connectionWords(d);
   const complete = d.solved.length === pack.groups.length;
+  const tier = connectionsTier(d.pack);
+  const pool = connectionsPool(tier);
+  function changeChallenge(next: ConnectionsTier) {
+    if (
+      next === tier ||
+      !window.confirm(
+        "Start a fresh puzzle? Your current puzzle will be replaced.",
+      )
+    )
+      return;
+    const pack = connectionsPool(next)[0];
+    update({ pack, solved: [], selected: [] }, { mode: connectionsMode(pack) });
+    setHintStep(0);
+    setMessage("");
+  }
   function check() {
     if (complete) return;
     const group = matchingConnection(d);
     if (!group) {
       setMessage(
-        "These words have different connections. Try another grouping, or use a hint.",
+        tier === "Challenging"
+          ? "That isn't one of this puzzle's four groups. Try another grouping."
+          : "These words have different connections. Try another grouping, or use a hint.",
       );
       return;
     }
@@ -66,16 +87,33 @@ export function Connections({
   const groupSelected = left[0]?.words.every((w) => d.selected.includes(w));
   return (
     <div className="connections-workspace">
+      <label className="connections-challenge">
+        Challenge{" "}
+        <select
+          aria-label="Word Connections challenge"
+          value={tier}
+          onChange={(e) => changeChallenge(e.target.value as ConnectionsTier)}
+        >
+          <option>Classic</option>
+          <option>Challenging</option>
+        </select>
+      </label>
       <h2>{pack.title}</h2>
       <p>
         {d.solved.length} of {pack.groups.length} connections found · Puzzle{" "}
-        {d.pack + 1} of {connections.length}
+        {pool.indexOf(d.pack) + 1} of {pool.length}
       </p>
       <p id="connections-instructions">
         Select four related words, then choose “Connect.”
       </p>
       <details>
         <summary>How to play & get help</summary>
+        <p>
+          Classic groups use direct categories. Challenging groups may use
+          compound words, phrases, alternate meanings or sounds. A plausible
+          grouping may leave other words without a match; consider the full
+          board. Wordplay can use one word or a phrase with spaces.
+        </p>
         <p>
           Select a word to add it; select it again to remove it. You can choose
           up to four words. Clear selection or press Escape to start your

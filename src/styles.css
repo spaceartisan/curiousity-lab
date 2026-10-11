@@ -1292,6 +1292,17 @@ summary {
   background: var(--hover);
   border-radius: 10px;
 }
+.connections-challenge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.connections-challenge select {
+  min-width: 0;
+  max-width: 100%;
+  padding-inline: min(0.7rem, 2vw);
+}
 /* Keep up to four columns, but give enlarged words enough reading width. */
 .connections-workspace .word-grid {
   grid-template-columns: repeat(

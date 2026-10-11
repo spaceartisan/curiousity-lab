@@ -23,8 +23,13 @@ import {
   sudokuContentVersion,
   type SudokuData,
 } from "./games/sudoku-engine";
-import { connections, searchBoard, searchPacks } from "./content/words";
-import { connectionsPuzzle } from "./games/connections-engine";
+import { searchBoard, searchPacks } from "./content/words";
+import {
+  connectionsPuzzle,
+  nextConnectionsPack,
+  connectionsMode,
+  connectionsContentVersion,
+} from "./games/connections-engine";
 import { Connections, WordSearch } from "./games/Words";
 import { Music, type MusicData } from "./games/Music";
 import { exerciseCount, musicPuzzle } from "./content/music";
@@ -104,9 +109,10 @@ function newDraft(
       : game === "connections"
         ? {
             pack: previous
-              ? (Number((previous.data as { pack: number }).pack) +
-                  (samePuzzle ? 0 : 1)) %
-                connections.length
+              ? nextConnectionsPack(
+                  (previous.data as { pack: number }).pack,
+                  samePuzzle,
+                )
               : 0,
             solved: [],
             selected: [],
@@ -163,11 +169,13 @@ function newDraft(
     mode:
       game === "sudoku"
         ? `${oldSudoku?.size || 9}x${oldSudoku?.size || 9}:${oldSudoku?.tier || "Classic"}`
-        : game === "music"
-          ? (data as MusicData).mode
-          : game === "lab"
-            ? labMode(data as LabData)
-            : "explore",
+        : game === "connections"
+          ? connectionsMode((data as { pack: number }).pack)
+          : game === "music"
+            ? (data as MusicData).mode
+            : game === "lab"
+              ? labMode(data as LabData)
+              : "explore",
     data,
   };
   return preferences
@@ -194,9 +202,10 @@ function archive(
           contentVersion:
             draft.game === "sudoku"
               ? sudokuContentVersion(draft.data as SudokuData)
-              : draft.game === "connections" &&
-                  (draft.data as { pack: number }).pack >= 2
-                ? "connections-2"
+              : draft.game === "connections"
+                ? connectionsContentVersion(
+                    (draft.data as { pack: number }).pack,
+                  )
                 : draft.game === "search" &&
                     draft.puzzleId !== "quiet-garden-v1"
                   ? "word-search-2"
@@ -504,8 +513,12 @@ export function App({ appRole }: { appRole: Role }) {
       let d = old;
       let next = s;
       const newContent =
-        game === "sudoku" &&
-        (data as { seed: number }).seed !== (old.data as { seed: number }).seed;
+        (game === "sudoku" &&
+          (data as { seed: number }).seed !==
+            (old.data as { seed: number }).seed) ||
+        (game === "connections" &&
+          (data as { pack: number }).pack !==
+            (old.data as { pack: number }).pack);
       const newSpecimen =
         game === "lab" &&
         (data as { specimen: number }).specimen !==
@@ -523,11 +536,13 @@ export function App({ appRole }: { appRole: Role }) {
           puzzleId:
             game === "sudoku"
               ? sudokuPuzzle(data as SudokuData)
-              : game === "lab"
-                ? labPuzzle(data as LabData)
-                : game === "music"
-                  ? musicPuzzle(data as MusicData)
-                  : old.puzzleId,
+              : game === "connections"
+                ? connectionsPuzzle((data as { pack: number }).pack)
+                : game === "lab"
+                  ? labPuzzle(data as LabData)
+                  : game === "music"
+                    ? musicPuzzle(data as MusicData)
+                    : old.puzzleId,
           mode: metrics?.mode || old.mode,
         };
         d = withTiming(
