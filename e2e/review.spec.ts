@@ -113,6 +113,21 @@ test("Insights reviews fictional exports offline with separated contexts and sou
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+  const headingFits = await region
+    .getByRole("heading", { name: "Review recorded sessions", exact: true })
+    .evaluate((el) => {
+      const canvas = document.createElement("canvas"),
+        ctx = canvas.getContext("2d")!;
+      ctx.font = getComputedStyle(el).font;
+      return (
+        Math.max(
+          ...el
+            .textContent!.split(/\s+/)
+            .map((word) => ctx.measureText(word).width),
+        ) <= el.getBoundingClientRect().width
+      );
+    });
+  expect(headingFits).toBe(true);
   const table = page.getByRole("region", { name: "Raw recorded sessions" });
   await table.focus();
   await table.press("ArrowRight");

@@ -273,7 +273,7 @@ export function SessionReview({
               <thead>
                 <tr>
                   {[
-                    "Session / UTC dates",
+                    "Session / source timestamps",
                     "Activity / versions",
                     "Puzzle / mode",
                     "Attempt",

@@ -968,7 +968,7 @@ export function App({ appRole }: { appRole: Role }) {
             )}
             {appRole === "insights" && (
               <>
-                <section className="subtle-panel">
+                <section className="subtle-panel local-export-review">
                   <h2>Review a local Play export</h2>
                   <p>
                     Choose a backup from Play to inspect it in this tab. It is

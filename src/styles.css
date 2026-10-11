@@ -1460,3 +1460,15 @@ summary {
   padding-inline: min(1rem, 3vw);
   overflow-wrap: anywhere;
 }
+
+.local-export-review.subtle-panel {
+  padding-inline: min(1.5rem, 4vw);
+  overflow-wrap: anywhere;
+}
+.local-export-review .file-control,
+.local-export-review .notice {
+  padding-inline: min(1rem, 3vw);
+}
+.local-export-review .file-control input {
+  padding-inline: min(0.5rem, 2vw);
+}
