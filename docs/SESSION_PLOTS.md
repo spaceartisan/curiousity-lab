@@ -20,6 +20,6 @@ Circle = completed, square = explored, triangle = unfinished. Overlapping observ
 
 ## Reproducible export
 
-`Export plot data` produces JSON with `plotVersion: local-session-points-1`, canonical context, selected metric, every selected/plotted/excluded source ID, counts, time/value domains, exact metric units and values, original and UTC timestamps, outcomes, attempts, hints/undo and limitations. It includes every eligible page, not only visible points. The existing raw CSV/JSON and `local-context-review-3` summary remain available; their aggregation algorithm is unchanged.
+`Export plot data` produces JSON with `plotVersion: local-session-points-2`, canonical context, selected metric, every selected/plotted/excluded source ID, counts, time/value domains, exact metric units and values, original and UTC timestamps, outcomes, attempts, hints/undo and limitations. It includes every eligible page, not only visible points. The existing raw CSV/JSON and `local-context-review-4` summary remain available; their aggregation algorithm is unchanged.
 
 Source clocks, missing optional context, unresolved normalized identity/input fields, correlated practice and unmatched reference forms remain limitations. No new activity collection or Firestore permission is introduced. Private cloud sync, shared reports, independently reviewed content and actual-device/production gates remain unfinished.

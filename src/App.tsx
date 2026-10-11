@@ -31,6 +31,7 @@ import { exerciseCount, musicPuzzle } from "./content/music";
 import { Laboratory } from "./games/Laboratory";
 import {
   observePresentation,
+  observeInput,
   withoutRecordedHistory,
 } from "./storage/presentation";
 import type { Preferences } from "./storage/contracts";
@@ -716,6 +717,26 @@ export function App({ appRole }: { appRole: Role }) {
   };
   const game = screen in titles ? (screen as GameKind) : null;
   const draft = game ? state.drafts[game] : null;
+  const recordInput = (method: string) => {
+    if (
+      !game ||
+      !draft ||
+      paused ||
+      !prefs.history ||
+      draft.finalized ||
+      document.visibilityState === "hidden"
+    )
+      return;
+    const id = draft.id;
+    setState((s) => {
+      const current = s?.drafts[game];
+      if (!s || !current || current.id !== id) return s;
+      const next = observeInput(current, s.preferences, method);
+      return next === current
+        ? s
+        : { ...s, drafts: { ...s.drafts, [game]: next } };
+    });
+  };
   const props = draft
     ? {
         draft,
@@ -1171,10 +1192,11 @@ export function App({ appRole }: { appRole: Role }) {
                   Puzzle progress and things you save stay on this device.
                   Optional history records active time, visible pause time,
                   puzzle version, hints, undo counts and observed theme/text
-                  settings. Music also records sound, volume, notation, pace and
-                  rhythm-flexibility settings, including changes. No keystrokes
-                  or audio recordings are collected. Nothing is sent to a
-                  server.
+                  settings, plus broad touch, mouse, pen or keyboard categories
+                  used within game controls. Music also records sound, volume,
+                  notation, pace and rhythm-flexibility settings, including
+                  changes. No keystrokes or audio recordings are collected.
+                  Nothing is sent to a server.
                 </p>
                 <label className="check-label">
                   <input
@@ -1362,7 +1384,21 @@ export function App({ appRole }: { appRole: Role }) {
                 </button>
               </section>
             ) : (
-              <section className="game-surface">
+              <section
+                className="game-surface"
+                onPointerDownCapture={(e) => recordInput(e.pointerType)}
+                onKeyDownCapture={(e) => {
+                  if (
+                    !e.altKey &&
+                    !e.metaKey &&
+                    !e.ctrlKey &&
+                    !["Shift", "Control", "Alt", "Meta", "Escape"].includes(
+                      e.key,
+                    )
+                  )
+                    recordInput("keyboard");
+                }}
+              >
                 {game === "sudoku" ? (
                   <Sudoku key={props.draft.id} {...props} />
                 ) : game === "connections" ? (

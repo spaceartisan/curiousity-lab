@@ -1,7 +1,7 @@
 import { timingKey, timingLabel } from "../storage/timing";
 import { presentationKey, presentationLabel } from "../storage/presentation";
 import type { GameKind, Session } from "../storage/contracts";
-export const ANALYSIS_VERSION = "local-context-review-3";
+export const ANALYSIS_VERSION = "local-context-review-4";
 export const activityNames: Record<GameKind, string> = {
   sudoku: "Sudoku",
   connections: "Word Connections",

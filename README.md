@@ -8,9 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.15.0
+## Current release · v0.16.0
 
-Insights now has individual-session plots for one explicitly selected local backup context, with active time, known foreground pauses and completed-session hints. Keyboard selection, source details/table, fixed axes across pages and a versioned all-page data export preserve the original observations. See [session plots](docs/SESSION_PLOTS.md).
+Optional local history now retains bounded input categories observed within game controls: touch, mouse, pen and keyboard. Insights separates unknown, partial, empty and mixed input contexts alongside task and presentation settings. Old backups remain compatible; finalized records stay immutable. See [input context](docs/INPUT_CONTEXT.md) and [session plots](docs/SESSION_PLOTS.md).
 
 This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. Owner Google sign-in and code-only parent invitations are available after enabling Anonymous Auth and publishing the included Firebase rules. Activity sharing remains disabled. No personal records, emails, service credentials, or private design document are published here.
 

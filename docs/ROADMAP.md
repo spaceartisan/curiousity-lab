@@ -81,3 +81,7 @@ Close active intervals before idle-window extension, pause/visibility transition
 ## v0.15.0 — Genuine local session plots
 
 One explicitly selected context now has chronological source points for active time, known foreground pause or hints in completed puzzle sessions, with outcome/repeat details, keyboard selection, table alternatives, fixed full-context axes across twenty-four-point pages and a reproducible all-page JSON export. Overlapping observations remain individual records; missing pause stays unknown and exploration has no performance score. This advances Phase 3 without any trend estimate or cloud upload. Full normalized context, matched reference forms, private sync/shared reports, remaining game/content work and production/device gates remain unfinished.
+
+## v0.16.0 — Consented game input observations
+
+With local activity history enabled, visible unpaused game controls retain only a bounded set of touch/mouse/pen/keyboard categories. Fresh attempts capture from start; legacy and mid-attempt collection stays partial. No observed category differs from old unknown input. Context review and plots separate these categories and coverage; offline exports and validated local preparation preserve them. No key values, coordinates, continuous gestures, device fingerprint or cloud path is added. Normalized install/clock/task identity, remaining game/content work, family sync/shared reports and production/device gates remain unfinished.

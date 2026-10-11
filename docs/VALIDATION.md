@@ -1,5 +1,10 @@
 # v0.15.0 validation
 
+## v0.16.0 checks
+
+Six input-context regressions cover bounded categories, unknown/partial/empty distinctions, canonical grouping, private/invalid payload rejection, consent and finalized-record boundaries, JSON/CSV compatibility, and real component game/paused-control behavior. An additional desktop/phone browser scenario uses actual mouse/touch and keyboard input, verifies offline resume, immutable filed records, history-off collection, export and separate legacy Insights grouping, and checks 200% text at 320 pixels. CI remains the deployment gate; browser results must be verified before reporting completion. Automated checks do not certify actual family-device accessibility or production readiness.
+
+
 Deployment gates: 152 unit/component checks, fourteen archive/remote checks with age, twenty-two Firestore security cases plus encrypted emulator recovery, and forty-eight desktop/phone browser scenarios (237 total). Ten new tests cover explicit context gating, UTC ordering/ties/source immutability, completed-hint and exploration exclusions, observed-zero versus unknown pause, zero/single/extreme domains and source clock warnings, exact versioned exports and all inclusion IDs, overlapping-point keyboard selection, fixed axes/paging/metric reset, missing pause/exploration controls, actual filtered review exports and source immutability.
 
 The new browser scenario imports a clearly fictional backup offline, verifies overlapping keyboard-selected source values and offset timestamps, fixed axes across pages, completed-only hint denominators, actual all-page JSON downloads, table alternatives, selected-marker visibility on paging, the actual Larger text preference, 320-pixel/200% text and keyboard plot scrolling, unknown pause, exploration exclusion, reset and reload isolation. The initial workflow passed all 237 checks. Follow-up viewport handling reveals selected markers and respects the actual app text preference; final release requires that workflow and focused screenshot review. Age-specific encryption remains CI-only locally; CI runs the actual encrypted recovery case.

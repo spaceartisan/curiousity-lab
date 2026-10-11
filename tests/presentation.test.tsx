@@ -64,6 +64,7 @@ it("collects bounded preference sets and exact volume range without mutating pre
     coverage: "from-start",
     themes: ["dark", "light"],
     textSizes: ["large", "normal"],
+    input: { version: 1, coverage: "from-start", methods: [] },
     music: {
       soundSettings: [false, true],
       volumeRange: [0, 0.25],

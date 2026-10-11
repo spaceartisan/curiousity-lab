@@ -1,5 +1,13 @@
 # v0.15.0
 
+## v0.16.0 — Consented game input context
+
+- Record bounded touch/mouse/pen/keyboard categories inside visible, unpaused game controls only with activity history enabled. No raw event, key, coordinate, gesture stream or device fingerprint is retained.
+- Distinguish from-start/partial capture, no observed category and legacy unknown input in Insights; preserve methods through offline resume, validated exports and local sharing preparation. Completed attempts remain immutable; disabling/clearing history removes optional draft context.
+- Bump derived context review to `local-context-review-4` and plot export to `local-session-points-2` for the additional grouping dimension. Source sessions and aggregate formulas remain unchanged.
+- Full document implementation, normalized install/clock/task identity, private sync/shared reporting and production/device/content gates remain unfinished.
+
+
 - Added genuine local Insights plots of individual sessions within one explicitly selected context, sorted by original end time in UTC. Plot active time, known foreground pauses or hints in completed puzzle sessions, with truthful denominators and exclusion reasons.
 - Preserve overlapping observations, source offset timestamps, outcomes, first/repeat labels, hints and undo in keyboard-selectable details and a source table. Exploration has no performance plot; missing pause remains unknown.
 - Keep full-context axes/units fixed across twenty-four-point pages, reflow controls at enlarged text sizes and scope horizontal scrolling to the chart/table. Preserve original values and surface existing time-consistency warnings.

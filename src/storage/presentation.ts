@@ -6,6 +6,11 @@ export interface Presentation {
   coverage: "from-start" | "partial";
   themes: Preferences["theme"][];
   textSizes: Preferences["textSize"][];
+  input?: {
+    version: 1;
+    coverage: "from-start" | "partial";
+    methods: InputMethod[];
+  };
   music?: {
     soundSettings: boolean[];
     volumeRange: [number, number];
@@ -14,6 +19,8 @@ export interface Presentation {
     flexibility: NonNullable<MusicData["flexibility"]>[];
   };
 }
+export type InputMethod = "keyboard" | "mouse" | "pen" | "touch";
+const inputMethods: InputMethod[] = ["keyboard", "mouse", "pen", "touch"];
 const union = <T extends string | boolean>(values: T[], value: T): T[] =>
   [...new Set([...values, value])].sort();
 
@@ -33,6 +40,11 @@ export function observePresentation(
     coverage: old?.coverage ?? (fromStart ? "from-start" : "partial"),
     themes: union(old?.themes ?? [], prefs.theme),
     textSizes: union(old?.textSizes ?? [], prefs.textSize),
+    input: old?.input ?? {
+      version: 1,
+      coverage: fromStart ? "from-start" : "partial",
+      methods: [],
+    },
   };
   if (draft.game === "music") {
     const data = draft.data as MusicData;
@@ -59,6 +71,33 @@ export function observePresentation(
   return { ...draft, presentation };
 }
 
+// Store categories only, never event objects, key values or coordinates.
+export function observeInput(
+  draft: Draft,
+  prefs: Preferences,
+  method: string,
+): Draft {
+  if (
+    draft.finalized ||
+    !prefs.history ||
+    !inputMethods.includes(method as InputMethod)
+  )
+    return draft;
+  const next = observePresentation(draft, prefs);
+  const input = next.presentation!.input!;
+  if (input.methods.includes(method as InputMethod)) return draft;
+  return {
+    ...next,
+    presentation: {
+      ...next.presentation!,
+      input: {
+        ...input,
+        methods: union(input.methods, method as InputMethod),
+      },
+    },
+  };
+}
+
 function choices(value: unknown, allowed: readonly unknown[], empty = false) {
   return (
     Array.isArray(value) &&
@@ -77,12 +116,32 @@ export function validPresentation(
   if (
     Object.keys(p).some(
       (k) =>
-        !["version", "coverage", "themes", "textSizes", "music"].includes(k),
+        ![
+          "version",
+          "coverage",
+          "themes",
+          "textSizes",
+          "music",
+          "input",
+        ].includes(k),
     ) ||
     p.version !== 1 ||
     !["from-start", "partial"].includes(p.coverage) ||
     !choices(p.themes, ["light", "dark"]) ||
     !choices(p.textSizes, ["normal", "large"])
+  )
+    return false;
+  if (
+    p.input !== undefined &&
+    (!p.input ||
+      typeof p.input !== "object" ||
+      Array.isArray(p.input) ||
+      Object.keys(p.input).some(
+        (k) => !["version", "coverage", "methods"].includes(k),
+      ) ||
+      p.input.version !== 1 ||
+      !["from-start", "partial"].includes(p.input.coverage) ||
+      !choices(p.input.methods, inputMethods, true))
   )
     return false;
   if (game !== "music") return p.music === undefined;
@@ -128,6 +187,9 @@ export function presentationKey(p?: Presentation) {
           [...p.music.flexibility].sort(),
         ]
       : null,
+    p.input
+      ? [p.input.version, p.input.coverage, [...p.input.methods].sort()]
+      : null,
   ]);
 }
 export function presentationLabel(p?: Presentation) {
@@ -142,7 +204,10 @@ export function presentationLabel(p?: Presentation) {
     `${p.coverage === "from-start" ? "Settings observed from start" : "Partial setting observations"}: ${p.themes.join(" / ")} theme, ${p.textSizes.join(" / ")} text` +
     (p.music
       ? `; sound setting ${p.music.soundSettings.map((v) => (v ? "on" : "off")).join(" / ")}, volume ${p.music.volumeRange.map((v) => Math.round(v * 100)).join("–")}%${p.music.volumeRange[1] === 0 ? " (muted)" : ""}, ${p.music.views.map((v) => names[v]).join(" / ")}, ${p.music.tempos.join(" / ")} pace${p.music.flexibility.length ? `, ${p.music.flexibility.join(" / ")} rhythm flexibility` : ""}`
-      : "")
+      : "") +
+    (p.input
+      ? `; input observations ${p.input.coverage === "from-start" ? "from start" : "partial"}: ${p.input.methods.length ? p.input.methods.join(" / ") : "none yet"}`
+      : "; input methods unrecorded")
   );
 }
 
