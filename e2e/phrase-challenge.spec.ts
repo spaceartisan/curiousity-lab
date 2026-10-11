@@ -15,7 +15,7 @@ test("challenging phrase rules, optional hints, keyboard and chosen replay work 
     page.getByText("Saved on this device", { exact: true }),
   ).toBeVisible();
   await page.reload();
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await page
     .getByRole("button", { name: "Complete the phrase", exact: true })
@@ -65,7 +65,7 @@ test("challenging phrase rules, optional hints, keyboard and chosen replay work 
   ).toBeVisible();
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect(choice).toHaveValue("Challenging");
   await expect(

@@ -177,7 +177,7 @@ async function open(legacy = false) {
   if (legacy) s.drafts.music = { ...draft(), activeMs: 500 };
   await saveState(s);
   render(<App appRole="play" />);
-  fireEvent.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );

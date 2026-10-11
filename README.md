@@ -10,6 +10,8 @@ These URLs become live when the Pages workflow deploys successfully. The reposit
 
 ## Current release · v0.32.0
 
+**A new look.** Light and dark themes (or follow the device), a typeface designed for low-vision readers, and a colour for each room. See the changelog.
+
 **Family sharing.** After Mom agrees once on Play, what she finishes is shared with the family automatically. Companion shows Dad her week, things to talk about, and lets him send her something. Insights shows trends, engagement and descriptive memory signals. Both have a fictional example. See [family sharing](docs/FAMILY_SHARING.md).
 
 **Numbers and Words.** Numbers now holds Sudoku, Killer Sudoku and a Countdown-style numbers game. Words holds cryptograms of classic quotations, a spelling-bee-style Letter Hive, Lewis Carroll's word ladders and Connections. See [numbers and words](docs/PUZZLE_ROOMS.md).

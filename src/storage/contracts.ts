@@ -3,7 +3,7 @@ import { validClockObservation, type ClockObservation } from "./clock-context";
 import { validPresentation, type Presentation } from "./presentation";
 import { validateGame } from "./validate-game";
 import { validLabViews, type LabView } from "../content/lab-views";
-export const APP_VERSION = "0.33.0";
+export const APP_VERSION = "0.34.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {
@@ -59,7 +59,8 @@ export interface Creation {
   labDomain?: "microbiology";
 }
 export interface Preferences {
-  theme: "light" | "dark";
+  /** "system" follows the device setting. */
+  theme: "system" | "light" | "dark";
   textSize: "normal" | "large";
   sound: boolean;
   volume: number;
@@ -80,7 +81,7 @@ export const emptyState = (role: Role): LocalState => ({
   installationRole: role,
   authenticatedUid: null,
   preferences: {
-    theme: "light",
+    theme: "system",
     textSize: "normal",
     sound: false,
     volume: 0.25,
@@ -108,7 +109,7 @@ export function validateState(
   )
     throw Error("Unsupported save or app");
   if (
-    !["light", "dark"].includes(v.preferences.theme) ||
+    !["system", "light", "dark"].includes(v.preferences.theme) ||
     !["normal", "large"].includes(v.preferences.textSize) ||
     typeof v.preferences.history !== "boolean" ||
     typeof v.preferences.welcomeDone !== "boolean" ||

@@ -54,7 +54,7 @@ async function openMusic(history = false, data?: MusicData) {
   await saveState(s);
   const user = userEvent.setup();
   const view = render(<App appRole="play" />);
-  await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  await user.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );

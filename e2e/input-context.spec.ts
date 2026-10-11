@@ -34,7 +34,7 @@ test("game input categories survive offline use and retain unknown legacy contex
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   const method = info.project.name.includes("phone") ? "touch" : "mouse";
   const cell = page.locator("#cell-0");
   if (method === "touch") await cell.tap();
@@ -49,7 +49,7 @@ test("game input categories survive offline use and retain unknown legacy contex
     });
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   await expect
     .poll(
       async () =>
@@ -72,7 +72,7 @@ test("game input categories survive offline use and retain unknown legacy contex
   await page
     .getByRole("button", { name: "Back to games", exact: true })
     .click();
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   await page.locator("#cell-0").press("ArrowRight");
   await expect
     .poll(async () => (await saved(page))?.drafts.sudoku?.presentation)

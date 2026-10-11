@@ -11,7 +11,7 @@ test("word search undo keeps crossing words and survives offline reload", async 
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
-  await page.getByRole("button", { name: "Open Word Search →" }).click();
+  await page.getByRole("button", { name: /^Word Search/ }).click();
   await page.getByRole("button", { name: "Another puzzle" }).click();
   const find = async (word: string) => {
     const path = findWordPaths(searchPacks[1], word)[0];
@@ -52,7 +52,7 @@ test("word search undo keeps crossing words and survives offline reload", async 
   ).toBeVisible();
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: "Open Word Search →" }).click();
+  await page.getByRole("button", { name: /^Word Search/ }).click();
   await expect(
     page.getByRole("heading", { name: "Kitchen table", exact: true }),
   ).toBeVisible();

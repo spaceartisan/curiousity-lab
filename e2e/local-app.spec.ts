@@ -11,7 +11,7 @@ test("music exercises replay separately and keep rhythm progress offline", async
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect(
     page.getByRole("checkbox", { name: "Sound", exact: true }),
@@ -68,7 +68,7 @@ test("music exercises replay separately and keep rhythm progress offline", async
   ).toBeVisible();
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect(page.getByText("2 of 4 beats tapped.")).toBeVisible();
   for (let i = 0; i < 2; i++)
@@ -155,7 +155,7 @@ test("music audio starts only after a gesture and Stop or Sound off cancels sche
   await page
     .getByRole("button", { name: "Play without activity history" })
     .click();
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await page
     .getByRole("button", { name: "Match the melody", exact: true })
@@ -189,7 +189,7 @@ test("word search boards preserve highlights offline and support keyboard, repla
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
-  await page.getByRole("button", { name: "Open Word Search →" }).click();
+  await page.getByRole("button", { name: /^Word Search/ }).click();
   await expect(
     page.getByRole("heading", { name: "Quiet garden" }),
   ).toBeVisible();
@@ -223,7 +223,7 @@ test("word search boards preserve highlights offline and support keyboard, repla
   ).toBeVisible();
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: "Open Word Search →" }).click();
+  await page.getByRole("button", { name: /^Word Search/ }).click();
   await expect(
     page.getByRole("heading", { name: "Kitchen table" }),
   ).toBeVisible();
@@ -297,7 +297,7 @@ test("player save/resume, scoped offline shell, and screenshots", async ({
     path: info.outputPath("play-library.png"),
     fullPage: true,
   });
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   await page
     .getByRole("button", { name: /Row.*empty/ })
     .first()
@@ -308,7 +308,7 @@ test("player save/resume, scoped offline shell, and screenshots", async ({
     page.getByText("Saved on this device", { exact: true }),
   ).toBeVisible();
   await page.reload();
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   await expect(
     page.getByRole("group", { name: "9 by 9 Sudoku" }),
   ).toBeVisible();
@@ -319,7 +319,7 @@ test("player save/resume, scoped offline shell, and screenshots", async ({
   await page.getByRole("button", { name: "Back to games" }).click();
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: /My Laboratory Take/ }).click();
+  await page.getByRole("button", { name: /^My Laboratory Bench/ }).click();
   await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await page.getByRole("button", { name: /Fungal forms Explore/ }).click();
   await expect(
@@ -401,7 +401,7 @@ test("settings stays local-only and selected controls remain readable", async ({
     ),
   ).toBe(false);
   await page.getByRole("button", { name: "Back to games" }).click();
-  await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("button", { name: /^Music Name the piece/ }).click();
   await page.getByRole("tab", { name: "Earlier exercises" }).click();
   const selected = page.getByRole("button", {
     name: "Free piano",
@@ -412,8 +412,22 @@ test("settings stays local-only and selected controls remain readable", async ({
     const style = getComputedStyle(element);
     return { text: style.color, background: style.backgroundColor };
   });
-  expect(colors.text).toBe("rgb(20, 40, 35)");
-  expect(colors.background).toBe("rgb(178, 220, 200)");
+  const luminance = (rgb: string) => {
+    const [r, g, b] = rgb
+      .match(/\d+/g)!
+      .slice(0, 3)
+      .map((v) => {
+        const c = Number(v) / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const [hi, lo] = [luminance(colors.text), luminance(colors.background)].sort(
+    (x, y) => y - x,
+  );
+  // The music room's own colour, with dark text on it in the dark theme.
+  expect(colors.background).toBe("rgb(231, 166, 200)");
+  expect((hi + 0.05) / (lo + 0.05)).toBeGreaterThanOrEqual(4.5);
   await page.screenshot({
     path: info.outputPath("music-dark.png"),
     fullPage: true,
@@ -503,7 +517,9 @@ test.describe("synthetic connected family", () => {
       await page.goto(`/curiousity-lab/${role}/`);
       if (role === "play")
         await expect(
-          page.getByText(/Connected to your family. Your games stay/),
+          page.getByText(
+            /Connected to your family\. (What you finish|Nothing is shared)/,
+          ),
         ).toBeVisible();
       else {
         await expect(
@@ -540,7 +556,9 @@ test.describe("synthetic connected family", () => {
     await expect(ask).not.toBeVisible();
     await page.reload();
     await expect(
-      page.getByText(/Connected to your family. Your games stay/),
+      page.getByText(
+        /Connected to your family\. (What you finish|Nothing is shared)/,
+      ),
     ).toBeVisible();
     await expect(ask).not.toBeVisible();
     await page.getByRole("button", { name: "Settings", exact: true }).click();
@@ -554,7 +572,9 @@ test.describe("synthetic connected family", () => {
     await mockConnectedFamily(page);
     await page.goto("/curiousity-lab/play/");
     await expect(
-      page.getByText(/Connected to your family. Your games stay/),
+      page.getByText(
+        /Connected to your family\. (What you finish|Nothing is shared)/,
+      ),
     ).toBeVisible();
     await expect(
       page.getByText("Saved on this device", { exact: true }),

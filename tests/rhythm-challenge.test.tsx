@@ -55,7 +55,7 @@ async function open(history = true, exercise = 0, taps = 0) {
   await saveState(s);
   const view = render(<App appRole="play" />),
     user = userEvent.setup();
-  await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  await user.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );
@@ -203,7 +203,7 @@ it("history-off reload retains six-beat progress without raw timestamps and resu
   await saved();
   view.unmount();
   render(<App appRole="play" />);
-  await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  await user.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );

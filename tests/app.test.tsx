@@ -118,7 +118,7 @@ describe("player flow", () => {
   it("piano saves symbolic notes even when sound is off", async () => {
     const user = userEvent.setup();
     render(<App appRole="play" />);
-    await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+    await user.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
     fireEvent.click(
       await screen.findByRole("tab", { name: "Earlier exercises" }),
     );

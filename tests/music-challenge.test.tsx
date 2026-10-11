@@ -53,7 +53,7 @@ async function open(history = true, exercise = 0) {
   await saveState(s);
   const view = render(<App appRole="play" />);
   const user = userEvent.setup();
-  await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  await user.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );
@@ -223,7 +223,7 @@ it("history-off reload preserves chosen melody and presentation without optional
   await saved();
   view.unmount();
   render(<App appRole="play" />);
-  await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  await user.click(await screen.findByRole("button", { name: /^Music Name the piece/ }));
   fireEvent.click(
     await screen.findByRole("tab", { name: "Earlier exercises" }),
   );

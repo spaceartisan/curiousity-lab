@@ -59,7 +59,7 @@ test("notebook collections filter paginate and revisit legacy entries offline", 
   await page.getByRole("button", { name: "Back to games" }).click();
   await page.reload();
   await context.setOffline(true);
-  await page.getByRole("button", { name: /My Laboratory Take/ }).click();
+  await page.getByRole("button", { name: /^My Laboratory Bench/ }).click();
   await page.getByRole("tab", { name: "Microscope & notebook" }).click();
   await page.getByRole("button", { name: "Open Lab Notebook" }).click();
   await expect(

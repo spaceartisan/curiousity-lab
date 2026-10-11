@@ -18,7 +18,7 @@ function useWidth<T extends HTMLElement>() {
     const el = ref.current;
     if (!el) return;
     const set = () =>
-      setWidth(Math.max(240, Math.round(el.getBoundingClientRect().width)));
+      setWidth(Math.max(160, Math.round(el.getBoundingClientRect().width)));
     set();
     if (typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver(set);

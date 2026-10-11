@@ -16,7 +16,7 @@ test("word connections help undo and replay work offline across all eight packs"
   ).toBeVisible();
   await page.reload();
   await context.setOffline(true);
-  await page.getByRole("button", { name: /Words Find/ }).click();
+  await page.getByRole("button", { name: /^Words Cryptograms/ }).click();
   await page.getByRole("tab", { name: "Connections" }).click();
   await page.getByRole("button", { name: "Hint", exact: true }).click();
   await expect(
@@ -38,7 +38,7 @@ test("word connections help undo and replay work offline across all eight packs"
     page.getByText("Saved on this device", { exact: true }),
   ).toBeVisible();
   await page.reload();
-  await page.getByRole("button", { name: /Words Find/ }).click();
+  await page.getByRole("button", { name: /^Words Cryptograms/ }).click();
   await page.getByRole("tab", { name: "Connections" }).click();
   expect(
     await page

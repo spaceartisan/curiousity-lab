@@ -53,7 +53,7 @@ test("hidden-single Sudoku explains, saves notes, undoes and replays offline wit
   await page.getByRole("button", { name: "Back to games" }).click();
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   await expect(
     page.getByRole("combobox", { name: "Challenge", exact: true }),
   ).toHaveValue("Hidden singles");
@@ -89,7 +89,7 @@ test("hidden-single Sudoku explains, saves notes, undoes and replays offline wit
     page.getByText("Saved on this device", { exact: true }),
   ).toBeVisible();
   await page.reload();
-  await page.getByRole("button", { name: /Numbers Settle/ }).click();
+  await page.getByRole("button", { name: /^Numbers Sudoku/ }).click();
   await expect(cell).toHaveAttribute(
     "aria-label",
     new RegExp(`empty, notes ${step.value}`),
