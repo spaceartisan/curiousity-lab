@@ -2,6 +2,7 @@ import { hiddenSinglesBoards, HIDDEN_SINGLES_VERSION } from "../content/sudoku";
 export type Size = 4 | 6 | 9;
 export type SudokuTier = "Relaxed" | "Classic" | "Hidden singles";
 export interface SudokuData {
+  largeCells?: boolean;
   size: Size;
   tier: SudokuTier;
   seed: number;

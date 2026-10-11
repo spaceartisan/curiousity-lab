@@ -91,11 +91,16 @@ function newDraft(
     previous?.game === "lab" ? (previous.data as LabData) : undefined;
   const data =
     game === "sudoku"
-      ? generateSudoku(
-          oldSudoku?.size || 9,
-          samePuzzle && oldSudoku ? oldSudoku.seed : seed,
-          oldSudoku?.tier || "Classic",
-        )
+      ? {
+          ...generateSudoku(
+            oldSudoku?.size || 9,
+            samePuzzle && oldSudoku ? oldSudoku.seed : seed,
+            oldSudoku?.tier || "Classic",
+          ),
+          ...(oldSudoku?.largeCells !== undefined
+            ? { largeCells: oldSudoku.largeCells }
+            : {}),
+        }
       : game === "connections"
         ? {
             pack: previous
@@ -1192,11 +1197,12 @@ export function App({ appRole }: { appRole: Role }) {
                   Puzzle progress and things you save stay on this device.
                   Optional history records active time, visible pause time,
                   puzzle version, hints, undo counts and observed theme/text
-                  settings, plus broad touch, mouse, pen or keyboard categories
-                  used within game controls. Music also records sound, volume,
-                  notation, pace and rhythm-flexibility settings, including
-                  changes. No keystrokes or audio recordings are collected.
-                  Nothing is sent to a server.
+                  settings and Sudoku square-size choices, plus broad touch,
+                  mouse, pen or keyboard categories used within game controls.
+                  Music also records sound, volume, notation, pace and
+                  rhythm-flexibility settings, including changes. No keystrokes
+                  or audio recordings are collected. Nothing is sent to a
+                  server.
                 </p>
                 <label className="check-label">
                   <input

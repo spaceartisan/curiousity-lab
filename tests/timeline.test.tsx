@@ -92,7 +92,7 @@ it("versioned plot exports retain all inclusion IDs, raw units, timestamps and s
     key = contextKey(s[0]),
     m = sessionTimeline(s, key, "hints"),
     e = timelineExport(m, key);
-  expect(e.plotVersion).toBe("local-session-points-2");
+  expect(e.plotVersion).toBe("local-session-points-3");
   expect(e.selectedSourceSessionIds).toHaveLength(32);
   expect(e.sourceSessionIds).toHaveLength(31);
   expect(e.excludedSourceSessionIds).toEqual(["fictional-point-04"]);

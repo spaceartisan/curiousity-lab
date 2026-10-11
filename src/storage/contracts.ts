@@ -1,7 +1,7 @@
 import { validTiming, type Timing } from "./timing";
 import { validPresentation, type Presentation } from "./presentation";
 import { validateGame } from "./validate-game";
-export const APP_VERSION = "0.16.0";
+export const APP_VERSION = "0.17.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {

@@ -85,3 +85,7 @@ One explicitly selected context now has chronological source points for active t
 ## v0.16.0 — Consented game input observations
 
 With local activity history enabled, visible unpaused game controls retain only a bounded set of touch/mouse/pen/keyboard categories. Fresh attempts capture from start; legacy and mid-attempt collection stays partial. No observed category differs from old unknown input. Context review and plots separate these categories and coverage; offline exports and validated local preparation preserve them. No key values, coordinates, continuous gestures, device fingerprint or cloud path is added. Normalized install/clock/task identity, remaining game/content work, family sync/shared reports and production/device gates remain unfinished.
+
+## v0.17.0 — Voluntary larger Sudoku squares
+
+The actual Sudoku grid now has an optional large-square view with contained scrolling and selected-square reveal via keyboard/row/column controls. Necessary display state survives offline resume, new puzzles and replay while preserving puzzle rules and progress. Optional presentation observations retain square-size changes and missing/partial context. This advances Phase 1 usability; advanced solving tiers/preferences, independent device/content review, normalized identity/clock/task context, private sync/shared reports and production recovery remain unfinished.

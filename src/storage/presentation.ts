@@ -6,6 +6,10 @@ export interface Presentation {
   coverage: "from-start" | "partial";
   themes: Preferences["theme"][];
   textSizes: Preferences["textSize"][];
+  sudoku?: {
+    coverage: "from-start" | "partial";
+    cellSizes: ("compact" | "large")[];
+  };
   input?: {
     version: 1;
     coverage: "from-start" | "partial";
@@ -68,6 +72,17 @@ export function observePresentation(
           : [],
     };
   }
+  if (draft.game === "sudoku") {
+    presentation.sudoku = {
+      coverage: old?.sudoku?.coverage ?? (fromStart ? "from-start" : "partial"),
+      cellSizes: union(
+        old?.sudoku?.cellSizes ?? [],
+        (draft.data as { largeCells?: boolean }).largeCells
+          ? "large"
+          : "compact",
+      ),
+    };
+  }
   return { ...draft, presentation };
 }
 
@@ -123,12 +138,26 @@ export function validPresentation(
           "textSizes",
           "music",
           "input",
+          "sudoku",
         ].includes(k),
     ) ||
     p.version !== 1 ||
     !["from-start", "partial"].includes(p.coverage) ||
     !choices(p.themes, ["light", "dark"]) ||
     !choices(p.textSizes, ["normal", "large"])
+  )
+    return false;
+  if (
+    p.sudoku !== undefined &&
+    (game !== "sudoku" ||
+      !p.sudoku ||
+      typeof p.sudoku !== "object" ||
+      Array.isArray(p.sudoku) ||
+      Object.keys(p.sudoku).some(
+        (k) => !["coverage", "cellSizes"].includes(k),
+      ) ||
+      !["from-start", "partial"].includes(p.sudoku.coverage) ||
+      !choices(p.sudoku.cellSizes, ["compact", "large"]))
   )
     return false;
   if (
@@ -190,6 +219,7 @@ export function presentationKey(p?: Presentation) {
     p.input
       ? [p.input.version, p.input.coverage, [...p.input.methods].sort()]
       : null,
+    p.sudoku ? [p.sudoku.coverage, [...p.sudoku.cellSizes].sort()] : null,
   ]);
 }
 export function presentationLabel(p?: Presentation) {
@@ -207,7 +237,10 @@ export function presentationLabel(p?: Presentation) {
       : "") +
     (p.input
       ? `; input observations ${p.input.coverage === "from-start" ? "from start" : "partial"}: ${p.input.methods.length ? p.input.methods.join(" / ") : "none yet"}`
-      : "; input methods unrecorded")
+      : "; input methods unrecorded") +
+    (p.sudoku
+      ? `; Sudoku square sizes ${p.sudoku.coverage === "from-start" ? "observed from start" : "partially observed"}: ${p.sudoku.cellSizes.join(" / ")}`
+      : "")
   );
 }
 

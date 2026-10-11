@@ -1550,3 +1550,30 @@ summary {
 .timeline-data table {
   min-width: 48rem;
 }
+
+.sudoku-viewport {
+  min-width: 0;
+  max-width: 100%;
+}
+.sudoku-viewport.large-cells {
+  overflow: auto;
+  max-height: min(70vh, 40em);
+  overscroll-behavior: contain;
+  border-radius: 4px;
+}
+.sudoku-workspace .sudoku-viewport.large-cells .sudoku {
+  max-width: none;
+  margin: 0;
+}
+.sudoku-workspace .sudoku-viewport.large-cells .cell {
+  font-size: 1.6em;
+  min-width: 48px;
+  min-height: 48px;
+}
+.sudoku-viewport.large-cells .cell .pencil {
+  font-size: 0.5em;
+}
+.sudoku-size-choice {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}

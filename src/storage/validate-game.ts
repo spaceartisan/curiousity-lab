@@ -17,6 +17,7 @@ export function validateGame(kind: string, value: unknown): boolean {
   if (kind === "sudoku") {
     if (
       !validSudoku(value) ||
+      (value.largeCells !== undefined && typeof value.largeCells !== "boolean") ||
       !Number.isInteger(value.seed) ||
       value.seed < 0 ||
       value.seed > 0xffffffff ||

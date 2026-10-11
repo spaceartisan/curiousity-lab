@@ -80,7 +80,7 @@ test("local session plots retain source values, overlap, fixed axes and missingn
     .click();
   const download = await downloadEvent;
   const exported = JSON.parse(await readFile((await download.path())!, "utf8"));
-  expect(exported.plotVersion).toBe("local-session-points-2");
+  expect(exported.plotVersion).toBe("local-session-points-3");
   expect(exported.selectedSourceSessionIds).toHaveLength(32);
   expect(exported.points).toHaveLength(31);
   expect(exported.excludedSourceSessionIds).toEqual(["fictional-point-04"]);

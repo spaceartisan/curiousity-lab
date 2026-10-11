@@ -8,9 +8,9 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.16.0
+## Current release · v0.17.0
 
-Optional local history now retains bounded input categories observed within game controls: touch, mouse, pen and keyboard. Insights separates unknown, partial, empty and mixed input contexts alongside task and presentation settings. Old backups remain compatible; finalized records stay immutable. See [input context](docs/INPUT_CONTEXT.md) and [session plots](docs/SESSION_PLOTS.md).
+Sudoku now offers a voluntary larger-square grid with contained scrolling and automatic selected-square visibility. The choice survives reload, new puzzles and replay without changing entries or difficulty. It works without history; optional history keeps square-size presentation observations distinct in Insights. See [Sudoku techniques and display](docs/SUDOKU_TECHNIQUES.md).
 
 This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. Owner Google sign-in and code-only parent invitations are available after enabling Anonymous Auth and publishing the included Firebase rules. Activity sharing remains disabled. No personal records, emails, service credentials, or private design document are published here.
 

@@ -1,5 +1,10 @@
 # v0.15.0 validation
 
+## v0.17.0 checks
+
+Six Sudoku regressions cover optional/invalid display imports, presentation coverage/validation/grouping, unchanged moves and hint counts, offline reload/replay, chosen-grid preservation, immutable completed records, and history-off/clear-history continuity. A new desktop/phone scenario checks actual square dimensions, bounded document width, selected-cell visibility in both scroll axes, row/column navigation, cached offline reload/replay and 200% text at 320 pixels. CI remains the deployment gate; browser screenshots/results must be reviewed before release completion. Automated browser evidence does not certify actual-family-device accessibility.
+
+
 ## v0.16.0 checks
 
 Six input-context regressions cover bounded categories, unknown/partial/empty distinctions, canonical grouping, private/invalid payload rejection, consent and finalized-record boundaries, JSON/CSV compatibility, and real component game/paused-control behavior. An additional desktop/phone browser scenario uses actual mouse/touch and keyboard input, verifies offline resume, immutable filed records, history-off collection, export and separate legacy Insights grouping, and checks 200% text at 320 pixels. CI remains the deployment gate; browser results must be verified before reporting completion. Automated checks do not certify actual family-device accessibility or production readiness.

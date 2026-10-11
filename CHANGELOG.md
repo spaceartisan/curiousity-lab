@@ -1,5 +1,13 @@
 # v0.15.0
 
+## v0.17.0 — Larger Sudoku squares
+
+- Optional large-grid view uses squares at least 48 pixels in each dimension, scaling with text size. Contained two-axis scrolling and selected-square reveal support keyboard and row/column navigation without scrolling the document to the grid.
+- Save/resume, new grids and same-board replay preserve this necessary display choice. Entries, notes, move history, seed, difficulty and puzzle identity stay intact; completed session records remain immutable.
+- Optional presentation context records from-start/partial and compact/large/mixed observations; old records stay unrecorded. Context review advances to `local-context-review-5` and plot export to `local-session-points-3` for this grouping dimension.
+- Advanced Sudoku tiers, full document implementation, content expansion, private sync/reporting and production/device gates remain unfinished.
+
+
 ## v0.16.0 — Consented game input context
 
 - Record bounded touch/mouse/pen/keyboard categories inside visible, unpaused game controls only with activity history enabled. No raw event, key, coordinate, gesture stream or device fingerprint is retained.

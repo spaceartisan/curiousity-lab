@@ -1,4 +1,4 @@
-import { beforeEach, expect, it } from "vitest";
+import { beforeEach, expect, it, vi } from "vitest";
 import { createHash } from "node:crypto";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -20,6 +20,12 @@ import {
 import { validateGame } from "../src/storage/validate-game";
 import { emptyState, validateState } from "../src/storage/contracts";
 import { clearState, saveState, loadState } from "../src/storage/local";
+import {
+  observePresentation,
+  validPresentation,
+  presentationKey,
+  withoutRecordedHistory,
+} from "../src/storage/presentation";
 beforeEach(async () => {
   await clearState("play");
 });
@@ -324,4 +330,154 @@ it("legacy remount, canceled challenge changes and history-off assistance preser
     sudokuPuzzle(d),
   );
   expect(() => validateState(s, "play")).not.toThrow();
+});
+
+it("large-square imports are optional for legacy puzzles and accept only a boolean", () => {
+  const d = generateSudoku(9, 23);
+  expect(d).not.toHaveProperty("largeCells");
+  expect(validateGame("sudoku", { ...d, largeCells: true })).toBe(true);
+  expect(validateGame("sudoku", { ...d, largeCells: false })).toBe(true);
+  for (const largeCells of [null, 1, "true", [], {}])
+    expect(validateGame("sudoku", { ...d, largeCells })).toBe(false);
+});
+it("square-size provenance separates legacy, partial and mixed settings without rewriting source", () => {
+  const state = emptyState("play");
+  state.preferences.history = true;
+  const d = {
+    id: "fictional-size",
+    game: "sudoku" as const,
+    puzzleId: "sudoku-9-23",
+    mode: "9x9:Classic",
+    startedAt: "2026-10-11T00:00:00Z",
+    activeMs: 0,
+    hints: 0,
+    undos: 0,
+    data: generateSudoku(9, 23),
+  };
+  const start = observePresentation(d, state.preferences, true),
+    original = structuredClone(start);
+  const changed = observePresentation(
+    { ...start, data: { ...d.data, largeCells: true } },
+    state.preferences,
+  );
+  expect(start).toEqual(original);
+  expect(changed.presentation?.sudoku).toEqual({
+    coverage: "from-start",
+    cellSizes: ["compact", "large"],
+  });
+  const { sudoku: _sudoku, ...legacy } = start.presentation!;
+  expect(validPresentation(legacy, "sudoku")).toBe(true);
+  const partial = observePresentation(
+    { ...d, presentation: legacy },
+    state.preferences,
+  );
+  expect(partial.presentation?.sudoku?.coverage).toBe("partial");
+  expect(
+    new Set(
+      [
+        legacy,
+        start.presentation,
+        partial.presentation,
+        changed.presentation,
+      ].map(presentationKey),
+    ).size,
+  ).toBe(4);
+  expect(presentationKey(changed.presentation)).toBe(
+    presentationKey({
+      ...changed.presentation!,
+      sudoku: {
+        ...changed.presentation!.sudoku!,
+        cellSizes: ["large", "compact"],
+      },
+    }),
+  );
+  for (const sudoku of [
+    null,
+    [],
+    { coverage: "guessed", cellSizes: ["large"] },
+    { coverage: "partial", cellSizes: [] },
+    { coverage: "partial", cellSizes: ["large", "large"] },
+    { coverage: "partial", cellSizes: ["tiny"] },
+    { coverage: "partial", cellSizes: ["large"], private: "text" },
+  ])
+    expect(
+      validPresentation({ ...start.presentation!, sudoku }, "sudoku"),
+    ).toBe(false);
+  expect(validPresentation(start.presentation, "lab")).toBe(false);
+});
+it("large-square choice changes no puzzle move or hint and survives reload and same-board replay", async () => {
+  const d = generateSudoku(9, 23),
+    { user, view } = await open(d, true);
+  const before = (await saved()).drafts.sudoku!;
+  await user.click(
+    screen.getByRole("checkbox", { name: "Larger Sudoku squares" }),
+  );
+  const changed = (await saved()).drafts.sudoku!;
+  expect(changed.id).toBe(before.id);
+  expect(changed.puzzleId).toBe(before.puzzleId);
+  expect(changed.hints).toBe(0);
+  expect(changed.undos).toBe(0);
+  expect(changed.data).toEqual({ ...d, largeCells: true });
+  expect(changed.presentation?.sudoku?.cellSizes).toEqual(["compact", "large"]);
+  expect(
+    screen.getByRole("region", { name: "Sudoku grid viewport" }),
+  ).toHaveClass("large-cells");
+  view.unmount();
+  render(<App appRole="play" />);
+  await user.click(
+    await screen.findByRole("button", { name: /Numbers Settle/ }),
+  );
+  expect(
+    screen.getByRole("checkbox", { name: "Larger Sudoku squares" }),
+  ).toBeChecked();
+  await user.click(screen.getByRole("button", { name: "Replay this puzzle" }));
+  const replayed = (await saved()).drafts.sudoku!;
+  expect(replayed.id).not.toBe(before.id);
+  expect(replayed.puzzleId).toBe(before.puzzleId);
+  expect((replayed.data as SudokuData).largeCells).toBe(true);
+  expect(replayed.presentation?.sudoku).toEqual({
+    coverage: "from-start",
+    cellSizes: ["large"],
+  });
+});
+it("grid changes preserve large squares without silently choosing a difficulty", async () => {
+  const { user } = await open({ ...generateSudoku(9, 23), largeCells: true });
+  const confirmation = vi.spyOn(window, "confirm").mockReturnValue(true);
+  await user.selectOptions(screen.getByRole("combobox", { name: "Grid" }), "6");
+  const d = (await saved()).drafts.sudoku!.data as SudokuData;
+  expect(d.size).toBe(6);
+  expect(d.tier).toBe("Classic");
+  expect(d.largeCells).toBe(true);
+  confirmation.mockRestore();
+});
+it("view changes after completion preserve the filed session and do not create another attempt", async () => {
+  const d = generateSudoku(4, 23),
+    index = d.givens.findIndex((n) => !n);
+  d.cells = [...d.solution];
+  d.cells[index] = 0;
+  const { user } = await open(d, true);
+  await user.click(screen.getByRole("button", { name: "Hint" }));
+  const finished = await saved();
+  expect(finished.sessions).toHaveLength(1);
+  await user.click(
+    screen.getByRole("checkbox", { name: "Larger Sudoku squares" }),
+  );
+  const changed = await saved();
+  expect(changed.sessions).toEqual(finished.sessions);
+  expect(changed.drafts.sudoku!.id).toBe(finished.drafts.sudoku!.id);
+  expect((changed.drafts.sudoku!.data as SudokuData).largeCells).toBe(true);
+});
+it("large squares work without history and history removal preserves the necessary view preference", async () => {
+  const { user } = await open(generateSudoku(9, 23), false);
+  await user.click(
+    screen.getByRole("checkbox", { name: "Larger Sudoku squares" }),
+  );
+  const state = await saved();
+  expect(state.sessions).toEqual([]);
+  expect(state.drafts.sudoku?.presentation).toBeUndefined();
+  expect(
+    (withoutRecordedHistory(state).drafts.sudoku!.data as SudokuData)
+      .largeCells,
+  ).toBe(true);
+  validateState(JSON.parse(JSON.stringify(state)), "play");
 });

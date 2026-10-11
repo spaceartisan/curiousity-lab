@@ -1,7 +1,7 @@
 import type { Session } from "../storage/contracts";
 import { contextKey, hasTimeIssue } from "./review";
 export type TimelineMetric = "active" | "hints" | "pause";
-export const TIMELINE_VERSION = "local-session-points-2";
+export const TIMELINE_VERSION = "local-session-points-3";
 export const POINTS_PER_PAGE = 24;
 export interface TimelinePoint {
   session: Session;

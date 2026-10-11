@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   dimensions,
   generateSudoku,
@@ -13,9 +13,36 @@ import {
 } from "./sudoku-engine";
 import type { GameProps } from "./types";
 export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
+  const viewport = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState(0),
     [noteMode, setNoteMode] = useState(false),
     [message, setMessage] = useState("");
+  const largeCells = (draft.data as SudokuData)?.largeCells === true;
+  useLayoutEffect(() => {
+    if (!largeCells) return;
+    const holder = viewport.current;
+    const reveal = () => {
+      if (!holder?.clientWidth) return;
+      const cell = holder.querySelector<HTMLElement>(`#cell-${selected}`);
+      if (!cell) return;
+      const bounds = holder.getBoundingClientRect(),
+        square = cell.getBoundingClientRect();
+      if (square.left < bounds.left + 6)
+        holder.scrollLeft += square.left - bounds.left - 6;
+      else if (square.right > bounds.right - 6)
+        holder.scrollLeft += square.right - bounds.right + 6;
+      if (square.top < bounds.top + 6)
+        holder.scrollTop += square.top - bounds.top - 6;
+      else if (square.bottom > bounds.bottom - 6)
+        holder.scrollTop += square.bottom - bounds.bottom + 6;
+    };
+    reveal();
+    if (!holder || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(reveal);
+    observer.observe(holder);
+    if (holder.firstElementChild) observer.observe(holder.firstElementChild);
+    return () => observer.disconnect();
+  }, [selected, largeCells, (draft.data as SudokuData)?.size]);
   if (!validSudoku(draft.data))
     return (
       <p>
@@ -95,7 +122,14 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
     )
       return;
     update(
-      generateSudoku(size, crypto.getRandomValues(new Uint32Array(1))[0], tier),
+      {
+        ...generateSudoku(
+          size,
+          crypto.getRandomValues(new Uint32Array(1))[0],
+          tier,
+        ),
+        largeCells,
+      },
       {
         mode: `${size}x${size}:${tier}`,
       },
@@ -149,72 +183,105 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
           ? "Choosing a smaller grid starts Classic."
           : "Hidden singles is available on the 9 × 9 grid."}
       </p>
+      <label className="check-label sudoku-size-choice">
+        <input
+          type="checkbox"
+          checked={largeCells}
+          onChange={(e) =>
+            update({ ...d, largeCells: e.target.checked }, { view: true })
+          }
+        />
+        Larger Sudoku squares
+      </label>
+      <p className="muted" id="sudoku-size-help">
+        {largeCells
+          ? "Scroll within the grid to see more squares. Arrow keys and the row/column controls keep your selected square in view."
+          : "Turn on larger squares for a roomier grid. Your puzzle and entries stay the same."}
+      </p>
       <div className="sudoku-layout">
         <div
-          className="sudoku"
-          data-size={d.size}
-          style={{ gridTemplateColumns: `repeat(${d.size},1fr)` }}
-          role="group"
-          aria-label={`${d.size} by ${d.size} Sudoku`}
-          onKeyDown={(e) => {
-            const moves: Record<string, number> = {
-              ArrowLeft: -1,
-              ArrowRight: 1,
-              ArrowUp: -d.size,
-              ArrowDown: d.size,
-            };
-            if (e.key in moves) {
-              e.preventDefault();
-              const row = Math.floor(selected / d.size),
-                col = selected % d.size;
-              const index =
-                e.key === "ArrowLeft"
-                  ? row * d.size + Math.max(0, col - 1)
-                  : e.key === "ArrowRight"
-                    ? row * d.size + Math.min(d.size - 1, col + 1)
-                    : Math.max(
-                        0,
-                        Math.min(d.cells.length - 1, selected + moves[e.key]),
-                      );
-              setSelected(index);
-              document.getElementById(`cell-${index}`)?.focus();
-            } else if (e.key === "Home" || e.key === "End") {
-              e.preventDefault();
-              const index = e.ctrlKey
-                ? e.key === "Home"
-                  ? 0
-                  : d.cells.length - 1
-                : Math.floor(selected / d.size) * d.size +
-                  (e.key === "Home" ? 0 : d.size - 1);
-              setSelected(index);
-              document.getElementById(`cell-${index}`)?.focus();
-            } else if (/^[1-9]$/.test(e.key) && Number(e.key) <= d.size)
-              move(Number(e.key));
-            else if (e.key === "Backspace" || e.key === "Delete") {
-              e.preventDefault();
-              move(0);
-            }
-          }}
+          ref={viewport}
+          className={`sudoku-viewport ${largeCells ? "large-cells" : ""}`}
+          role="region"
+          aria-label="Sudoku grid viewport"
+          aria-describedby="sudoku-size-help"
+          tabIndex={largeCells ? 0 : -1}
         >
-          {d.cells.map((n, i) => (
-            <button
-              id={`cell-${i}`}
-              key={i}
-              className={`cell ${d.givens[i] ? "given" : ""} ${selected === i ? "selected" : ""}`}
-              style={{
-                borderRightWidth: ((i % d.size) + 1) % cols === 0 ? 3 : 1,
-                borderBottomWidth:
-                  (Math.floor(i / d.size) + 1) % rows === 0 ? 3 : 1,
-              }}
-              tabIndex={selected === i ? 0 : -1}
-              aria-label={`Row ${Math.floor(i / d.size) + 1}, column ${(i % d.size) + 1}, ${n || "empty"}${d.givens[i] ? ", given" : ""}${d.notes[i].length ? `, notes ${d.notes[i].join(", ")}` : ""}`}
-              aria-pressed={selected === i}
-              onClick={() => setSelected(i)}
-              onFocus={() => setSelected(i)}
-            >
-              {n || <span className="pencil">{d.notes[i].join(" ")}</span>}
-            </button>
-          ))}
+          <div
+            className="sudoku"
+            data-size={d.size}
+            style={{
+              gridTemplateColumns: `repeat(${d.size},1fr)`,
+              ...(largeCells
+                ? { width: `calc(${d.size} * max(48px, 4em))` }
+                : {}),
+            }}
+            role="group"
+            aria-label={`${d.size} by ${d.size} Sudoku`}
+            onKeyDown={(e) => {
+              const moves: Record<string, number> = {
+                ArrowLeft: -1,
+                ArrowRight: 1,
+                ArrowUp: -d.size,
+                ArrowDown: d.size,
+              };
+              if (e.key in moves) {
+                e.preventDefault();
+                const row = Math.floor(selected / d.size),
+                  col = selected % d.size;
+                const index =
+                  e.key === "ArrowLeft"
+                    ? row * d.size + Math.max(0, col - 1)
+                    : e.key === "ArrowRight"
+                      ? row * d.size + Math.min(d.size - 1, col + 1)
+                      : Math.max(
+                          0,
+                          Math.min(d.cells.length - 1, selected + moves[e.key]),
+                        );
+                setSelected(index);
+                document
+                  .getElementById(`cell-${index}`)
+                  ?.focus({ preventScroll: true });
+              } else if (e.key === "Home" || e.key === "End") {
+                e.preventDefault();
+                const index = e.ctrlKey
+                  ? e.key === "Home"
+                    ? 0
+                    : d.cells.length - 1
+                  : Math.floor(selected / d.size) * d.size +
+                    (e.key === "Home" ? 0 : d.size - 1);
+                setSelected(index);
+                document
+                  .getElementById(`cell-${index}`)
+                  ?.focus({ preventScroll: true });
+              } else if (/^[1-9]$/.test(e.key) && Number(e.key) <= d.size)
+                move(Number(e.key));
+              else if (e.key === "Backspace" || e.key === "Delete") {
+                e.preventDefault();
+                move(0);
+              }
+            }}
+          >
+            {d.cells.map((n, i) => (
+              <button
+                id={`cell-${i}`}
+                key={i}
+                className={`cell ${d.givens[i] ? "given" : ""} ${selected === i ? "selected" : ""}`}
+                style={{
+                  borderRightWidth: ((i % d.size) + 1) % cols === 0 ? 3 : 1,
+                  borderBottomWidth:
+                    (Math.floor(i / d.size) + 1) % rows === 0 ? 3 : 1,
+                }}
+                tabIndex={selected === i ? 0 : -1}
+                aria-label={`Row ${Math.floor(i / d.size) + 1}, column ${(i % d.size) + 1}, ${n || "empty"}${d.givens[i] ? ", given" : ""}${d.notes[i].length ? `, notes ${d.notes[i].join(", ")}` : ""}`}
+                aria-pressed={selected === i}
+                onClick={() => setSelected(i)}
+                onFocus={() => setSelected(i)}
+              >
+                {n || <span className="pencil">{d.notes[i].join(" ")}</span>}
+              </button>
+            ))}
+          </div>
         </div>
         <aside className="sudoku-tools">
           <div className="square-picker">

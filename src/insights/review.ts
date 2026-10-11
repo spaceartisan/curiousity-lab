@@ -1,7 +1,7 @@
 import { timingKey, timingLabel } from "../storage/timing";
 import { presentationKey, presentationLabel } from "../storage/presentation";
 import type { GameKind, Session } from "../storage/contracts";
-export const ANALYSIS_VERSION = "local-context-review-4";
+export const ANALYSIS_VERSION = "local-context-review-5";
 export const activityNames: Record<GameKind, string> = {
   sudoku: "Sudoku",
   connections: "Word Connections",
@@ -37,7 +37,7 @@ export function contextKey(s: Session) {
   ]);
 }
 export function contextLabel(s: Session) {
-  return `${activityNames[s.game]} · ${s.mode} · ${s.puzzleId} · ${s.contentVersion} · app ${s.appVersion} · ${s.attempt === 1 ? "first attempt" : "repeat attempts"} · ${presentationLabel(s.presentation)} · ${timingLabel(s.timing)}`;
+  return `${activityNames[s.game]} · ${s.mode} · ${s.puzzleId} · ${s.contentVersion} · app ${s.appVersion} · ${s.attempt === 1 ? "first attempt" : "repeat attempts"} · ${presentationLabel(s.presentation)}${s.game === "sudoku" && s.presentation && !s.presentation.sudoku ? "; Sudoku square sizes unrecorded" : ""} · ${timingLabel(s.timing)}`;
 }
 export function filterSessions(
   sessions: Session[],
