@@ -1,6 +1,58 @@
 // Original boards generated from our own Latin-grid generator. Frozen content.
 // Unique solutions; hidden singles are required; no guessing or advanced rules.
 export const HIDDEN_SINGLES_VERSION = "sudoku-hidden-singles-1";
+export const CHALLENGING_VERSION = "sudoku-challenging-1";
+// Original candidate-elimination boards; frozen after independent uniqueness checks.
+export const challengingBoards = [
+  {
+    id: "challenging-1",
+    generationSeed: 5,
+    givens: [
+      0, 0, 4, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 3, 1, 0, 0, 0, 9, 0, 0, 0, 0, 0, 8,
+      2, 0, 0, 6, 0, 5, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 1, 0, 0, 0,
+      0, 6, 3, 9, 4, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 2, 6, 0, 0, 0, 0,
+      0, 9, 5, 0, 4, 0,
+    ],
+    solution: [
+      7, 5, 4, 2, 8, 6, 3, 9, 1, 2, 8, 6, 9, 3, 1, 5, 7, 4, 9, 3, 1, 7, 5, 4, 8,
+      2, 6, 3, 6, 9, 5, 1, 7, 4, 8, 2, 8, 4, 2, 3, 6, 9, 1, 5, 7, 5, 1, 7, 8, 4,
+      2, 6, 3, 9, 4, 7, 8, 6, 2, 3, 9, 1, 5, 1, 9, 5, 4, 7, 8, 2, 6, 3, 6, 2, 3,
+      1, 9, 5, 7, 4, 8,
+    ],
+  },
+  {
+    id: "challenging-2",
+    generationSeed: 13,
+    givens: [
+      0, 0, 0, 7, 0, 0, 3, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 8, 0, 0, 0, 0, 0, 9, 0,
+      6, 7, 6, 0, 1, 3, 0, 0, 2, 7, 9, 0, 0, 3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 4,
+      0, 0, 8, 0, 0, 0, 5, 0, 1, 7, 0, 3, 0, 0, 0, 0, 6, 3, 0, 8, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0,
+    ],
+    solution: [
+      9, 2, 8, 7, 6, 1, 3, 5, 4, 1, 6, 7, 4, 5, 3, 9, 2, 8, 3, 5, 4, 8, 2, 9, 1,
+      6, 7, 6, 4, 1, 3, 8, 5, 2, 7, 9, 5, 8, 3, 9, 7, 2, 6, 4, 1, 2, 7, 9, 1, 4,
+      6, 5, 8, 3, 8, 9, 5, 2, 1, 7, 4, 3, 6, 7, 1, 2, 6, 3, 4, 8, 9, 5, 4, 3, 6,
+      5, 9, 8, 7, 1, 2,
+    ],
+  },
+  {
+    id: "challenging-3",
+    generationSeed: 71,
+    givens: [
+      0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 2, 7, 0, 0, 0, 0, 1, 0, 4, 0, 0, 0, 0, 8, 0,
+      0, 2, 0, 0, 0, 0, 0, 4, 1, 3, 0, 0, 0, 0, 5, 7, 9, 0, 0, 0, 0, 6, 0, 0, 8,
+      0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 7, 0, 0, 3, 6, 0, 0, 0, 0,
+      0, 9, 5, 0, 7, 4,
+    ],
+    solution: [
+      1, 5, 8, 9, 2, 7, 6, 4, 3, 9, 2, 7, 4, 3, 6, 8, 1, 5, 4, 3, 6, 1, 5, 8, 7,
+      9, 2, 5, 7, 9, 2, 6, 4, 1, 3, 8, 3, 8, 1, 5, 7, 9, 4, 2, 6, 2, 6, 4, 3, 8,
+      1, 9, 5, 7, 7, 4, 2, 6, 1, 3, 5, 8, 9, 8, 9, 5, 7, 4, 2, 3, 6, 1, 6, 1, 3,
+      8, 9, 5, 2, 7, 4,
+    ],
+  },
+] as const;
 export const hiddenSinglesBoards = [
   {
     id: "hidden-singles-1",

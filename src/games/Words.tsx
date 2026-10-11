@@ -72,8 +72,7 @@ export function Connections({
         {d.pack + 1} of {connections.length}
       </p>
       <p id="connections-instructions">
-        Find four words that belong together. Select them, then choose
-        “Connect.” There is no time limit or limit on tries.
+        Select four related words, then choose “Connect.”
       </p>
       <details>
         <summary>How to play & get help</summary>
@@ -261,15 +260,17 @@ export function WordSearch({
         </p>
       </div>
       <p id="word-search-instructions">
-        Tap the first letter, then the last letter of a word. You can select in
-        either direction. With a keyboard, use arrow keys to move and Enter or
-        Space to select. Escape clears the selection.
+        Find the listed words by selecting their first and last letters.
       </p>
       <p className="muted search-scroll-help">
         On a small screen, slide the board sideways to see all columns.
       </p>
       <details>
         <summary>How to play & get help</summary>
+        <p>
+          Select in either direction. Arrow keys move between letters; Enter or
+          Space selects, and Escape clears the selection.
+        </p>
         <p>
           Found words stay marked. Undo last word returns the most recently
           found word to the list while this puzzle is in progress. You can find

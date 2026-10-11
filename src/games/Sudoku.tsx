@@ -5,6 +5,7 @@ import {
   isComplete,
   validSudoku,
   findLogicalStep,
+  findAdvancedStep,
   explainStep,
   removePeerNote,
   type Size,
@@ -82,7 +83,12 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
   }
   function hint(explainOnly = false) {
     const wrong = d.cells.findIndex((n, i) => n && n !== d.solution[i]);
-    const step = wrong < 0 ? findLogicalStep(d.cells, d.size) : undefined;
+    const step =
+      wrong < 0
+        ? d.tier === "Challenging"
+          ? findAdvancedStep(d.cells, d.size)
+          : findLogicalStep(d.cells, d.size)
+        : undefined;
     if (explainOnly) {
       update(d, { hint: true, view: true });
       if (step) {
@@ -112,7 +118,7 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
     setMessage(
       step
         ? `${explainStep(step, d.size)} The square is filled for you.`
-        : `Row ${Math.floor(empty / d.size) + 1}, column ${(empty % d.size) + 1}: this entry differed from the solution. The square is filled for you.`,
+        : `Row ${Math.floor(empty / d.size) + 1}, column ${(empty % d.size) + 1}: ${wrong >= 0 ? "this entry differed from the solution" : "filled from the puzzle’s solution"}. The square is filled for you.`,
     );
     if (isComplete(next)) finish("completed");
   }
@@ -150,7 +156,8 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
             onChange={(e) =>
               change(
                 Number(e.target.value) as Size,
-                d.tier === "Hidden singles" && Number(e.target.value) !== 9
+                (d.tier === "Hidden singles" || d.tier === "Challenging") &&
+                  Number(e.target.value) !== 9
                   ? "Classic"
                   : d.tier,
               )
@@ -171,20 +178,43 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
             <option>Relaxed</option>
             <option>Classic</option>
             <option disabled={d.size !== 9}>Hidden singles</option>
+            <option disabled={d.size !== 9}>Challenging</option>
           </select>
         </label>
-        <span className="muted">Choose a square, then a number.</span>
       </div>
       <p className="muted sudoku-technique">
-        {d.tier === "Hidden singles"
-          ? "Hidden singles: look for a number’s only possible place in a row, column or box. These puzzles also use single-candidate squares; no guessing is needed."
-          : d.tier === "Relaxed"
-            ? "Relaxed: more starting numbers, with single-candidate squares to find."
-            : "Classic: single-candidate squares, with fewer starting numbers than Relaxed."}{" "}
-        {d.tier === "Hidden singles"
-          ? "Choosing a smaller grid starts Classic."
-          : "Hidden singles is available on the 9 × 9 grid."}
+        {d.tier === "Challenging"
+          ? "Challenging · Locked candidates and naked pairs."
+          : d.tier === "Hidden singles"
+            ? "Hidden singles · Single-candidate and hidden-single placements."
+            : d.tier === "Relaxed"
+              ? "Relaxed · More givens; single-candidate placements."
+              : "Classic · Fewer givens; single-candidate placements."}{" "}
+        {d.tier === "Hidden singles" || d.tier === "Challenging"
+          ? "9 × 9 only; smaller grids start Classic."
+          : "Advanced challenges use the 9 × 9 grid."}
       </p>
+      <details>
+        <summary>Controls & solving techniques</summary>
+        <p>
+          Select a square and enter a number. Arrow keys move; Home/End select
+          row endpoints; Control+Home/End select board endpoints. Delete or
+          Backspace erases. Pencil notes and Undo are available below.
+        </p>
+        <p>
+          A hidden single has only one possible place in a row, column or box.
+          Locked candidates confine a number to the overlap of a box and a row
+          or column, removing it elsewhere in that unit. A naked pair consists
+          of two squares in one unit with the same two candidates, removing
+          those candidates from other squares in that unit.
+        </p>
+        <p>
+          Show a step explains a deduction without entering a number. Hint fills
+          a square. Assistance and checking are optional; nothing is revealed
+          automatically. All challenges have a unique solution and can be solved
+          logically without guessing.
+        </p>
+      </details>
       <label className="check-label sudoku-size-choice">
         <input
           type="checkbox"
@@ -197,8 +227,8 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
       </label>
       <p className="muted" id="sudoku-size-help">
         {largeCells
-          ? "Scroll within the grid to see more squares. Arrow keys and the row/column controls keep your selected square in view."
-          : "Turn on larger squares for a roomier grid. Your puzzle and entries stay the same."}
+          ? "Scroll inside the grid; navigation keeps the selected square visible."
+          : "Optional larger squares keep the same puzzle."}
       </p>
       <div className="sudoku-layout">
         <div
@@ -287,7 +317,6 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
         </div>
         <aside className="sudoku-tools">
           <div className="square-picker">
-            <p className="muted">Choose a square with larger controls</p>
             <label>
               Row{" "}
               <select
@@ -334,7 +363,7 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
               ? ` · Notes: ${d.notes[selected].join(", ")}`
               : ""}
           </p>
-          <p className="eyebrow">Your number tray</p>
+          <p className="eyebrow">Numbers</p>
           <div className="numberpad">
             {Array.from({ length: d.size }, (_, i) => (
               <button
@@ -390,14 +419,9 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
               Check entries
             </button>
           </div>
-          <p className="muted">Take your time. There is no timer to beat.</p>
         </aside>
       </div>
-      <p role="status">
-        {complete
-          ? "You completed this puzzle. It is yours to revisit anytime."
-          : message}
-      </p>
+      <p role="status">{complete ? "Puzzle complete." : message}</p>
       <div className="actions sudoku-replay">
         <button onClick={repeat ?? replay}>Replay this puzzle</button>
         <button onClick={replay}>

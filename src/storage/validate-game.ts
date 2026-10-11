@@ -17,12 +17,16 @@ export function validateGame(kind: string, value: unknown): boolean {
   if (kind === "sudoku") {
     if (
       !validSudoku(value) ||
-      (value.largeCells !== undefined && typeof value.largeCells !== "boolean") ||
+      (value.largeCells !== undefined &&
+        typeof value.largeCells !== "boolean") ||
       !Number.isInteger(value.seed) ||
       value.seed < 0 ||
       value.seed > 0xffffffff ||
-      !["Relaxed", "Classic", "Hidden singles"].includes(value.tier) ||
-      (value.tier === "Hidden singles" && value.size !== 9)
+      !["Relaxed", "Classic", "Hidden singles", "Challenging"].includes(
+        value.tier,
+      ) ||
+      ((value.tier === "Hidden singles" || value.tier === "Challenging") &&
+        value.size !== 9)
     )
       return false;
     const count = value.size * value.size;

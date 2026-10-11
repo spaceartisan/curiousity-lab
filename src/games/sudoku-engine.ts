@@ -1,6 +1,12 @@
-import { hiddenSinglesBoards, HIDDEN_SINGLES_VERSION } from "../content/sudoku";
+import {
+  hiddenSinglesBoards,
+  HIDDEN_SINGLES_VERSION,
+  challengingBoards,
+  CHALLENGING_VERSION,
+} from "../content/sudoku.ts";
 export type Size = 4 | 6 | 9;
-export type SudokuTier = "Relaxed" | "Classic" | "Hidden singles";
+export type SudokuTier =
+  "Relaxed" | "Classic" | "Hidden singles" | "Challenging";
 export interface SudokuData {
   largeCells?: boolean;
   size: Size;
@@ -89,8 +95,17 @@ export function consistentGrid(cells: number[], size: Size): boolean {
 export interface SudokuStep {
   index: number;
   value: number;
-  technique: "single-candidate" | "hidden-single";
+  technique: "single-candidate" | "hidden-single" | "candidate-chain";
   unit?: { kind: "row" | "column" | "box"; number: number };
+  deductions?: SudokuDeduction[];
+}
+export interface SudokuDeduction {
+  technique: "locked-candidates" | "naked-pair";
+  unit: { kind: "row" | "column" | "box"; number: number };
+  targetUnit?: { kind: "row" | "column" | "box"; number: number };
+  source: number[];
+  values: number[];
+  removed: { index: number; values: number[] }[];
 }
 function units(size: Size) {
   const { rows, cols } = dimensions(size);
@@ -163,6 +178,136 @@ export function solveLogically(input: number[], size: Size, hidden = true) {
     solved: consistentGrid(cells, size) && cells.every(Boolean),
   };
 }
+// Rebuild candidate deductions from the actual entries for every request.
+// Pencil notes are player-owned and never treated as a proof premise.
+export function findAdvancedStep(
+  cells: number[],
+  size: Size,
+  pairs = true,
+): SudokuStep | undefined {
+  const direct = findLogicalStep(cells, size);
+  if (direct) return direct;
+  if (!consistentGrid(cells, size)) return;
+  const groups = units(size);
+  const options = cells.map((_, i) => candidates(cells, i, size));
+  const deductions: SudokuDeduction[] = [];
+  const unitLabel = (u: (typeof groups)[number]) => ({
+    kind: u.kind,
+    number: u.number,
+  });
+  while (true) {
+    if (options.some((c, i) => !cells[i] && !c.length)) return;
+    let forced: SudokuStep | undefined;
+    const single = options.findIndex((c) => c.length === 1);
+    if (single >= 0)
+      forced = {
+        index: single,
+        value: options[single][0],
+        technique: "candidate-chain",
+      };
+    if (!forced)
+      for (const unit of groups) {
+        for (let value = 1; value <= size; value++) {
+          const places = unit.indices.filter((i) => options[i].includes(value));
+          if (places.length === 1) {
+            forced = {
+              index: places[0],
+              value,
+              technique: "candidate-chain",
+              unit: unitLabel(unit),
+            };
+            break;
+          }
+        }
+        if (forced) break;
+      }
+    if (forced) return { ...forced, deductions };
+    let deduction: SudokuDeduction | undefined;
+    // Pointing (box -> line) and claiming (line -> box) use the same
+    // containment proof: every place for a value in one unit lies in another.
+    for (const unit of groups) {
+      for (let value = 1; value <= size; value++) {
+        const source = unit.indices.filter((i) => options[i].includes(value));
+        if (source.length < 2) continue;
+        for (const target of groups) {
+          if ((unit.kind === "box") === (target.kind === "box")) continue;
+          if (!source.every((i) => target.indices.includes(i))) continue;
+          const removed = target.indices
+            .filter(
+              (i) => !unit.indices.includes(i) && options[i].includes(value),
+            )
+            .map((index) => ({ index, values: [value] }));
+          if (removed.length) {
+            deduction = {
+              technique: "locked-candidates",
+              unit: unitLabel(unit),
+              targetUnit: unitLabel(target),
+              source,
+              values: [value],
+              removed,
+            };
+            break;
+          }
+        }
+        if (deduction) break;
+      }
+      if (deduction) break;
+    }
+    if (!deduction && pairs)
+      for (const unit of groups) {
+        for (const index of unit.indices) {
+          const values = options[index];
+          if (values.length !== 2) continue;
+          const source = unit.indices.filter(
+            (i) =>
+              options[i].length === 2 &&
+              options[i].every((n) => values.includes(n)),
+          );
+          if (source.length !== 2) continue;
+          const removed = unit.indices
+            .filter((i) => !source.includes(i))
+            .map((index) => ({
+              index,
+              values: options[index].filter((n) => values.includes(n)),
+            }))
+            .filter((r) => r.values.length);
+          if (removed.length) {
+            deduction = {
+              technique: "naked-pair",
+              unit: unitLabel(unit),
+              source,
+              values: [...values],
+              removed,
+            };
+            break;
+          }
+        }
+        if (deduction) break;
+      }
+    if (!deduction) return;
+    for (const removal of deduction.removed)
+      options[removal.index] = options[removal.index].filter(
+        (n) => !removal.values.includes(n),
+      );
+    deductions.push(deduction);
+    // Every deduction removes at least one of at most size^3 candidates.
+  }
+}
+export function solveAdvanced(input: number[], size: Size, pairs = true) {
+  const cells = [...input],
+    steps: SudokuStep[] = [];
+  while (steps.length < size * size) {
+    const step = findAdvancedStep(cells, size, pairs);
+    if (!step) break;
+    cells[step.index] = step.value;
+    steps.push(step);
+  }
+  return {
+    cells,
+    steps,
+    solved: consistentGrid(cells, size) && cells.every(Boolean),
+  };
+}
 export function solvedBySingles(input: number[], size: Size): boolean {
   if (!consistentGrid(input, size)) return false;
   const cells = [...input];
@@ -185,9 +330,9 @@ export function generateSudoku(
   seed: number,
   tier: SudokuTier = "Classic",
 ): SudokuData {
-  if (tier === "Hidden singles") {
-    if (size !== 9) throw Error("Hidden singles is a 9 by 9 challenge.");
-    return generateHiddenSingles(seed);
+  if (tier === "Hidden singles" || tier === "Challenging") {
+    if (size !== 9) throw Error(`${tier} is a 9 by 9 challenge.`);
+    return generateAuthored(seed, tier);
   }
   let state = seed >>> 0;
   const random = () => {
@@ -238,7 +383,10 @@ export function generateSudoku(
     history: [],
   };
 }
-function generateHiddenSingles(seed: number): SudokuData {
+function generateAuthored(
+  seed: number,
+  tier: "Hidden singles" | "Challenging",
+): SudokuData {
   let state = seed >>> 0;
   const shuffle = (input: number[]) => {
     const copy = [...input];
@@ -249,7 +397,9 @@ function generateHiddenSingles(seed: number): SudokuData {
     }
     return copy;
   };
-  const board = hiddenSinglesBoards[(seed >>> 0) % hiddenSinglesBoards.length];
+  const boards =
+    tier === "Challenging" ? challengingBoards : hiddenSinglesBoards;
+  const board = boards[(seed >>> 0) % boards.length];
   const symbols = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const rows = shuffle([0, 1, 2]).flatMap((b) =>
     shuffle([b * 3, b * 3 + 1, b * 3 + 2]),
@@ -267,7 +417,7 @@ function generateHiddenSingles(seed: number): SudokuData {
   const givens = transform(board.givens);
   return {
     size: 9,
-    tier: "Hidden singles",
+    tier,
     seed,
     givens,
     solution: transform(board.solution),
@@ -277,15 +427,31 @@ function generateHiddenSingles(seed: number): SudokuData {
   };
 }
 export function sudokuPuzzle(data: SudokuData): string {
-  return data.tier === "Hidden singles"
-    ? `${HIDDEN_SINGLES_VERSION}-${data.seed}`
-    : `sudoku-${data.size}-${data.seed}`;
+  return data.tier === "Challenging"
+    ? `${CHALLENGING_VERSION}-${data.seed}`
+    : data.tier === "Hidden singles"
+      ? `${HIDDEN_SINGLES_VERSION}-${data.seed}`
+      : `sudoku-${data.size}-${data.seed}`;
 }
 export function sudokuContentVersion(data: SudokuData): string {
-  return data.tier === "Hidden singles" ? HIDDEN_SINGLES_VERSION : "starter-1";
+  return data.tier === "Challenging"
+    ? CHALLENGING_VERSION
+    : data.tier === "Hidden singles"
+      ? HIDDEN_SINGLES_VERSION
+      : "starter-1";
 }
 export function explainStep(step: SudokuStep, size: Size): string {
   const square = `Row ${Math.floor(step.index / size) + 1}, column ${(step.index % size) + 1}`;
+  if (step.technique === "candidate-chain") {
+    const at = (index: number) =>
+      `r${Math.floor(index / size) + 1}c${(index % size) + 1}`;
+    const reasons = step.deductions!.map((d) =>
+      d.technique === "naked-pair"
+        ? `Naked pair: ${d.source.map(at).join(" and ")} hold only ${d.values.join(" and ")} in ${d.unit.kind} ${d.unit.number}; remove those candidates from ${d.removed.map((r) => at(r.index)).join(", ")}.`
+        : `Locked candidates: ${d.values[0]} in ${d.unit.kind} ${d.unit.number} is confined to ${d.targetUnit!.kind} ${d.targetUnit!.number}; remove it from ${d.removed.map((r) => at(r.index)).join(", ")}.`,
+    );
+    return `${reasons.join(" ")} ${square}: ${step.value} is now ${step.unit ? `the only place for this number in ${step.unit.kind} ${step.unit.number}` : "the only remaining candidate"}.`;
+  }
   return step.technique === "hidden-single"
     ? `${square}: ${step.value} has only one possible place in ${step.unit!.kind} ${step.unit!.number}. This is a hidden single.`
     : `${square}: ${step.value} is the only number allowed by its row, column and box.`;

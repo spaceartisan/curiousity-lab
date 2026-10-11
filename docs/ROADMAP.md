@@ -93,3 +93,7 @@ The actual Sudoku grid now has an optional large-square view with contained scro
 ## v0.18.0 — Word Search undo and help
 
 In-progress undo uses the existing ordered found-word list, preserving original saves and puzzle identity. Found-letter highlights derive from all remaining words, including crossing paths. Brief help explains unlimited play, actual-path hints, undo and same-board replay. Optional history counts successful undo; history-off keeps only necessary progress. Completed attempts cannot be undone. This advances the common game usability requirements; remaining game/content work, normalized identity/clock/task context, private sync/shared reports and production/device gates remain unfinished.
+
+## v0.19.0 — Adult challenge and optional guidance
+
+Chosen 9×9 Challenging puzzles require candidate elimination beyond singles and locked candidates alone. Three original boards have independently unique solutions, verified naked-pair necessity within this solver, and deterministic variations. Requested hints explain actual logical deductions; no explanation or answer is shown automatically. Routine Sudoku and word instructions are compact and full help stays closed. Existing difficulty choices, saves and replay identities remain. Broader demanding word/music content, player feedback and human calibration, content/device review, normalized context, private sync/shared reporting and production recovery remain unfinished.

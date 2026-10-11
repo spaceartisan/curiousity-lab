@@ -8,15 +8,15 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.18.0
+## Current release · v0.19.0
 
-Word Search now offers in-progress undo with offline resume, crossing-word highlights and a short help panel. Undo returns the last found word without changing the board; completed attempts stay intact and replay starts fresh. See [Word Search help](docs/WORD_SEARCH.md).
+Sudoku has a chosen **Challenging** tier: three original boards and reproducible variations requiring candidate elimination, including naked pairs. All have unique, logically solvable solutions. Routine instructions are compact, longer explanations stay closed, and hints appear only when requested. See [Sudoku techniques](docs/SUDOKU_TECHNIQUES.md).
 
 This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. Owner Google sign-in and code-only parent invitations are available after enabling Anonymous Auth and publishing the included Firebase rules. Activity sharing remains disabled. No personal records, emails, service credentials, or private design document are published here.
 
 Play includes:
 
-- Optional 9×9 Hidden singles challenges verified by solving technique, explanations before fills, peer pencil-note cleanup, unlimited same-board replay and larger selected-square controls. Original Relaxed/Classic boards remain reproducible. See [Sudoku techniques](docs/SUDOKU_TECHNIQUES.md).
+- Optional 9×9 Challenging boards requiring naked pairs, with locked-candidate and pair deductions available on request. Optional 9×9 Hidden singles challenges verified by solving technique, explanations before fills, peer pencil-note cleanup, unlimited same-board replay and larger selected-square controls. Original Relaxed/Classic boards remain reproducible. See [Sudoku techniques](docs/SUDOKU_TECHNIQUES.md).
 
 - Reproducible, unique-solution Sudoku in 9×9, 6×6, and 4×4 grids, pencil notes, undo, hints, optional checking, and saved progress. Both current tiers are verified solvable with naked singles; Classic has fewer givens. These are provisional game difficulty tiers, not clinical measures.
 - Eight original themed Word Connections packs with progressive category/one-word/four-word hints, in-progress undo, shuffle, same-board replay and saved selection. The original two boards retain their IDs and content versions. Four versioned Word Search boards: Quiet garden, Kitchen table, At the workbench and By the water. Found letters stay marked, in-progress undo returns the last found word, hints locate an actual first letter, and keyboard navigation, same-board replay and new-board cycling are available. Original garden saves retain their board and progress.

@@ -1,3 +1,11 @@
+# v0.19.0 validation
+
+Six new component/engine regressions check all three frozen boards' independent uniqueness and naked-pair necessity, full deduction traces with separately constructed unit membership and candidate premises, 38 deterministic variations, canonical import boundaries, blank/inconsistent-grid behavior, optional explanation versus filling/undo, history-off reload, canceled choices, grid constraints, unassisted completed content/mode and separate replay.
+
+A new desktop/phone browser scenario restores clearly synthetic challenging progress through the actual confirmed restore flow; checks closed help and absent unsolicited advice, requested pair explanations, Hint/Undo, offline resume, same-board replay, 320-pixel/200% text width, canceled challenge changes and explicitly confirmed smaller grids. Deployment requires the full component/build, archive, security/recovery and browser gates plus screenshot review. Human difficulty calibration and actual family-device accessibility remain unverified; the full document remains in progress.
+
+---
+
 # v0.18.0 validation
 
 Three additional component regressions cover original-save undo and reload, pending selection/hint clearing, history-off exclusion, crossing-word highlights, consented undo counts, immutable completed sessions and fresh replay. A new desktop/phone browser scenario checks keyboard undo, actual crossing highlights, offline resume, repeated finding/completion, disabled completed undo, same-board replay and 320-pixel/200% text target sizes and bounded document width.

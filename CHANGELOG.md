@@ -1,3 +1,11 @@
+# v0.19.0 — Chosen candidate-elimination challenges
+
+- Add a 9×9 Challenging tier with three original frozen boards and deterministic seed variations. Singles and locked candidates alone cannot finish any board; naked pairs are required within the documented technique set. Unique solutions and logical completion are verified independently.
+- Requested explanations rebuild locked-candidate and pair deductions from current entries, without using pencil notes as premises. Show a step preserves progress; Hint places an explained value and Undo restores cells/notes. No assistance appears automatically.
+- Preserve all old puzzle generators, seed identities and saved progress. The new collection uses `sudoku-challenging-1`; replay retains its content and tier, while choosing a smaller grid explicitly starts Classic after confirmation.
+- Shorten routine Sudoku/word guidance, put full controls/techniques in closed help panels, and use direct number/completion wording. Mathematical technique calibration does not establish human difficulty equivalence.
+- Full document implementation, broader demanding word/music content, player preference feedback, content/device review, normalized context, private sync/shared reporting and production gates remain unfinished.
+
 # v0.18.0 — Word Search undo
 
 - Undo last word returns the latest found word during an unfinished puzzle, clearing pending selection and hint cues. Crossing letters remain marked when another found word still uses them.

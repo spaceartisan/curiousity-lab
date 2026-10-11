@@ -285,7 +285,7 @@ it("seven same-board completed replays retain distinct immutable attempts and ne
         }
     }
     await user.click(screen.getByRole("button", { name: "Hint" }));
-    expect(screen.getByText(/You completed this puzzle/)).toBeInTheDocument();
+    expect(screen.getByText("Puzzle complete.")).toBeInTheDocument();
     await user.click(
       screen.getByRole("button", { name: "Replay this puzzle" }),
     );
