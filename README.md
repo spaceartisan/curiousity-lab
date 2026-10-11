@@ -8,7 +8,7 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.11.0
+## Current release · v0.12.0
 
 This is a **local prototype**, implementing Phase 0 and the first playable slices of Phase 1. Owner Google sign-in and code-only parent invitations are available after enabling Anonymous Auth and publishing the included Firebase rules. Activity sharing remains disabled. No personal records, emails, service credentials, or private design document are published here.
 
@@ -24,7 +24,7 @@ Play includes:
 - Light/dark themes, larger text, JSON backup/restore with a review step and three durable undo copies, CSV session export, and explicit deletion controls.
 - IndexedDB progress saves separated by app role. Optional activity history starts off; it stays on this device. With it off, active-time/hint/undo summaries are not accumulated. Game state necessary for save/resume is still stored.
 
-Companion and Insights open directly to their own views. Fictional examples are clearly labeled and only appear when requested. Neither app reads Play's browser database. Insights can explicitly inspect a selected Play backup **in memory**, without uploading or persisting it.
+Companion and Insights open directly to their own views. Fictional examples are clearly labeled and only appear when requested. Neither app reads Play's browser database. Insights can explicitly inspect a selected Play backup **in memory**, without uploading or persisting it. Its review separates activity, mode, puzzle, app/content versions and first/repeated exposure; offers UTC date filters, paginated source records, completed-session hint denominators, and full-source/filtered CSV plus a versioned summary JSON. Missing history remains unknown and no clinical or enjoyment inference is made. See [local review](docs/LOCAL_REVIEW.md).
 
 ## Firebase account setup
 

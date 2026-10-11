@@ -1,3 +1,13 @@
+# v0.12.0 validation
+
+Locally: 120 unit/component tests passed, including eight new review cases for context boundaries, repeat exposure, UTC offset boundaries, outcome/hint denominators, exploration exclusion, clock inconsistencies, source immutability, filters, pagination, all-context access beyond the first 200 options and versioned/source-preserving exports. Thirteen archive/remote checks passed; age is unavailable locally and its encryption case is skipped. TypeScript, production build and scoped PWA/provenance checks passed.
+
+CI gates deployment on 120 unit/component tests, fourteen archive/remote checks with age, twenty-two Firestore security cases plus encrypted emulator recovery, and forty-two desktop/phone browser scenarios (199 total). The new scenario uses a fictional schema-v1 backup, actual offline imports and downloads, filter/reset/page flows, invalid/repeated imports, UTC offset dates, close/reload isolation, role separation and keyboard table scrolling at 320 pixels/200% text. Check this commit's workflow for actual completion and visually review the screenshots.
+
+No family data or network upload is used. Review is ephemeral and does not merge into role storage. Schema-v1 lacks audio, notation, input, pauses, clock quality and reference equivalence; these are disclosed rather than imputed. No estimated trend, clinical score or enjoyment inference is presented. Actual device accessibility, independently reviewed content, full private sync/reporting and production recovery gates remain.
+
+---
+
 # v0.11.0 validation
 
 Locally: 112 unit/component tests passed, including twelve new Sudoku cases for six exact legacy generator serializations; three original boards and 38 varied seeds with uniqueness/determinism/hidden-single necessity; independent candidate/unit verification for explanations; rejection of contradictory grids and unsupported/corrupted restores; immutable peer-note cleanup; explanation without placement; truthful correction/undo; real pencil toggles and restoration; keyboard endpoints; seven same-board completed attempts; and legacy reload/canceled change/history-off exclusion. Thirteen archive/remote cases passed, with the age-only test skipped locally. TypeScript, build and PWA/provenance checks passed.

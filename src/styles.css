@@ -1403,6 +1403,57 @@ summary {
   flex-wrap: wrap;
   max-width: 100%;
 }
+.session-review {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.review-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+}
+.review-filters label {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.review-filters input,
+.review-filters select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+.session-review button {
+  min-width: 0;
+  max-width: 100%;
+  padding-inline: min(1rem, 3vw);
+  overflow-wrap: anywhere;
+}
+.review-contexts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr));
+  gap: 1rem;
+}
+.review-context {
+  min-width: 0;
+  padding: min(1rem, 4vw);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.review-context h4 {
+  margin-top: 0;
+}
+.review-table {
+  max-width: 100%;
+}
+.review-table table {
+  min-width: 900px;
+}
+.review-table td {
+  vertical-align: top;
+  min-width: 110px;
+}
 .sudoku-replay button {
   max-width: 100%;
   min-width: 0;

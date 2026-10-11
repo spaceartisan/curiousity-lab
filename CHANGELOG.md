@@ -1,3 +1,10 @@
+# v0.12.0
+
+- Added local, memory-only Insights backup review with separate activity/mode/puzzle/app/content/source/exposure groups, inclusive UTC end-date filters and bounded summary/record pages.
+- Show recorded-session/day counts, outcome denominators, active-time ranges and hints per completed session; exclude unfinished hints and exploration performance scoring. Flag sparse and inconsistent-clock records without rewriting source data or estimating trends.
+- Preserve raw IDs, timestamps, milliseconds and values in full-source/filtered CSV; export a recomputable versioned summary with filters, source IDs and limitations. Missing play and unrecorded presentation context remain unknown.
+- Verify actual offline imports/downloads, rejected/repeated imports, close/reload isolation, keyboard table scrolling and 320-pixel/200% text with fictional fixtures. No activity upload or Firebase permission changes.
+
 # v0.11.0
 
 - Added an optional 9×9 Hidden singles collection: three original frozen boards, deterministic variations, unique solutions and a documented solving-technique ceiling. Every board requires hidden singles and can finish without guessing.

@@ -8,13 +8,8 @@ import {
   type Draft,
   type Creation,
 } from "./storage/contracts";
-import {
-  loadState,
-  saveState,
-  clearState,
-  download,
-  sessionsCsv,
-} from "./storage/local";
+import { loadState, saveState, clearState } from "./storage/local";
+import { SessionReview } from "./insights/SessionReview";
 import { Creations } from "./creations/Creations";
 import {
   latestNotebookVisit,
@@ -290,6 +285,7 @@ export function App({ appRole }: { appRole: Role }) {
     [review, setReview] = useState<LocalState | null>(null),
     [updateReady, setUpdateReady] = useState<ServiceWorker | null>(null);
   const [creationFilter, setCreationFilter] = useState<CollectionFilter>("all");
+  const [reviewRevision, setReviewRevision] = useState(0);
   const [restoreEpoch, setRestoreEpoch] = useState(0);
   const [restoreBusy, setRestoreBusy] = useState(false);
   const preparationError = usePreparation(family, state, restoreEpoch);
@@ -584,6 +580,7 @@ export function App({ appRole }: { appRole: Role }) {
       const parsed = await parseBackup(file, inspect ? "play" : appRole);
       if (inspect) {
         setReview(parsed);
+        setReviewRevision((n) => n + 1);
         return;
       }
     } catch {
@@ -990,60 +987,11 @@ export function App({ appRole }: { appRole: Role }) {
                     />
                   </label>
                   {review && (
-                    <>
-                      <p>
-                        {review.sessions.length} recorded sessions ·{" "}
-                        {review.creations.length} creations · Local guest source
-                      </p>
-                      <button onClick={() => setReview(null)}>
-                        Close imported review
-                      </button>
-                      <div className="table-wrap">
-                        <table>
-                          <thead>
-                            <tr>
-                              <th>Activity / version</th>
-                              <th>Content / mode</th>
-                              <th>Attempt</th>
-                              <th>Active time</th>
-                              <th>Hints / undo</th>
-                              <th>Outcome</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {review.sessions.map((s) => (
-                              <tr key={s.id}>
-                                <td>
-                                  {titles[s.game]} · {s.appVersion}
-                                </td>
-                                <td>
-                                  {s.puzzleId}
-                                  <br />
-                                  {s.mode} · {s.contentVersion}
-                                </td>
-                                <td>{s.attempt}</td>
-                                <td>{(s.activeMs / 60000).toFixed(1)} min</td>
-                                <td>
-                                  {s.hints} / {s.undos}
-                                </td>
-                                <td>{s.outcome}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <button
-                        onClick={() =>
-                          download(
-                            sessionsCsv(review),
-                            "curiosity-lab-reviewed-sessions.csv",
-                            "text/csv",
-                          )
-                        }
-                      >
-                        Export reviewed CSV
-                      </button>
-                    </>
+                    <SessionReview
+                      key={reviewRevision}
+                      review={review}
+                      onClose={() => setReview(null)}
+                    />
                   )}
                 </section>
                 <section className="subtle-panel">
