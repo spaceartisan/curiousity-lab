@@ -1,3 +1,11 @@
+# v0.25.0 validation
+
+Five new regressions verify independent drag/pinch geometry, moving-midpoint anchoring, finite bounds and degenerate inputs, captured outside movement, one/two/one transitions, third-pointer rejection, cancellation/lost capture/Escape/blur/resize/external changes, keyboard alternatives, one final commit, history-on/off persistence, no gesture traces, offline-style remount, and immutable notebook/session snapshots. A desktop/phone browser scenario uses actual mouse input and Chromium touch dispatch, including pinch/cancel, ordinary page scrolling outside the image, offline reopening, keyboard/button alternatives, 320-pixel/200% text and notebook restoration.
+
+Deployment requires full component/build, archive, security/recovery and browser gates followed by actual screenshot review. Automated Chromium input does not establish actual iOS/Android device usability, accessible screen-reader gestures or independent scientific review. Digital zoom remains display enlargement, not new optical detail. The full architecture remains unfinished.
+
+---
+
 # v0.24.0 validation
 
 Four new regressions cover bounded optional view contracts in active/stored slide pages and notebook imports, old saves and wrong-kind rejection, slide isolation and defensive copies, real zoom/pan save and reopen, history-off reload, removal undo, the six-view limit, notebook name search, immutable saved snapshots/session records, new exploration and notebook reopens. A desktop/phone scenario exercises these flows offline and checks 320-pixel/200% text and action targets.

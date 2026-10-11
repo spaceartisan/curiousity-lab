@@ -2,7 +2,7 @@ import { validTiming, type Timing } from "./timing";
 import { validPresentation, type Presentation } from "./presentation";
 import { validateGame } from "./validate-game";
 import { validLabViews, type LabView } from "../content/lab-views";
-export const APP_VERSION = "0.24.0";
+export const APP_VERSION = "0.25.0";
 export type Role = "play" | "companion" | "insights";
 export type GameKind = "sudoku" | "connections" | "search" | "music" | "lab";
 export interface Session {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MicroscopeViewport } from "./MicroscopeViewport";
 import { specimens } from "../content/specimens";
 import type { LabView } from "../content/lab-views";
 import {
@@ -230,43 +231,13 @@ export function Laboratory({
           )}
           {d.stage === "microscope" && (
             <>
-              <div
-                className="microscope"
-                tabIndex={0}
-                role="region"
-                aria-label="Microscope image. Arrow keys move the image; plus and minus adjust digital zoom."
-                onKeyDown={(e) => {
-                  if (
-                    [
-                      "ArrowLeft",
-                      "ArrowRight",
-                      "ArrowUp",
-                      "ArrowDown",
-                      "+",
-                      "-",
-                      "=",
-                    ].includes(e.key)
-                  )
-                    e.preventDefault();
-                  if (e.key === "ArrowLeft") pan(-5, 0);
-                  if (e.key === "ArrowRight") pan(5, 0);
-                  if (e.key === "ArrowUp") pan(0, -5);
-                  if (e.key === "ArrowDown") pan(0, 5);
-                  if (e.key === "+" || e.key === "=")
-                    set({ zoom: Math.min(3, d.zoom + 0.25) }, true);
-                  if (e.key === "-")
-                    set({ zoom: Math.max(1, d.zoom - 0.25) }, true);
-                }}
-              >
-                <img
-                  src={import.meta.env.BASE_URL + s.asset}
-                  alt={s.description}
-                  draggable={false}
-                  style={{
-                    transform: `translate(${d.pan[0]}%,${d.pan[1]}%) scale(${d.zoom})`,
-                  }}
-                />
-              </div>
+              <MicroscopeViewport
+                key={s.id}
+                src={import.meta.env.BASE_URL + s.asset}
+                description={s.description}
+                view={{ zoom: d.zoom, pan: d.pan }}
+                onView={(value) => set(value, true)}
+              />
               <div className="actions">
                 <button
                   aria-label="Zoom out"
@@ -297,6 +268,16 @@ export function Laboratory({
                 <button onClick={() => pan(0, -5)}>Move up</button>
                 <button onClick={() => pan(0, 5)}>Move down</button>
               </div>
+              <details>
+                <summary>Microscope controls</summary>
+                <p>
+                  Drag the image to pan, or pinch with two fingers for digital
+                  zoom. The buttons below the image offer the same controls.
+                  With the image focused, use arrow keys to move and plus/minus
+                  to zoom. Escape cancels an unfinished gesture. Scroll outside
+                  the image to move the page.
+                </p>
+              </details>
               <details>
                 <summary>
                   Saved microscope views

@@ -8,9 +8,11 @@ A calm, adult-respectful collection of puzzles, music, and microscopy. One React
 
 These URLs become live when the Pages workflow deploys successfully. The repository URL deliberately retains its existing spelling, `curiousity-lab`; product branding is **Curiosity Lab**.
 
-## Current release · v0.24.0
+## Current release · v0.25.0
 
-The microscope now supports up to six **named saved views per slide**, with reopen, removal/undo, notebook snapshots and search by view name. These preserve digital display settings; they are not calibrated measurements. See [saved microscope views](docs/LAB_SAVED_VIEWS.md).
+The microscope now supports **direct dragging and two-finger pinch zoom**, with steady one/two-finger transitions and the existing keyboard/buttons. Only completed, bounded view settings persist; canceled gestures restore the previous view and no pointer trace is stored. See [microscope gestures](docs/MICROSCOPE_GESTURES.md).
+
+The microscope supports up to six **named saved views per slide**, with reopen, removal/undo, notebook snapshots and search by view name. These preserve digital display settings; they are not calibrated measurements. See [saved microscope views](docs/LAB_SAVED_VIEWS.md).
 
 Rhythm Echo now offers three chosen **Challenging** six-beat sequences. Relative-spacing tolerance remains unchanged; hints are requested, and resumed sequences explicitly lack timing feedback when the full tap timings are unavailable. See [rhythm challenges](docs/RHYTHM_CHALLENGES.md).
 
