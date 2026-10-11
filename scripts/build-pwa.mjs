@@ -91,7 +91,10 @@ for (const role of ["play", "companion", "insights"]) {
     scope + "manifest.webmanifest",
     scope + "icon-192.png",
     scope + "icon-512.png",
-    ...shared,
+    // Piano samples are only needed by Play's music room.
+    ...shared.filter(
+      (url) => role === "play" || !url.startsWith(base + "media/piano/"),
+    ),
   ];
   const hash = (await import("node:crypto")).createHash("sha256");
   for (const url of list) {

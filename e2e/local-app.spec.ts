@@ -12,6 +12,7 @@ test("music exercises replay separately and keep rhythm progress offline", async
     await navigator.serviceWorker.ready;
   });
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect(
     page.getByRole("checkbox", { name: "Sound", exact: true }),
   ).not.toBeChecked();
@@ -68,6 +69,7 @@ test("music exercises replay separately and keep rhythm progress offline", async
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect(page.getByText("2 of 4 beats tapped.")).toBeVisible();
   for (let i = 0; i < 2; i++)
     await page.getByRole("button", { name: "Tap a beat" }).click();
@@ -154,6 +156,7 @@ test("music audio starts only after a gesture and Stop or Sound off cancels sche
     .getByRole("button", { name: "Play without activity history" })
     .click();
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await page
     .getByRole("button", { name: "Match the melody", exact: true })
     .click();
@@ -398,6 +401,7 @@ test("settings stays local-only and selected controls remain readable", async ({
   ).toBe(false);
   await page.getByRole("button", { name: "Back to games" }).click();
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   const selected = page.getByRole("button", {
     name: "Free piano",
     exact: true,

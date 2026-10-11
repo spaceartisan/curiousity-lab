@@ -1650,3 +1650,220 @@ summary {
 .medical-root-details summary {
   min-height: 48px;
 }
+/* Music room */
+.music-room {
+  display: grid;
+  gap: 1.2rem;
+}
+.music-room-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.ntp {
+  display: grid;
+  gap: 1rem;
+}
+.ntp-settings {
+  display: grid;
+  gap: 0.6rem;
+}
+.ntp-round {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  padding: clamp(1rem, 3vw, 1.75rem);
+  display: grid;
+  gap: 1rem;
+}
+.ntp-round h2,
+.ntp-reveal h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  font-size: 1.7rem;
+  margin: 0;
+}
+.ntp-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 0.75rem;
+}
+.ntp-choices button {
+  text-align: left;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  min-height: 72px;
+}
+.ntp-choices small,
+.ntp-composer {
+  color: var(--muted);
+}
+.ntp-choices small {
+  font-size: 0.85em;
+}
+.ntp-hint {
+  border-left: 4px solid var(--accent);
+  padding-left: 0.8rem;
+  margin: 0;
+}
+.ntp-reveal {
+  display: grid;
+  gap: 0.6rem;
+}
+.ntp-reveal p {
+  margin: 0;
+}
+.ntp-verdict {
+  font-weight: 600;
+}
+.ntp-verdict.right {
+  color: var(--accent);
+}
+.ntp-source {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+button.big {
+  min-height: 60px;
+  font-size: 1.1em;
+  padding-inline: 1.5rem;
+}
+.score {
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: 12px;
+  padding: 0.5rem 0.25rem;
+  overflow: hidden;
+}
+.score svg {
+  max-width: 100%;
+}
+.score .score-playing,
+.score .score-playing path {
+  fill: #c0661b;
+  color: #c0661b;
+}
+.theme-dark .score .score-playing,
+.theme-dark .score .score-playing path {
+  fill: #efbf78;
+  color: #efbf78;
+}
+.piy {
+  display: grid;
+  gap: 1rem;
+}
+.piy-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+}
+.piy-head h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+}
+.piy-head select {
+  max-width: 100%;
+  min-height: 48px;
+}
+.piy-status {
+  margin: 0;
+  font-weight: 600;
+}
+.keyboard-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+  -webkit-overflow-scrolling: touch;
+}
+.keyboard {
+  position: relative;
+  display: flex;
+  height: clamp(150px, 28vw, 230px);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.keyboard button {
+  border-radius: 0 0 8px 8px;
+  padding: 0;
+  min-height: 0;
+  -webkit-touch-callout: none;
+}
+.white-key {
+  flex: 1 1 0;
+  background: #fffefa;
+  color: #233e38;
+  border: 1px solid #8b9a91;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  padding-bottom: 0.6rem !important;
+  font-size: 0.8rem;
+}
+.white-key:hover {
+  background: #f1f4ef;
+}
+.black-key {
+  position: absolute;
+  top: 0;
+  height: 60%;
+  background: #1f2a27;
+  border: 1px solid #0d1311;
+  z-index: 1;
+}
+.black-key:hover {
+  background: #33423d;
+}
+.keyboard .key-target {
+  box-shadow: inset 0 -10px 0 #d98b3a;
+}
+.keyboard .black-key.key-target {
+  background: #8a5521;
+}
+.keyboard .key-right {
+  background: #cfe6d6;
+}
+.keyboard .black-key.key-right {
+  background: #2f6b55;
+}
+.keyboard .key-pressed {
+  background: #e3e8e4;
+}
+.keyboard .black-key.key-pressed {
+  background: #4a5a55;
+}
+.free-piano h2 {
+  margin-bottom: 0.2rem;
+}
+.music-room > *,
+.piy > *,
+.free-piano > * {
+  min-width: 0;
+}
+.ntp-settings summary {
+  cursor: pointer;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  color: var(--muted);
+}
+.ntp-settings[open] summary {
+  margin-bottom: 0.4rem;
+}
+.piy-head label {
+  display: grid;
+  gap: 0.3rem;
+  width: min(100%, 420px);
+}
+.piy-head select {
+  width: 100%;
+}

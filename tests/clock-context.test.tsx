@@ -258,6 +258,9 @@ it("actual app saves clock shifts, reloads partial drafts, and never rewrites a 
   await saveState(s);
   const mounted = render(<App appRole="play" />);
   fireEvent.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   mono = 1000;
   wall += 6000;
   fireEvent.keyDown(document, { key: "Tab" });
@@ -270,6 +273,9 @@ it("actual app saves clock shifts, reloads partial drafts, and never rewrites a 
   mounted.unmount();
   render(<App appRole="play" />);
   fireEvent.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   fireEvent.click(screen.getByRole("button", { name: "Finish for now" }));
   await waitFor(async () =>
     expect((await loadState("play")).sessions[0].clock).toMatchObject({

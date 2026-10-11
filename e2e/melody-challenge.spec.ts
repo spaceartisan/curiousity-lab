@@ -16,6 +16,7 @@ test("chosen melody challenge has optional hints, hidden by-ear answers and offl
   ).toBeVisible();
   await page.reload();
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await page
     .getByRole("button", { name: "Match the melody", exact: true })
     .click();
@@ -66,6 +67,7 @@ test("chosen melody challenge has optional hints, hidden by-ear answers and offl
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect(choice).toHaveValue("Challenging");
   await expect(
     page.getByRole("button", { name: "By ear", exact: true }),

@@ -1,3 +1,13 @@
+# v0.30.0 — Music room with real repertoire
+
+- Music Studio opens on **Name that piece**: two-phrase excerpts of 65 public-domain works (classical, Scott Joplin, hymns and carols), played on a sampled grand piano. Answer from four titles or reveal; listen by ear or read the score first; optional clues, slower playback and tune-only playback.
+- The reveal shows the engraved score, highlighted as it plays, with composer, date, work and a short note.
+- **Play it yourself:** play the top line on a full keyboard with black keys while the piano supplies the accompaniment.
+- **Piano:** three octaves with octave shift and sustain.
+- The earlier exercises remain on their own tab. The old exercises' tones use the sampled piano once it has loaded.
+- Piano samples are cached only in Play for offline use. Audio is still created only after a tap.
+- Sources and the regeneration pipeline: see docs/MUSIC_ROOM.md.
+
 # v0.19.0 — Chosen candidate-elimination challenges
 
 - Add a 9×9 Challenging tier with three original frozen boards and deterministic seed variations. Singles and locked candidates alone cannot finish any board; naked pairs are required within the documented technique set. Unique solutions and logical completion are verified independently.
@@ -22,14 +32,12 @@
 - Optional presentation context records from-start/partial and compact/large/mixed observations; old records stay unrecorded. Context review advances to `local-context-review-5` and plot export to `local-session-points-3` for this grouping dimension.
 - Advanced Sudoku tiers, full document implementation, content expansion, private sync/reporting and production/device gates remain unfinished.
 
-
 ## v0.16.0 — Consented game input context
 
 - Record bounded touch/mouse/pen/keyboard categories inside visible, unpaused game controls only with activity history enabled. No raw event, key, coordinate, gesture stream or device fingerprint is retained.
 - Distinguish from-start/partial capture, no observed category and legacy unknown input in Insights; preserve methods through offline resume, validated exports and local sharing preparation. Completed attempts remain immutable; disabling/clearing history removes optional draft context.
 - Bump derived context review to `local-context-review-4` and plot export to `local-session-points-2` for the additional grouping dimension. Source sessions and aggregate formulas remain unchanged.
 - Full document implementation, normalized install/clock/task identity, private sync/shared reporting and production/device/content gates remain unfinished.
-
 
 - Added genuine local Insights plots of individual sessions within one explicitly selected context, sorted by original end time in UTC. Plot active time, known foreground pauses or hints in completed puzzle sessions, with truthful denominators and exclusion reasons.
 - Preserve overlapping observations, source offset timestamps, outcomes, first/repeat labels, hints and undo in keyboard-selectable details and a source table. Exploration has no performance plot; missing pause remains unknown.

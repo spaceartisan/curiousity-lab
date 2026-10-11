@@ -1,0 +1,240 @@
+{
+ "excerpts": {
+  "fur-elise": {
+   "start": 0,
+   "pickup": 192,
+   "nbars": 8
+  },
+  "alla-turca": {
+   "start": 0,
+   "pickup": 384,
+   "nbars": 8,
+   "tempo": 116
+  },
+  "entertainer": {
+   "start": 2880,
+   "pickup": 192,
+   "nbars": 8
+  },
+  "maple-leaf": {
+   "start": 0,
+   "pickup": 192,
+   "nbars": 8,
+   "tempo": 92
+  },
+  "brahms-waltz-15": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8,
+   "tempo": 104
+  },
+  "prelude-a-major": {
+   "start": 0,
+   "pickup": 384,
+   "nbars": 8,
+   "tempo": 76
+  },
+  "prelude-e-minor": {
+   "start": 0,
+   "pickup": 384,
+   "nbars": 4
+  },
+  "traumerei": {
+   "start": 0,
+   "pickup": 384,
+   "nbars": 4,
+   "tempo": 60
+  },
+  "raindrop": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 4,
+   "tempo": 66
+  },
+  "k331-tema": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 4
+  },
+  "op49-2-menuetto": {
+   "start": 0,
+   "pickup": 384,
+   "nbars": 8
+  },
+  "waltz-b-minor": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8
+  },
+  "minute-waltz": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8,
+   "tempo": 220
+  },
+  "impromptu-g-flat": {
+   "start": 3072,
+   "pickup": 0,
+   "nbars": 2
+  },
+  "bethena": {
+   "start": 9216,
+   "pickup": 0,
+   "nbars": 8,
+   "tempo": 132
+  },
+  "clair-de-lune": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 4,
+   "tempo": 50
+  },
+  "easy-winners": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8,
+   "tempo": 80
+  },
+  "elite-syncopations": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8,
+   "tempo": 80
+  },
+  "fantaisie-impromptu": {
+   "start": 6144,
+   "pickup": 0,
+   "nbars": 4
+  },
+  "gymnopedie-1": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 12,
+   "tempo": 66
+  },
+  "invention-13": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 3,
+   "key": "Am",
+   "tempo": 76
+  },
+  "magnetic-rag": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 4,
+   "tempo": 96
+  },
+  "mountain-king": {
+   "start": 1536,
+   "pickup": 0,
+   "nbars": 4,
+   "clefs": [
+    "bass",
+    "bass"
+   ]
+  },
+  "pathetique-2": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8,
+   "clefs": [
+    "bass",
+    "bass"
+   ]
+  },
+  "peacherine": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8
+  },
+  "pineapple-rag": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8,
+   "tempo": 88
+  },
+  "prelude-c-minor": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 4
+  },
+  "solace": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8,
+   "tempo": 60
+  },
+  "sun-flower": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8
+  },
+  "wall-street": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8
+  },
+  "original-rags": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 8,
+   "tempo": 84
+  },
+  "wtc-prelude-c": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 4,
+   "key": "C",
+   "tempo": 66
+  },
+  "pathetique-3": {
+   "start": 0,
+   "pickup": 576,
+   "nbars": 4
+  },
+  "invention-4": {
+   "start": 0,
+   "pickup": 0,
+   "nbars": 6,
+   "tempo": 80
+  }
+ },
+ "urls": {
+  "fur-elise": "https://www.mutopiaproject.org/ftp/BeethovenLv/WoO59/fur_Elise_WoO59/fur_Elise_WoO59.mid",
+  "pathetique-2": "https://www.mutopiaproject.org/ftp/BeethovenLv/O13/pathetique-2/pathetique-2.mid",
+  "pathetique-3": "https://www.mutopiaproject.org/ftp/BeethovenLv/O13/pathetique-3/pathetique-3.mid",
+  "op49-2-menuetto": "https://www.mutopiaproject.org/ftp/BeethovenLv/O49/LVB_Sonate_49no2_2/LVB_Sonate_49no2_2.mid",
+  "alla-turca": "https://www.mutopiaproject.org/ftp/MozartWA/KV331/KV331_3_RondoAllaTurca/KV331_3_RondoAllaTurca.mid",
+  "k331-tema": "https://www.mutopiaproject.org/ftp/MozartWA/KV331/KV331_1_1_tema/KV331_1_1_tema.mid",
+  "clair-de-lune": "https://www.mutopiaproject.org/ftp/DebussyC/L75/debussy_Ste_Bergamesq_Clair/debussy_Ste_Bergamesq_Clair.mid",
+  "gymnopedie-1": "https://www.mutopiaproject.org/ftp/SatieE/gymnopedie_1/gymnopedie_1.mid",
+  "traumerei": "https://www.mutopiaproject.org/ftp/SchumannR/O15/SchumannOp15No07/SchumannOp15No07.mid",
+  "minute-waltz": "https://www.mutopiaproject.org/ftp/ChopinFF/O64/chopin_valse_op64_no1/chopin_valse_op64_no1.mid",
+  "prelude-e-minor": "https://www.mutopiaproject.org/ftp/ChopinFF/O28/Chop-28-4/Chop-28-4.mid",
+  "prelude-a-major": "https://www.mutopiaproject.org/ftp/ChopinFF/O28/Chop-28-7/Chop-28-7.mid",
+  "prelude-c-minor": "https://www.mutopiaproject.org/ftp/ChopinFF/O28/Chop-28-20/Chop-28-20.mid",
+  "raindrop": "https://www.mutopiaproject.org/ftp/ChopinFF/O28/Chop-28-15/Chop-28-15.mid",
+  "fantaisie-impromptu": "https://www.mutopiaproject.org/ftp/ChopinFF/O66/chopin_fantaisie-impromptu/chopin_fantaisie-impromptu.mid",
+  "waltz-b-minor": "https://www.mutopiaproject.org/ftp/ChopinFF/O69/w10-h-moll-cfi/w10-h-moll-cfi.mid",
+  "wtc-prelude-c": "https://www.mutopiaproject.org/ftp/BachJS/BWV846/wtk1-prelude1/wtk1-prelude1.mid",
+  "invention-4": "https://www.mutopiaproject.org/ftp/BachJS/BWV775/bach-invention-04/bach-invention-04.mid",
+  "invention-13": "https://www.mutopiaproject.org/ftp/BachJS/BWV784/bach-invention-13/bach-invention-13.mid",
+  "mountain-king": "https://www.mutopiaproject.org/ftp/GriegE/O46/Dans_l_antre_du_roi_de_la_montagne/Dans_l_antre_du_roi_de_la_montagne.mid",
+  "brahms-waltz-15": "https://www.mutopiaproject.org/ftp/BrahmsJ/O39/waltz-op39-15/waltz-op39-15.mid",
+  "impromptu-g-flat": "https://www.mutopiaproject.org/ftp/SchubertF/D899/SchubertF-D899-3-Impromptu/SchubertF-D899-3-Impromptu.mid",
+  "entertainer": "https://www.mutopiaproject.org/ftp/JoplinS/entertainer/entertainer.mid",
+  "maple-leaf": "https://www.mutopiaproject.org/ftp/JoplinS/maple/maple.mid",
+  "elite-syncopations": "https://www.mutopiaproject.org/ftp/JoplinS/EliteSyncopations/EliteSyncopations.mid",
+  "solace": "https://www.mutopiaproject.org/ftp/JoplinS/solace/solace.mid",
+  "bethena": "https://www.mutopiaproject.org/ftp/JoplinS/bethena/bethena.mid",
+  "easy-winners": "https://www.mutopiaproject.org/ftp/JoplinS/winners/winners.mid",
+  "pineapple-rag": "https://www.mutopiaproject.org/ftp/JoplinS/PineappleRag/PineappleRag.mid",
+  "peacherine": "https://www.mutopiaproject.org/ftp/JoplinS/peacherine/peacherine.mid",
+  "sun-flower": "https://www.mutopiaproject.org/ftp/JoplinS/sun-flower-slow-drag/sun-flower-slow-drag.mid",
+  "original-rags": "https://www.mutopiaproject.org/ftp/JoplinS/original/original.mid",
+  "magnetic-rag": "https://www.mutopiaproject.org/ftp/JoplinS/magnetic/magnetic.mid",
+  "wall-street": "https://www.mutopiaproject.org/ftp/JoplinS/WallStreetRag/WallStreetRag.mid",
+  "moonlight": "https://www.mutopiaproject.org/ftp/BeethovenLv/O27/moonlight-guitar-duo/moonlight-guitar-duo.mid"
+ }
+}

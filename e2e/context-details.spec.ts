@@ -32,13 +32,11 @@ test("short context cards keep exact provenance behind keyboard/touch disclosure
   });
   await page.reload();
   await context.setOffline(true);
-  await page
-    .getByLabel("Open Play JSON backup")
-    .setInputFiles({
-      name: "synthetic-context-layout.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(fixture)),
-    });
+  await page.getByLabel("Open Play JSON backup").setInputFiles({
+    name: "synthetic-context-layout.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
   const review = page.getByRole("region", { name: "Imported activity review" });
   await expect(review.getByRole("article")).toHaveCount(2);
   const choices = await review

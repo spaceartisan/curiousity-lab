@@ -1,5 +1,5 @@
 import { beforeEach, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../src/App";
 import {
@@ -57,6 +57,9 @@ async function open(history = true, exercise = 0) {
   const view = render(<App appRole="play" />),
     user = userEvent.setup();
   await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   return { user, view };
 }
 async function saved() {
@@ -215,6 +218,9 @@ it("history-off resume keeps challenging content and presentation but drops tran
   view.unmount();
   render(<App appRole="play" />);
   await user.click(await screen.findByRole("button", { name: /Music Hear/ }));
+  fireEvent.click(
+    await screen.findByRole("tab", { name: "Earlier exercises" }),
+  );
   expect(
     screen.getByRole("heading", { name: "Opposing lines" }),
   ).toBeInTheDocument();

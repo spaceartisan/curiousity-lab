@@ -35,6 +35,7 @@ test("consented presentation settings survive offline replay, exports and review
     await navigator.serviceWorker.ready;
   });
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await page
     .getByRole("button", { name: "Complete the phrase", exact: true })
     .click();
@@ -82,6 +83,7 @@ test("consented presentation settings survive offline replay, exports and review
   await context.setOffline(true);
   await page.reload();
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect(
     page.getByRole("button", { name: "Note pattern", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
@@ -99,6 +101,7 @@ test("consented presentation settings survive offline replay, exports and review
     .getByRole("button", { name: "Back to games", exact: true })
     .click();
   await page.getByRole("button", { name: /Music Hear/ }).click();
+  await page.getByRole("tab", { name: "Earlier exercises" }).click();
   await expect
     .poll(async () => (await saved(page))!.drafts.music?.presentation?.coverage)
     .toBe("partial");
