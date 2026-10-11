@@ -1169,11 +1169,12 @@ export function App({ appRole }: { appRole: Role }) {
                 <h2>Your data, your choice</h2>
                 <p>
                   Puzzle progress and things you save stay on this device.
-                  Optional history records active time, puzzle version, hints,
-                  undo counts and observed theme/text settings. Music also
-                  records sound, volume, notation, pace and rhythm-flexibility
-                  settings, including changes. No keystrokes or audio recordings
-                  are collected. Nothing is sent to a server.
+                  Optional history records active time, visible pause time,
+                  puzzle version, hints, undo counts and observed theme/text
+                  settings. Music also records sound, volume, notation, pace and
+                  rhythm-flexibility settings, including changes. No keystrokes
+                  or audio recordings are collected. Nothing is sent to a
+                  server.
                 </p>
                 <label className="check-label">
                   <input
