@@ -54,6 +54,7 @@ import {
   labPuzzle,
   blankLabPage,
   savedLabViews,
+  labContentVersion,
   selectLabSlide,
   type LabData,
 } from "./content/laboratory";
@@ -223,9 +224,8 @@ function archive(
                         draft.data as MusicData,
                         draft.puzzleId,
                       )
-                    : draft.game === "lab" &&
-                        (draft.data as LabData).workflowRevision === 1
-                      ? "lab-workflow-1"
+                    : draft.game === "lab"
+                      ? labContentVersion(draft.data as LabData)
                       : "starter-1",
           game: draft.game,
           puzzleId: draft.puzzleId,

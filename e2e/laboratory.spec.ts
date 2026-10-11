@@ -1,3 +1,4 @@
+import { specimens } from "../src/content/specimens";
 import { test, expect } from "@playwright/test";
 test("optional laboratory journey keeps separate notes offline and permits repeat visits", async ({
   page,
@@ -46,9 +47,10 @@ test("optional laboratory journey keeps separate notes offline and permits repea
   await page
     .getByRole("textbox", { name: "Your notebook note" })
     .fill("Fictional test note: rounded forms");
-  await page
-    .getByRole("button", { name: "Next specimen", exact: true })
-    .click();
+  for (let i = 1; i < specimens.length; i++)
+    await page
+      .getByRole("button", { name: "Next specimen", exact: true })
+      .click();
   await expect(
     page.getByRole("textbox", { name: "Your notebook note" }),
   ).toHaveValue("Fictional test note: branches");

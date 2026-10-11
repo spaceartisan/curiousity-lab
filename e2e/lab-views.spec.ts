@@ -1,3 +1,4 @@
+import { specimens } from "../src/content/specimens";
 import { test, expect } from "@playwright/test";
 test("named microscope views remain slide-bound and notebook snapshots reopen offline", async ({
   page,
@@ -47,7 +48,8 @@ test("named microscope views remain slide-bound and notebook snapshots reopen of
   await expect(
     page.getByRole("button", { name: "Open saved view 1: Branch tips" }),
   ).toHaveCount(0);
-  await page.getByRole("button", { name: "Next specimen" }).click();
+  for (let i = 1; i < specimens.length; i++)
+    await page.getByRole("button", { name: "Next specimen" }).click();
   await summary.click();
   await page
     .getByRole("button", { name: "Remove saved view 1: Branch tips" })

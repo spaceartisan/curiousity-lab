@@ -2,6 +2,7 @@ import { beforeEach, expect, it } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../src/App";
+import { specimens } from "../src/content/specimens";
 import { validLabViews } from "../src/content/lab-views";
 import {
   blankLabPage,
@@ -137,7 +138,8 @@ it("actual zoom/pan presets reopen across history-off reload, slide switching an
   expect(
     screen.queryByRole("button", { name: "Open saved view 1: Branch tips" }),
   ).not.toBeInTheDocument();
-  await user.click(screen.getByRole("button", { name: "Next specimen" }));
+  for (let i = 1; i < specimens.length; i++)
+    await user.click(screen.getByRole("button", { name: "Next specimen" }));
   await user.click(screen.getByText(/^Saved microscope views/));
   expect(
     screen.getByRole("button", { name: "Open saved view 1: Branch tips" }),

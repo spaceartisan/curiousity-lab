@@ -1,3 +1,11 @@
+# v0.26.0 validation
+
+Three new regressions freeze original slots/hashes and six new source identities, compare actual image bytes to provenance, verify source credits and review boundaries, isolate all eight pages/presets, reject nonexistent/duplicate pages, distinguish old/new content versions, and exercise chosen comparison, note preservation and correct new-source notebook restoration. Existing return-to-original-slide tests now cycle the full collection. Build validation checks actual JPEG dimensions/checksums, inventory and Play precaching. A desktop/phone scenario loads all eight sources offline, opens all six additions, chooses a specific comparison, checks 320-pixel/200% text, files/reopens the actual source, and preserves notes across offline reload.
+
+Deployment requires the full component/build, archive, security/recovery and browser gates followed by screenshot review. Source-caption cross-check and visual inspection are not independent scientific review. These are unchanged CDC-published low-resolution JPGs; higher-resolution/responsive preparation and actual family-device usefulness still need review. The full document remains unfinished.
+
+---
+
 # v0.25.0 validation
 
 Five new regressions verify independent drag/pinch geometry, moving-midpoint anchoring, finite bounds and degenerate inputs, captured outside movement, one/two/one transitions, third-pointer rejection, cancellation/lost capture/Escape/blur/resize/external changes, keyboard alternatives, one final commit, history-on/off persistence, no gesture traces, offline-style remount, and immutable notebook/session snapshots. A desktop/phone browser scenario uses actual mouse input and Chromium touch dispatch, including pinch/cancel, ordinary page scrolling outside the image, offline reopening, keyboard/button alternatives, 320-pixel/200% text and notebook restoration.

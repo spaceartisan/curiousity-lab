@@ -45,6 +45,90 @@ export const labWorkflows = [
       "Optional visual observation; no specimen processing, identification test or diagnosis.",
     orderedOptionalSteps: ["case", "microscope", "observations", "compare"],
   },
+  {
+    id: "morphology-study-3077-v1",
+    revision: 1,
+    labDomain: "microbiology",
+    specimenId: "phil-3077-r1",
+    title: "A study of bacteria in chains",
+    fictionalCaseStatement:
+      "Imagine a teaching colleague has set aside a prepared view for a morphology study. Examine the arrangement and record whatever you find interesting; comparing with another teaching image is optional.",
+    prompt:
+      "Which structures would you describe in your notebook? Compare another field if you wish.",
+    educationalScope:
+      "Optional visual observation; no specimen processing, identification test or diagnosis.",
+    orderedOptionalSteps: ["case", "microscope", "observations", "compare"],
+  },
+  {
+    id: "morphology-study-16289-v1",
+    revision: 1,
+    labDomain: "microbiology",
+    specimenId: "phil-16289-r1",
+    title: "A study of rods and long chains",
+    fictionalCaseStatement:
+      "Imagine a teaching colleague has set aside a prepared view for a morphology study. Examine the arrangement and record whatever you find interesting; comparing with another teaching image is optional.",
+    prompt:
+      "Which structures would you describe in your notebook? Compare another field if you wish.",
+    educationalScope:
+      "Optional visual observation; no specimen processing, identification test or diagnosis.",
+    orderedOptionalSteps: ["case", "microscope", "observations", "compare"],
+  },
+  {
+    id: "morphology-study-1250-v1",
+    revision: 1,
+    labDomain: "microbiology",
+    specimenId: "phil-1250-r1",
+    title: "A study of short stained rods",
+    fictionalCaseStatement:
+      "Imagine a teaching colleague has set aside a prepared view for a morphology study. Examine the arrangement and record whatever you find interesting; comparing with another teaching image is optional.",
+    prompt:
+      "Which structures would you describe in your notebook? Compare another field if you wish.",
+    educationalScope:
+      "Optional visual observation; no specimen processing, identification test or diagnosis.",
+    orderedOptionalSteps: ["case", "microscope", "observations", "compare"],
+  },
+  {
+    id: "morphology-study-300-v1",
+    revision: 1,
+    labDomain: "microbiology",
+    specimenId: "phil-300-r1",
+    title: "A study of conidia on a branching stalk",
+    fictionalCaseStatement:
+      "Imagine a teaching colleague has set aside a prepared view for a morphology study. Examine the arrangement and record whatever you find interesting; comparing with another teaching image is optional.",
+    prompt:
+      "Which structures would you describe in your notebook? Compare another field if you wish.",
+    educationalScope:
+      "Optional visual observation; no specimen processing, identification test or diagnosis.",
+    orderedOptionalSteps: ["case", "microscope", "observations", "compare"],
+  },
+  {
+    id: "morphology-study-14588-v1",
+    revision: 1,
+    labDomain: "microbiology",
+    specimenId: "phil-14588-r1",
+    title: "A study of divided fungal macroconidia",
+    fictionalCaseStatement:
+      "Imagine a teaching colleague has set aside a prepared view for a morphology study. Examine the arrangement and record whatever you find interesting; comparing with another teaching image is optional.",
+    prompt:
+      "Which structures would you describe in your notebook? Compare another field if you wish.",
+    educationalScope:
+      "Optional visual observation; no specimen processing, identification test or diagnosis.",
+    orderedOptionalSteps: ["case", "microscope", "observations", "compare"],
+  },
+  {
+    id: "morphology-study-26587-v1",
+    revision: 1,
+    labDomain: "microbiology",
+    specimenId: "phil-26587-r1",
+    title: "A study of brush-like conidial groups",
+    fictionalCaseStatement:
+      "Imagine a teaching colleague has set aside a prepared view for a morphology study. Examine the arrangement and record whatever you find interesting; comparing with another teaching image is optional.",
+    prompt:
+      "Which structures would you describe in your notebook? Compare another field if you wish.",
+    educationalScope:
+      "Optional visual observation; no specimen processing, identification test or diagnosis.",
+    orderedOptionalSteps: ["case", "microscope", "observations", "compare"],
+  },
 ] as const;
 export function blankLabPage(specimen: number): LabPage {
   return { specimen, zoom: 1, pan: [0, 0], observations: [], text: "" };
@@ -96,4 +180,12 @@ export function selectLabSlide(
       ? current
       : (pages.find((p) => p.specimen === specimen) ?? blankLabPage(specimen));
   return { ...target, pages, experience, workflowRevision: 1, stage };
+}
+
+export function labContentVersion(data: LabData) {
+  return data.specimen >= 2
+    ? "lab-micrographs-2"
+    : data.workflowRevision === 1
+      ? "lab-workflow-1"
+      : "starter-1";
 }

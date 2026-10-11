@@ -78,7 +78,7 @@ describe("laboratory workflow", () => {
       { pages: [{ ...blankLabPage(1), zoom: Infinity }] },
       { pages: [{ ...blankLabPage(1), text: "x".repeat(1001) }] },
       { pan: [NaN, 0] },
-      { specimen: 2 },
+      { specimen: specimens.length },
       { stage: "incubation" },
     ])
       expect(validateGame("lab", { ...legacy, ...p })).toBe(false);
@@ -218,7 +218,8 @@ describe("laboratory workflow", () => {
     expect(
       screen.getByRole("textbox", { name: "Your notebook note" }),
     ).toHaveValue("Second slide");
-    await user.click(screen.getByRole("button", { name: "Next specimen" }));
+    for (let i = 1; i < specimens.length; i++)
+      await user.click(screen.getByRole("button", { name: "Next specimen" }));
     expect(
       screen.getByRole("textbox", { name: "Your notebook note" }),
     ).toHaveValue("First slide");

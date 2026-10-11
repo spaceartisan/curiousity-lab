@@ -23,6 +23,7 @@ function ImageSource({ index }: { index: number }) {
         scale is displayed.
       </p>
       <p>{s.credit}</p>
+      <p className="muted">{s.scientificReviewStatus}</p>
       <a href={s.sourceUrl} target="_blank" rel="noreferrer">
         CDC source and public-domain record
       </a>
@@ -48,6 +49,9 @@ export function Laboratory({
   const s = specimens[d.specimen];
   const workflow = labWorkflows[d.specimen];
   const other = (d.specimen + 1) % specimens.length;
+  const [comparison, setComparison] = useState<number | null>(null);
+  const compared =
+    comparison !== null && comparison !== d.specimen ? comparison : other;
   function set(p: Partial<LabData>, view = false) {
     update({ ...d, ...p }, { view });
   }
@@ -161,7 +165,9 @@ export function Laboratory({
               </button>
             </div>
           </div>
-          <p className="eyebrow">Microbiology desk · Starter collection</p>
+          <p className="eyebrow">
+            Microbiology desk · {specimens.length} slides
+          </p>
           <div className="specimen-grid">
             {specimens.map((asset, i) => (
               <article className="lab-slide-card" key={asset.id}>
@@ -391,8 +397,24 @@ export function Laboratory({
                 not fields from the same specimen or the same magnification.
                 Compare whatever interests you; there is no required answer.
               </p>
+              <label>
+                Comparison image{" "}
+                <select
+                  value={compared}
+                  onChange={(e) => setComparison(Number(e.target.value))}
+                >
+                  {specimens.map(
+                    (asset, index) =>
+                      index !== d.specimen && (
+                        <option key={asset.id} value={index}>
+                          {asset.title}
+                        </option>
+                      ),
+                  )}
+                </select>
+              </label>
               <div className="lab-comparison">
-                {[d.specimen, other].map((index) => (
+                {[d.specimen, compared].map((index) => (
                   <article key={specimens[index].id}>
                     <h3>
                       {specimens[index].title}
