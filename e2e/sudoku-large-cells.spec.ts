@@ -51,12 +51,14 @@ test("large Sudoku squares retain the board and selected-square visibility offli
       const selected = e
           .querySelector(".cell.selected")!
           .getBoundingClientRect(),
-        viewport = e.getBoundingClientRect();
+        viewport = e.getBoundingClientRect(),
+        left = viewport.left + e.clientLeft,
+        top = viewport.top + e.clientTop;
       return (
-        selected.left >= viewport.left - 1 &&
-        selected.right <= viewport.right + 1 &&
-        selected.top >= viewport.top - 1 &&
-        selected.bottom <= viewport.bottom + 1
+        selected.left >= left - 1 &&
+        selected.right <= left + e.clientWidth + 1 &&
+        selected.top >= top - 1 &&
+        selected.bottom <= top + e.clientHeight + 1
       );
     });
   await expect.poll(visible).toBe(true);
@@ -108,11 +110,9 @@ test("large Sudoku squares retain the board and selected-square visibility offli
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await page
-    .locator(".game-surface")
-    .screenshot({
-      path: info.outputPath("sudoku-large-squares-200-percent.png"),
-    });
+  await page.locator(".game-surface").screenshot({
+    path: info.outputPath("sudoku-large-squares-200-percent.png"),
+  });
   await option.uncheck();
   await expect(holder).not.toHaveClass(/large-cells/);
   expect(

@@ -26,15 +26,17 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
       const cell = holder.querySelector<HTMLElement>(`#cell-${selected}`);
       if (!cell) return;
       const bounds = holder.getBoundingClientRect(),
-        square = cell.getBoundingClientRect();
-      if (square.left < bounds.left + 6)
-        holder.scrollLeft += square.left - bounds.left - 6;
-      else if (square.right > bounds.right - 6)
-        holder.scrollLeft += square.right - bounds.right + 6;
-      if (square.top < bounds.top + 6)
-        holder.scrollTop += square.top - bounds.top - 6;
-      else if (square.bottom > bounds.bottom - 6)
-        holder.scrollTop += square.bottom - bounds.bottom + 6;
+        square = cell.getBoundingClientRect(),
+        left = bounds.left + holder.clientLeft,
+        top = bounds.top + holder.clientTop,
+        right = left + holder.clientWidth,
+        bottom = top + holder.clientHeight;
+      if (square.left < left + 6) holder.scrollLeft += square.left - left - 6;
+      else if (square.right > right - 6)
+        holder.scrollLeft += square.right - right + 6;
+      if (square.top < top + 6) holder.scrollTop += square.top - top - 6;
+      else if (square.bottom > bottom - 6)
+        holder.scrollTop += square.bottom - bottom + 6;
     };
     reveal();
     if (!holder || typeof ResizeObserver === "undefined") return;
@@ -241,7 +243,7 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
                 setSelected(index);
                 document
                   .getElementById(`cell-${index}`)
-                  ?.focus({ preventScroll: true });
+                  ?.focus({ preventScroll: largeCells });
               } else if (e.key === "Home" || e.key === "End") {
                 e.preventDefault();
                 const index = e.ctrlKey
@@ -253,7 +255,7 @@ export function Sudoku({ draft, update, finish, replay, repeat }: GameProps) {
                 setSelected(index);
                 document
                   .getElementById(`cell-${index}`)
-                  ?.focus({ preventScroll: true });
+                  ?.focus({ preventScroll: largeCells });
               } else if (/^[1-9]$/.test(e.key) && Number(e.key) <= d.size)
                 move(Number(e.key));
               else if (e.key === "Backspace" || e.key === "Delete") {
